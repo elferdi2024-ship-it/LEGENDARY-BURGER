@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --ink:#080808;
@@ -21,7 +20,7 @@
   --orange:#f05a22;
   --orange-dark:#c94213;
   --violet:#6b55ce;
-  --wa-green:#25D366;
+  --green:#22c55e;
   --display:"Archivo Black", sans-serif;
   --body:"Space Grotesk", sans-serif;
 }
@@ -315,12 +314,12 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
   position:absolute;
   inset:0;
   opacity:0;
-  animation:productSlide 16s infinite;
+  animation:productSlide 9s infinite;
 }
 .product-media .slide:first-child{opacity:1}
-.product-media .slide:nth-child(2){animation-delay:4s}
-.product-media .slide:nth-child(3){animation-delay:8s}
-.product-media .slide:nth-child(4){animation-delay:12s}
+.product-media .slide:nth-child(2){animation-delay:3s}
+.product-media .slide:nth-child(3){animation-delay:6s}
+.product-media .slide:nth-child(4){animation-delay:9s}
 .product-dots{
   position:absolute;
   left:8px;
@@ -337,12 +336,10 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
   box-shadow:1px 1px 0 #000;
 }
 @keyframes productSlide{
-  0%,22%{opacity:1}
-  25%,97%{opacity:0}
+  0%,30%{opacity:1}
+  36%,94%{opacity:0}
   100%{opacity:1}
 }
-/* single image — never animate */
-.product-media.single>img{position:relative;inset:auto;opacity:1!important;animation:none!important}
 .fallback{
   color:var(--cream);
   font-family:var(--display);
@@ -402,117 +399,22 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
   font-size:23px;
   font-weight:900;
   box-shadow:3px 3px 0 #000;
-  transition:background .18s,transform .14s,box-shadow .14s;
-  user-select:none;
 }
-.plus.added{background:var(--cream);transform:scale(1.14);box-shadow:3px 3px 0 #000;color:#111}
-.product-card{transition:transform .18s,box-shadow .18s}
-.product-card:hover{transform:translateY(-3px);box-shadow:0 12px 0 #050505,0 22px 38px rgba(240,90,34,.13)}
-.product-media img{cursor:zoom-in;transition:filter .2s}
-.product-media img:hover{filter:brightness(1.1)}
-
-/* ── Lightbox ── */
-.lightbox{
-  position:fixed;inset:0;z-index:300;
-  background:rgba(0,0,0,.92);
-  display:none;align-items:center;justify-content:center;
-  padding:20px;backdrop-filter:blur(10px);
-}
-.lightbox.open{display:flex;animation:fadeIn .25s ease forwards}
-.lightbox-content{
-  position:relative;width:min(800px,100%);
-  transform:scale(.95);animation:zoomIn .3s cubic-bezier(.34,1.56,.64,1) forwards;
-}
-.lightbox img{width:100%;height:auto;border-radius:12px;box-shadow:0 24px 64px rgba(0,0,0,.8);border:1px solid var(--line)}
-.lightbox-close{
-  position:absolute;top:-50px;right:0;
-  width:44px;height:44px;background:var(--card);
-  color:var(--cream);border-radius:50%;border:1px solid var(--line);
-  display:grid;place-items:center;font-size:24px;cursor:pointer;
-}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes zoomIn{from{transform:scale(.9) translateY(10px)}to{transform:scale(1) translateY(0)}}
-.modal-overlay{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.72);
-  backdrop-filter:blur(5px);
-  display:flex;align-items:flex-end;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .22s;
-}
-.modal-overlay.open{opacity:1;pointer-events:auto}
-.modal-box{
-  width:min(540px,100%);
-  max-height:82vh;overflow-y:auto;
-  border-radius:14px 14px 0 0;
-  background:var(--coal);
-  border:1px solid var(--line);border-bottom:none;
-  padding:22px 20px 32px;
-  transform:translateY(100%);
-  transition:transform .3s cubic-bezier(.34,1.3,.64,1);
-}
-.modal-overlay.open .modal-box{transform:translateY(0)}
-.modal-head{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:4px;
-}
-.modal-head h3{font-family:var(--display);font-size:20px;color:var(--cream)}
-.modal-close{width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:18px}
-.modal-hint{color:var(--muted);font-size:12px;font-weight:700;margin-bottom:16px}
-.ing-list{display:grid;gap:8px;margin-bottom:20px}
-.ing-row{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;
-  border:1px solid var(--line);border-radius:8px;
-  background:#101010;cursor:pointer;
-  transition:border-color .15s,background .15s;
-}
-.ing-row:hover{background:#181818}
-.ing-row.removed{border-color:rgba(240,90,34,.5);background:rgba(240,90,34,.08)}
-.ing-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--orange);cursor:pointer;flex:0 0 auto}
-.ing-row span{font-size:13px;font-weight:600}
-.ing-row.removed span{text-decoration:line-through;color:var(--muted)}
-/* ── Formulario carrito ── */
-.delivery-toggle{
-  display:grid;grid-template-columns:1fr 1fr;
-  border:1px solid var(--line);border-radius:8px;overflow:hidden;
-  margin-bottom:16px;
-}
-.delivery-btn{
-  padding:11px 8px;
-  background:transparent;color:var(--muted);
-  font-weight:900;font-size:12px;text-transform:uppercase;
-  transition:background .18s,color .18s;
-  border:none;
-}
-.delivery-btn.active{background:var(--orange);color:#111}
-.customer-form{display:grid;gap:11px;margin-bottom:18px}
-.form-field{display:flex;flex-direction:column;gap:5px}
-.form-field label{color:var(--muted);font-size:11px;font-weight:900;text-transform:uppercase}
-.form-field input,.form-field textarea{
-  width:100%;min-height:44px;
-  padding:0 12px;
-  border:1px solid var(--line);border-radius:8px;
-  background:#101010;color:#fff;outline:none;
-  transition:border-color .18s;
-}
-.form-field input:focus,.form-field textarea:focus{border-color:var(--orange)}
-.form-field textarea{min-height:76px;padding:10px 12px;resize:vertical}
 .value-band{background:linear-gradient(180deg,#111,#0b0b0b);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .value-grid{max-width:1120px;margin:auto;padding:48px 18px;display:grid;gap:22px}
-.value-img{
-  width:100%;
-  aspect-ratio:16/9;
-  object-fit:cover;
-  border-radius:10px;
-  margin-bottom:14px;
-  border:1px solid var(--line);
+.value-code{
+  width:56px;
+  height:56px;
+  display:grid;
+  place-items:center;
+  margin-bottom:12px;
+  border-radius:6px;
+  background:var(--orange);
+  color:#111;
+  font-family:var(--display);
   box-shadow:4px 4px 0 #000;
 }
-.value-item h3{font-size:20px;color:var(--cream);margin-bottom:6px}
-.value-item p{color:var(--muted);line-height:1.55;font-size:14px}
-.value-item .btn-link{display:inline-flex;margin-top:12px;color:var(--orange);font-weight:900;font-size:12px;text-transform:uppercase;gap:6px;align-items:center}
-
-/* ── Builder Promo ── */
+.value-item h3{font-size:18px}.value-item p{margin-top:8px;color:var(--muted);line-height:1.55}
 .builder-promo{
   max-width:1180px;
   margin:54px auto 0;
@@ -620,9 +522,8 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
   background:var(--card);
   box-shadow:0 8px 0 #050505;
 }
-.open{display:inline-flex;gap:8px;align-items:center;margin-bottom:14px;color:var(--cream);font-weight:900}
-.open i{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(240,90,34,0.7)}70%{box-shadow:0 0 0 10px rgba(240,90,34,0)}100%{box-shadow:0 0 0 0 rgba(240,90,34,0)}}
+.open{display:inline-flex;gap:8px;align-items:center;margin-bottom:14px;color:var(--green);font-weight:900}
+.open i{width:8px;height:8px;border-radius:50%;background:var(--green)}
 .loc-row{display:flex;gap:12px;margin:8px 0;color:var(--muted);line-height:1.5}.loc-row b{width:38px;color:var(--orange)}
 .page-kicker{
   padding:34px 18px 24px;
@@ -802,26 +703,7 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
       <div class="section-head"><div><div class="mark"></div><h2 class="section-title">Las que <em>mandan</em></h2><p class="section-sub">Una muestra rapida. El menu completo vive en su propia pagina.</p></div><a class="btn btn-ghost" href="#menu" data-route="menu">Ver todo</a></div>
       <div class="grid" id="featuredGrid"></div>
     </section>
-    <section class="value-band">
-      <div class="value-grid">
-        <div class="value-item">
-          <img class="value-img" src="IMAGENES/PERFECTOSMASH1.png" alt="Smash tecnico">
-          <h3>Smash técnico</h3>
-          <p>Corteza real, carne jugosa y salida rápida de cocina bajo presión.</p>
-        </div>
-        <div class="value-item">
-          <img class="value-img" src="IMAGENES/QUESSMASH.jpg" alt="Queso fundido">
-          <h3>Queso fundido</h3>
-          <p>Cheddar protagonista, fundido a la perfección sobre el smash.</p>
-        </div>
-        <div class="value-item">
-          <img class="value-img" src="IMAGENES/Triple Chesse/triple chesse 3.jpg" alt="Ritmo de pedido">
-          <h3>Ritmo de pedido</h3>
-          <p>Menú fácil de escanear, sumá al carrito y mandá tu pedido en segundos.</p>
-          <a href="#menu" data-route="menu" class="btn-link">Ver menú completo ➔</a>
-        </div>
-      </div>
-    </section>
+    <section class="value-band"><div class="value-grid"><div class="value-item"><div class="value-code">SM</div><h3>Smash tecnico</h3><p>Corteza real, carne jugosa y salida rapida de cocina.</p></div><div class="value-item"><div class="value-code">CH</div><h3>Queso fundido</h3><p>Cheddar protagonista, sin disfrazar el producto.</p></div><div class="value-item"><div class="value-code">FX</div><h3>Ritmo de pedido</h3><p>Menu facil de escanear, sumar al carrito y mandar por WhatsApp.</p></div></div></section>
     <section class="builder-promo"><h2>Arma la <em>tuya</em></h2><p>Elegis cada ingrediente, ves el precio y recien ahi la sumas al pedido.</p><a class="btn btn-purple" href="#builder" data-route="builder">Crear burger personalizada</a></section>
     <section class="section" id="local"><div class="section-head"><div><div class="mark"></div><h2 class="section-title">Donde <em>encontrarnos</em></h2></div></div><div class="loc-card"><div class="open"><i></i> ABIERTO AHORA</div><h3>Legendary Burger / Montevideo</h3><div class="loc-row"><b>MAP</b><span>Av. [Confirmar con el cliente], Montevideo, Uruguay</span></div><div class="loc-row"><b>HS</b><span>Lun-Jue: 19:00-00:00 | Vie-Dom: 19:00-01:00</span></div><div class="loc-row"><b>WA</b><span>+598 9X XXX XXX</span></div></div></section>
   </section>
@@ -851,138 +733,97 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
     <header class="page-kicker"><div class="page-kicker-inner"><div class="mark"></div><h1 class="section-title">Tu <em>pedido</em></h1><p class="section-sub">Revisa cantidades y envia el pedido por WhatsApp.</p></div></header>
     <section class="section cart-layout">
       <div class="cart-panel"><div class="cart-list" id="cartList"></div></div>
-      <aside class="cart-panel summary">
-        <div class="delivery-toggle">
-          <button class="delivery-btn active" id="btnRetiro">🏪 Retirar</button>
-          <button class="delivery-btn" id="btnEnvio">🛵 Envío</button>
-        </div>
-        <div class="customer-form">
-          <div class="form-field">
-            <label>Nombre *</label>
-            <input type="text" id="custName" placeholder="Tu nombre" autocomplete="name">
-          </div>
-          <div class="form-field">
-            <label>Teléfono *</label>
-            <input type="tel" id="custPhone" placeholder="Ej: 099 123 456" autocomplete="tel">
-          </div>
-          <div class="form-field" id="addressField" style="display:none">
-            <label>Dirección *</label>
-            <input type="text" id="custAddress" placeholder="Ej: Av. 18 de Julio 1234, Apto 5A" autocomplete="street-address">
-          </div>
-          <div class="form-field">
-            <label>¿Algo más? / Detalles</label>
-            <textarea id="custNotes" placeholder="Ej: sin sal, bien cocida, timbrar en apto 3..."></textarea>
-          </div>
-        </div>
-        <div class="total"><span>Total</span><strong id="cartTotal">$0</strong></div>
-        <button class="btn" id="checkout" style="width:100%;background:var(--wa-green);color:#fff;font-size:14px;gap:8px">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-top:-2px"><path d="M12.031 6.172c-2.32 0-4.519.903-6.16 2.544-1.64 1.641-2.543 3.841-2.543 6.161 0 1.5.385 2.96 1.114 4.247L3.109 23.5l4.512-1.185a8.65 8.65 0 004.41 1.205h.004c2.32 0 4.519-.903 6.16-2.544 1.64-1.641 2.543-3.841 2.543-6.161 0-2.321-.903-4.519-2.544-6.161a8.657 8.657 0 00-6.163-2.54zM12.031 7.422c1.989 0 3.858.775 5.263 2.181 1.406 1.406 2.18 3.275 2.18 5.263 0 1.989-.775 3.858-2.181 5.263-1.406 1.406-3.275 2.18-5.263 2.18h-.003c-1.285 0-2.555-.334-3.673-.966l-.263-.149-2.73.716.728-2.66-.164-.261a7.394 7.394 0 01-1.135-3.963c0-1.989.775-3.858 2.181-5.263 1.406-1.406 3.275-2.18 5.263-2.18zm4.332 5.867l-1.583-.791c-.287-.144-.475-.121-.663.12l-.76 1.012c-.143.19-.332.237-.617.095-.285-.143-1.205-.445-2.296-1.417-.85-.757-1.422-1.691-1.588-1.976-.166-.285-.018-.439.124-.581.129-.127.285-.332.427-.5.143-.166.19-.285.285-.475.095-.19.047-.356-.024-.5-.071-.143-.663-1.594-.91-2.183-.241-.573-.484-.494-.663-.504l-.565-.01c-.19 0-.5.071-.76.356-.261.285-1 1.012-1 2.47s1.059 2.873 1.205 3.063c.143.19 2.083 3.181 5.047 4.462.705.305 1.256.487 1.684.623.708.226 1.353.194 1.862.118.568-.085 1.745-.712 1.994-1.399.25-.688.25-1.278.175-1.401-.075-.124-.261-.19-.547-.333z"/></svg>
-          ENVIAR POR WHATSAPP
-        </button>
-        <a class="btn btn-ghost" href="#menu" data-route="menu" style="width:100%;margin-top:12px">Seguir pidiendo</a>
-      </aside>
+      <aside class="cart-panel summary"><div class="total"><span>Total</span><strong id="cartTotal">$0</strong></div><button class="btn btn-primary" id="checkout" style="width:100%">Enviar por WhatsApp</button><a class="btn btn-ghost" href="#menu" data-route="menu" style="width:100%;margin-top:12px">Seguir pidiendo</a></aside>
     </section>
   </section>
-
 </main>
 <footer><div class="foot-logo">LEGENDARY BURGER</div><div class="foot-links"><a href="#home" data-route="home">Inicio</a><a href="#menu" data-route="menu">Menu</a><a href="#builder" data-route="builder">Arma tu burger</a><a href="#cart" data-route="cart">Carrito</a><a href="https://instagram.com/legendaryburgermvd" target="_blank">Instagram</a></div><p class="copy">2024 Legendary Burger / Montevideo, Uruguay</p></footer>
-<div class="modal-overlay" id="ingredientModal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 id="modalTitle">Personalizar</h3>
-      <button class="modal-close" id="modalClose">&times;</button>
-    </div>
-    <p class="modal-hint">Desmarcá los ingredientes que no querés 👇</p>
-    <div class="ing-list" id="ingList"></div>
-    <button class="btn btn-primary" id="modalConfirm" style="width:100%">Agregar al pedido ✓</button>
-  </div>
-</div>
 <div class="toast" id="toast"></div>
-<div class="lightbox" id="lightbox">
-  <div class="lightbox-content">
-    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-    <img id="lightboxImg" src="" alt="Zoom product">
-  </div>
-</div>
 
 <script>
-// USANDO LAS CREDENCIALES PROVISTAS POR EL USUARIO
-const SUPABASE_URL = 'https://dwgwbnalrbzvakzbiwmb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3Z3dibmFscmJ6dmFremJpd21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MTQ4OTEsImV4cCI6MjA5MzI5MDg5MX0.im55Wn6fWcQddwaiRgZx1umKYPI2y0fwW0_RuP51ZR0';
-
-// Inicialización explícita
-const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { persistSession: false }
-});
-
-let cats = {};
-let builderSteps = [];
-let WA = '59899000000';
-
-async function initData() {
-  console.log('Iniciando carga de datos desde Supabase...');
-  try {
-    const { data: catData, error: catError } = await sbClient.from('categories').select('*').order('display_order');
-    const { data: prodData, error: prodError } = await sbClient.from('products').select('*').eq('is_active', true);
-    const { data: configData } = await sbClient.from('site_config').select('*');
-    const { data: bSteps } = await sbClient.from('builder_options').select('*').order('display_order');
-
-    if (catError || prodError) {
-      console.error('Error cargando tablas:', catError || prodError);
-      return;
-    }
-
-    console.log('Datos recibidos:', { cats: catData?.length, products: prodData?.length });
-
-    const config = {};
-    configData?.forEach(c => config[c.key] = c.value);
-    if(config.whatsapp) WA = config.whatsapp;
-
-    const catsMap = {};
-    catData?.forEach(c => {
-      catsMap[c.id] = { label: c.label, items: [] };
-    });
-
-    prodData?.forEach(p => {
-      if(catsMap[p.category_id]) {
-        catsMap[p.category_id].items.push({
-          id: p.id,
-          name: p.name,
-          desc: p.description,
-          price: parseFloat(p.price),
-          img: p.img,
-          imgs: p.imgs || [],
-          badge: p.badge
-        });
-      }
-    });
-
-    cats = catsMap;
-    builderSteps = bSteps?.map(s => ({
-      id: s.id,
-      title: s.label,
-      multi: s.is_multi,
-      required: s.id === 'base',
-      options: s.options
-    })) || [];
-
-    renderMenu();
-    route();
-    console.log('Menu renderizado con éxito');
-  } catch (err) {
-    console.error('Error crítico en initData:', err);
-  }
-}
-
-// Suscripción Realtime mejorada
-sbClient.channel('any')
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, initData)
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, initData)
-  .subscribe();
-
-initData();
-
-// Builder steps are now dynamic
+const WA='59899000000';
+const cats={
+  carne:{label:'Burger de Carne',items:[
+    {id:'texas',name:'Texas Crispy',desc:'Smash de carne, bacon, salsa BBQ, cheddar, emmental x2, cebolla crispy y huevo frito.',price:390,img:'IMAGENES/Texas Crispy/Texas Crispy.jpg',imgs:['IMAGENES/Texas Crispy/Texas Crispy.jpg','IMAGENES/Texas Crispy/Texas Crispy 2.jpg'],badge:'ESTRELLA'},
+    {id:'only',name:'Only Cheese',desc:'Smash de carne, bacon, medallon de provolone, salsa BBQ y cheddar x2.',price:390,img:'IMAGENES/Only Chesse.jpg'},
+    {id:'triple',name:'Triple Cheese',desc:'Doble smash de carne, cheddar x4, salsa Legendary y cebolla.',price:480,img:'IMAGENES/Triple Chesse/triple chesse 1.jpg',imgs:['IMAGENES/Triple Chesse/triple chesse 1.jpg','IMAGENES/Triple Chesse/triple chesse 2.jpg','IMAGENES/Triple Chesse/triple chesse 3.jpg']},
+    {id:'onion-rings',name:'Onion Rings',desc:'Smash de carne, aros de cebolla x3, muzza x3, mayonesa burger house y bacon.',price:390,img:'IMAGENES/Oniong Rings/Oniong Rings.jpg',imgs:['IMAGENES/Oniong Rings/Oniong Rings.jpg','IMAGENES/Oniong Rings/Oniong Rings 2.jpg','IMAGENES/Oniong Rings/Oniong Rings 3.jpg']},
+    {id:'moon',name:'Moon Burger',desc:'Smash de carne, cheddar x2, salsa barbacoa y cebolla caramelizada.',price:390,img:null},
+    {id:'big-legend',name:'Big Legend',desc:'Doble smash de carne, bacon, salsa Legendary, cheddar x4 y pepinillos.',price:480,img:'IMAGENES/Big Legend/Big Legend.jpg',imgs:['IMAGENES/Big Legend/Big Legend.jpg','IMAGENES/Big Legend/Big Legend 2.jpg'],badge:'TOP'},
+    {id:'kids',name:'Kids Burger',desc:'Smash de carne, cheddar x3 y salsa a eleccion.',price:350,img:'IMAGENES/kid.jpg'}]},
+  pollo:{label:'Otras Burgers',items:[
+    {id:'crispy-bacon',name:'Crispy Bacon',desc:'Pollo crispy, bacon, tomate, cheddar x2 y alioli.',price:380,img:'IMAGENES/Crispy Bacon.jpg'},
+    {id:'crispy-mix',name:'Crispy Mix',desc:'Pollo crispy, cheddar y ensalada coleslaw.',price:380,img:'IMAGENES/Crispy MIX.jpg'}]},
+  veggie:{label:'Veggie',items:[{id:'veggie',name:'Veggie LGY',desc:'Medallon vegetal, huevo frito, emmental, lechuga, tomate y alioli.',price:370,img:'IMAGENES/Vegetariana LGY.jpg'}]},
+  milas:{label:'Milanesas y Chivitos',items:[
+    {id:'mila-americana',name:'Milanesa Americana',desc:'Milanesa de carne, panceta, huevo y salsa BBQ.',price:420,img:'IMAGENES/Mila Americana.jpg'},
+    {id:'mila-napo',name:'Milanesa Napolitana',desc:'Milanesa de carne, jamon, mozzarella y salsa de tomate.',price:420,img:'IMAGENES/napo.jpg'},
+    {id:'chivito',name:'Chivito Legendario',desc:'Lomo tiernizado, jamon, mozzarella, bacon, huevo frito, aceituna, lechuga, tomate y mayonesa.',price:435,img:'IMAGENES/Chivito Legendario/chivito legendario.jpg',badge:'TOP'}]},
+  papas:{label:'Papas',items:[
+    {id:'papas',name:'Papas',desc:'Porcion de papas fritas.',price:200,img:'IMAGENES/fritas.jpg'},
+    {id:'papas-cheddar',name:'Papas Cheddar',desc:'Papas con salsa cheddar caliente.',price:240,img:'IMAGENES/fritas cheddar.jpg'},
+    {id:'papas-bacon',name:'Papas Cheddar y Bacon',desc:'Papas con cheddar y bacon crujiente.',price:280,img:'IMAGENES/papas  cheddar bacon.jpg'}]},
+  extras:{label:'Extras en Burger',items:[
+    {id:'extra-bacon',name:'Bacon',desc:'Extra para sumar a tu burger.',price:35,img:null},
+    {id:'extra-aros',name:'Aros de cebolla',desc:'Extra para sumar a tu burger.',price:35,img:'IMAGENES/Oniong Rings/Oniong Rings.jpg'},
+    {id:'extra-huevo',name:'Huevo',desc:'Extra para sumar a tu burger.',price:35,img:null},
+    {id:'extra-lechuga',name:'Lechuga',desc:'Extra para sumar a tu burger.',price:35,img:null},
+    {id:'extra-tomate',name:'Tomate',desc:'Extra para sumar a tu burger.',price:35,img:null},
+    {id:'extra-carne-cheddar',name:'Carne mas cheddar',desc:'Medallon extra con cheddar.',price:90,img:null}]},
+  bebidas:{label:'Bebidas',items:[
+    {id:'coca',name:'Linea Coca Cola 600ml',desc:'Refresco linea Coca Cola.',price:130,img:null},
+    {id:'agua',name:'Aguas',desc:'Agua con gas o sin gas.',price:100,img:null},
+    {id:'cabezas-botella',name:'Cabezas Bier Botella',desc:'Cerveza artesanal en botella.',price:270,img:null},
+    {id:'cabezas-lata',name:'Cabezas Bier Lata',desc:'Cerveza artesanal en lata.',price:170,img:null},
+    {id:'cabezas-tirada',name:'Cabezas Bier Tirada',desc:'Cerveza artesanal tirada.',price:250,img:null},
+    {id:'cabezas-gintonic',name:'Cabezas Bier Gintonic',desc:'Gintonic de Cabezas Bier.',price:250,img:null},
+    {id:'brik-330',name:'Cerveza Brik 330',desc:'Cerveza Brik 330 ml.',price:110,img:null},
+    {id:'stella',name:'Cerveza Stella Artois',desc:'Cerveza Stella Artois.',price:300,img:null},
+    {id:'moreiz-negra',name:'Moreiz Etiqueta Negra',desc:'Vino Moreiz etiqueta negra.',price:295,img:null},
+    {id:'moreiz-blanca',name:'Moreiz Etiqueta Blanca',desc:'Vino Moreiz etiqueta blanca.',price:198,img:null}]}
+};
+const builderSteps=[
+  {id:'base',title:'Tipo de proteina',multi:false,required:true,options:[
+    {id:'smash',name:'Smash de carne',code:'SM',price:300},
+    {id:'pollo',name:'Pollo crispy',code:'CR',price:300},
+    {id:'veggie',name:'Patty vegetal',code:'VG',price:280}
+  ]},
+  {id:'qty',title:'Cantidad',multi:false,options:[
+    {id:'single',name:'Simple',code:'S1',price:0,label:'incluido'},
+    {id:'double',name:'Doble',code:'D2',price:120},
+    {id:'triple',name:'Triple',code:'T3',price:240}
+  ]},
+  {id:'bun',title:'Pan',multi:false,options:[
+    {id:'brioche',name:'Brioche',code:'BR',price:0,label:'incluido'},
+    {id:'clasico',name:'Clasico',code:'CL',price:0,label:'incluido'},
+    {id:'integral',name:'Integral',code:'IN',price:0,label:'incluido'}
+  ]},
+  {id:'cheese',title:'Queso',multi:true,options:[
+    {id:'cheddar',name:'Cheddar',code:'CH',price:35},
+    {id:'muzza',name:'Mozzarella',code:'MZ',price:35},
+    {id:'provolone',name:'Provolone',code:'PV',price:35},
+    {id:'emmental',name:'Emmental',code:'EM',price:35}
+  ]},
+  {id:'sauces',title:'Salsas',multi:true,options:[
+    {id:'mayo',name:'Mayonesa',code:'MY',price:0,label:'gratis'},
+    {id:'bbq',name:'BBQ',code:'BQ',price:0,label:'gratis'},
+    {id:'ketchup',name:'Ketchup',code:'KT',price:0,label:'gratis'},
+    {id:'mostaza',name:'Mostaza',code:'MS',price:0,label:'gratis'},
+    {id:'alioli',name:'Alioli',code:'AL',price:0,label:'gratis'},
+    {id:'legendary',name:'Legendary',code:'LG',price:0,label:'gratis'}
+  ]},
+  {id:'toppings',title:'Toppings extra',multi:true,cols3:true,options:[
+    {id:'bacon',name:'Bacon',code:'BC',price:35},
+    {id:'cebolla',name:'Cebolla caramelizada',code:'CB',price:35},
+    {id:'lechuga',name:'Lechuga',code:'LE',price:35},
+    {id:'tomate',name:'Tomate',code:'TM',price:35},
+    {id:'pepinillos',name:'Pepinillos',code:'PK',price:35},
+    {id:'huevo',name:'Huevo frito',code:'HF',price:35},
+    {id:'jalapeno',name:'Jalapeno',code:'JP',price:35},
+    {id:'aros',name:'Aros de cebolla',code:'AR',price:35},
+    {id:'hongos',name:'Hongos',code:'HG',price:35}
+  ]}
+];
 const builderState={base:null,qty:'single',bun:'brioche',cheese:[],sauces:[],toppings:[]};
 let cart=JSON.parse(localStorage.getItem('legendary-cart')||'[]');
 const $=s=>document.querySelector(s);
@@ -990,46 +831,19 @@ const $$=s=>Array.from(document.querySelectorAll(s));
 function allItems(){return Object.values(cats).flatMap(cat=>cat.items)}
 function imageList(item){return item.imgs || (item.img ? [item.img] : [])}
 function firstImage(item){return imageList(item)[0] || null}
-function esc(t){ if(!t)return ''; return t.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
 function productCard(item){
-  const originalImgs=imageList(item);
-  const isSingle = originalImgs.length === 1;
-  let slides = [...originalImgs];
-  
-  // Animación original de la versión ANTES
-  const media=originalImgs.length
-    ? slides.map((src,index)=>`<img class="${isSingle?'':'slide'}" src="${src}" alt="${esc(item.name)}${slides.length>1?` ${index+1}`:''}" loading="lazy" onerror="this.remove()">`).join('')+(originalImgs.length>1?`<span class="product-dots">${originalImgs.map(()=>'<i></i>').join('')}</span>`:'')
+  const imgs=imageList(item);
+  const media=imgs.length
+    ? imgs.map((src,index)=>`<img class="slide" src="${src}" alt="${item.name}${imgs.length>1?` ${index+1}`:''}" loading="lazy" onerror="this.remove()">`).join('')+(imgs.length>1?`<span class="product-dots">${imgs.map(()=>'<i></i>').join('')}</span>`:'')
     : '<span class="fallback">LB</span>';
-
-  return `<article class="product-card"><div class="product-media ${isSingle?'single':''}">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}</div><div class="product-body"><h3>${esc(item.name)}</h3><p>${esc(item.desc)}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" aria-label="Agregar ${esc(item.name)}">+</button></div></div></article>`;
+  return `<article class="product-card"><div class="product-media">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}</div><div class="product-body"><h3>${item.name}</h3><p>${item.desc}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" aria-label="Agregar ${item.name}">+</button></div></div></article>`;
 }
 function renderMenu(){
-  // IDs ORIGINALES DE LA LANDING
-  const featuredIds = ['triple','texas','big-legend','chivito'];
-  const featured = featuredIds.map(id => allItems().find(item => item.id === id)).filter(Boolean);
-  
-  const featuredGrid = $('#featuredGrid');
-  if (featuredGrid) {
-    featuredGrid.innerHTML = featured.length 
-      ? featured.map(productCard).join('') 
-      : '<p style="padding:20px;color:var(--muted)">Cargando destacados...</p>';
-  }
-
-  const tabs = $('#tabs');
-  if (tabs) {
-    tabs.innerHTML = Object.entries(cats).map(([id,cat]) => `<button class="tab" data-cat="${id}">${cat.label}</button>`).join('');
-    tabs.querySelector('.tab')?.classList.add('active');
-  }
-
-  const menuContent = $('#menuContent');
-  if (menuContent) {
-    menuContent.innerHTML = Object.entries(cats).map(([id,cat]) => `
-      <div class="menu-block" id="${id}">
-        <h2 class="menu-title">${cat.label}</h2>
-        <div class="grid">${cat.items.map(productCard).join('')}</div>
-      </div>
-    `).join('');
-  }
+  const featured=['triple','texas','big-legend','chivito'].map(id=>allItems().find(item=>item.id===id)).filter(Boolean);
+  $('#featuredGrid').innerHTML=featured.map(productCard).join('');
+  $('#tabs').innerHTML=Object.entries(cats).map(([id,cat])=>`<button class="tab" data-cat="${id}">${cat.label}</button>`).join('');
+  $('#tabs .tab')?.classList.add('active');
+  $('#menuContent').innerHTML=Object.entries(cats).map(([id,cat])=>`<div class="menu-block" id="${id}"><h2 class="menu-title">${cat.label}</h2><div class="grid">${cat.items.map(productCard).join('')}</div></div>`).join('');
 }
 function renderBuilder(){
   $('#builderSteps').innerHTML=builderSteps.map((step,index)=>`<article class="builder-card"><div class="builder-card-head"><div class="builder-num">${index+1}</div><h3>${step.title}</h3>${step.multi?'<span class="builder-hint">Multiple</span>':''}</div><div class="option-grid ${step.cols3?'cols-3':''}">${step.options.map(option=>{
@@ -1078,8 +892,7 @@ function addCustomBurger(){
   const input=$('#builderName');
   const name=input?.value.trim() || 'Burger personalizada';
   const parts=selectedBuilderParts().map(part=>part.name);
-  const cartId = 'custom-'+Date.now();
-  cart.push({id:cartId, cartId, name, desc:parts.join(', '), price, img:null, qty:1, custom:true, removedIngredients:[]});
+  cart.push({id:'custom-'+Date.now(),name,desc:parts.join(', '),price,img:null,qty:1,custom:true});
   save();
   toast(`${name} agregada al pedido`);
   location.hash='cart';
@@ -1093,70 +906,15 @@ function route(){
   document.body.classList.remove('menu-open');
   if(valid==='menu' || valid==='builder' || valid==='cart') window.scrollTo({top:0,behavior:'instant'});
 }
-let deliveryMode = 'retiro';
-let pendingItem = null;
 function save(){localStorage.setItem('legendary-cart',JSON.stringify(cart));renderCart()}
-function getCategory(id) {
-  for (const [catId, cat] of Object.entries(cats)) {
-    if (cat.items.some(item => item.id === id)) return catId;
-  }
-  return null;
-}
-function parseIngredients(desc) {
-  if(!desc) return [];
-  const clean = desc.replace(/\.$/, '');
-  const parts = clean.split(/, | y /);
-  return parts.filter(p => p.trim().length > 0).map(p => p.trim());
-}
-function add(id, btn){
+function add(id){
   const item=allItems().find(entry=>entry.id===id);
   if(!item)return;
-  
-  if (btn) {
-    btn.textContent = '✓';
-    btn.classList.add('added');
-    setTimeout(() => {
-      btn.textContent = '+';
-      btn.classList.remove('added');
-    }, 1400);
-  }
-
-  const catId = getCategory(id);
-  const hasIngredients = ['carne', 'pollo', 'veggie', 'milas'].includes(catId);
-  const ingredients = parseIngredients(item.desc);
-
-  if (hasIngredients && ingredients.length > 1) {
-    pendingItem = item;
-    $('#modalTitle').textContent = item.name;
-    $('#ingList').innerHTML = ingredients.map(ing => `
-      <label class="ing-row">
-        <input type="checkbox" class="ing-check" value="${ing}" checked>
-        <span>${ing}</span>
-      </label>
-    `).join('');
-    $('#ingredientModal').classList.add('open');
-  } else {
-    addToCart(item, []);
-  }
-}
-function addToCart(item, removedIngredients) {
-  const removedKey = removedIngredients.slice().sort().join('|');
-  const cartId = item.custom ? item.id : (item.id + (removedKey ? '-' + removedKey : ''));
-  
-  const existing = cart.find(entry => entry.cartId === cartId);
-  if (existing) {
-    existing.qty++;
-  } else {
-    cart.push({
-      ...item,
-      img: firstImage(item),
-      qty: 1,
-      removedIngredients,
-      cartId
-    });
-  }
+  const found=cart.find(entry=>entry.id===id);
+  if(found)found.qty++;
+  else cart.push({...item,img:firstImage(item),qty:1});
   save();
-  if(!item.custom) toast(`${item.name} agregado`);
+  toast(`${item.name} agregado`);
 }
 function renderCart(){
   const count=cart.reduce((sum,item)=>sum+item.qty,0);
@@ -1164,12 +922,7 @@ function renderCart(){
   $('#cartBadge').textContent=count;
   $('#cartBadge').classList.toggle('show',count>0);
   $('#cartTotal').textContent='$'+total;
-  $('#cartList').innerHTML=cart.length?cart.map(item=>{
-    const removedText = item.removedIngredients && item.removedIngredients.length > 0 
-      ? `<br><span style="color:var(--orange);font-size:11px;font-weight:700">❌ Sin: ${[...item.removedIngredients].sort().join(', ')}</span>`
-      : '';
-    return `<div class="cart-item"><div class="cart-thumb">${item.img?`<img src="${item.img}" alt="${item.name}">`:'LB'}</div><div><div class="cart-name">${item.name}</div>${item.desc?`<div class="cart-note">${item.desc}${removedText}</div>`:''}<div class="cart-price">$${item.price*item.qty}</div></div><div class="qty"><button data-dec="${item.cartId||item.id}" aria-label="Quitar">-</button><span>${item.qty}</span><button data-inc="${item.cartId||item.id}" aria-label="Sumar">+</button></div></div>`;
-  }).join(''):'<div class="empty">Tu pedido esta vacio.</div>';
+  $('#cartList').innerHTML=cart.length?cart.map(item=>`<div class="cart-item"><div class="cart-thumb">${item.img?`<img src="${item.img}" alt="${item.name}">`:'LB'}</div><div><div class="cart-name">${item.name}</div>${item.desc?`<div class="cart-note">${item.desc}</div>`:''}<div class="cart-price">$${item.price*item.qty}</div></div><div class="qty"><button data-dec="${item.id}" aria-label="Quitar">-</button><span>${item.qty}</span><button data-inc="${item.id}" aria-label="Sumar">+</button></div></div>`).join(''):'<div class="empty">Tu pedido esta vacio.</div>';
 }
 function toast(text){
   const el=$('#toast');
@@ -1180,97 +933,25 @@ function toast(text){
 }
 function checkout(){
   if(!cart.length){toast('Agrega algo al pedido primero');return}
-  const name = $('#custName').value.trim();
-  const phone = $('#custPhone').value.trim();
-  const address = $('#custAddress').value.trim();
-  const notes = $('#custNotes').value.trim();
-  if (!name || !phone) {
-    toast('Ingresá tu nombre y teléfono por favor');
-    return;
-  }
-  if (deliveryMode === 'envio' && !address) {
-    toast('Ingresá tu dirección para el envío');
-    return;
-  }
   const total=cart.reduce((sum,item)=>sum+item.qty*item.price,0);
-  let msg='*🍔 NUEVO PEDIDO — LEGENDARY BURGER*\n\n';
-  msg+='📋 *PEDIDO:*\n';
-  cart.forEach(item=>{
-    msg+=`• *${item.name}* x${item.qty} — $${item.price*item.qty}\n`;
-    if (item.removedIngredients && item.removedIngredients.length > 0) {
-      const sorted = [...item.removedIngredients].sort();
-      msg+=`   └ ❌ *Sin:* _${sorted.join(', ')}_\n`;
-    }
-  });
-  msg+=`\n━━━━━━━━━━━━━━━━━━\n💰 *TOTAL: $${total}*\n\n`;
-  msg+=`🚗 *MODALIDAD:* ${deliveryMode === 'retiro' ? '🏪 Retiro en local' : '🛵 Envío a domicilio'}\n`;
-  msg+=`👤 *Nombre:* ${name}\n`;
-  msg+=`📞 *Teléfono:* ${phone}\n`;
-  if (deliveryMode === 'envio') {
-    msg+=`📍 *Dirección:* ${address}\n`;
-  }
-  if (notes) {
-    msg+=`\n📝 *Notas:* _${notes}_\n`;
-  }
+  let msg='NUEVO PEDIDO - LEGENDARY BURGER\n\n';
+  cart.forEach(item=>msg+=`${item.name} x${item.qty} - $${item.price*item.qty}\n`);
+  msg+=`\nTOTAL: $${total}`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
 }
-function openLightbox(src){
-  $('#lightboxImg').src=src;
-  $('#lightbox').classList.add('open');
-  document.body.classList.add('menu-open');
-}
-function closeLightbox(){
-  $('#lightbox').classList.remove('open');
-  document.body.classList.remove('menu-open');
-}
-window.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
 document.addEventListener('click',event=>{
-  const prodImg=event.target.closest('.product-media img');
-  if(prodImg) openLightbox(prodImg.src);
-  
-  const lightboxOverlay=event.target.closest('.lightbox');
-  if(lightboxOverlay && !event.target.closest('.lightbox-content')) closeLightbox();
-  
   const addBtn=event.target.closest('[data-add]');
-  if(addBtn)add(addBtn.dataset.add, addBtn);
+  if(addBtn)add(addBtn.dataset.add);
   const inc=event.target.closest('[data-inc]');
-  if(inc){const item=cart.find(entry=>(entry.cartId||entry.id)===inc.dataset.inc);if(item){item.qty++;save()}}
+  if(inc){const item=cart.find(entry=>entry.id===inc.dataset.inc);if(item){item.qty++;save()}}
   const dec=event.target.closest('[data-dec]');
-  if(dec){const item=cart.find(entry=>(entry.cartId||entry.id)===dec.dataset.dec);if(item){item.qty--;if(item.qty<=0)cart=cart.filter(entry=>(entry.cartId||entry.id)!==(item.cartId||item.id));save()}}
+  if(dec){const item=cart.find(entry=>entry.id===dec.dataset.dec);if(item){item.qty--;if(item.qty<=0)cart=cart.filter(entry=>entry.id!==item.id);save()}}
   const local=event.target.closest('[data-scroll="local"]');
   if(local){setTimeout(()=>$('#local')?.scrollIntoView({behavior:'smooth'}),60)}
   const tab=event.target.closest('[data-cat]');
   if(tab)document.getElementById(tab.dataset.cat)?.scrollIntoView({behavior:'smooth',block:'start'});
   const builderOption=event.target.closest('[data-builder-step]');
   if(builderOption)selectBuilder(builderOption.dataset.builderStep,builderOption.dataset.builderOption);
-  const ingRow=event.target.closest('.ing-row');
-  if(ingRow && event.target.tagName !== 'INPUT'){
-    const cb = ingRow.querySelector('input');
-    cb.checked = !cb.checked;
-    ingRow.classList.toggle('removed', !cb.checked);
-  } else if (ingRow && event.target.tagName === 'INPUT') {
-    ingRow.classList.toggle('removed', !event.target.checked);
-  }
-});
-$('#btnRetiro').addEventListener('click', () => {
-  deliveryMode = 'retiro';
-  $('#btnRetiro').classList.add('active');
-  $('#btnEnvio').classList.remove('active');
-  $('#addressField').style.display = 'none';
-});
-$('#btnEnvio').addEventListener('click', () => {
-  deliveryMode = 'envio';
-  $('#btnEnvio').classList.add('active');
-  $('#btnRetiro').classList.remove('active');
-  $('#addressField').style.display = 'flex';
-});
-$('#modalClose').addEventListener('click', () => {
-  $('#ingredientModal').classList.remove('open');
-});
-$('#modalConfirm').addEventListener('click', () => {
-  const removed = $$('.ing-check:not(:checked)').map(el => el.value);
-  addToCart(pendingItem, removed);
-  $('#ingredientModal').classList.remove('open');
 });
 $('#hamb').addEventListener('click',()=>{document.body.classList.add('menu-open');$('#mobileMenu').classList.add('open')});
 $('#closeMenu').addEventListener('click',()=>{document.body.classList.remove('menu-open');$('#mobileMenu').classList.remove('open')});
