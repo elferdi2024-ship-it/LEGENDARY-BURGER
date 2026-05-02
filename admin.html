@@ -149,7 +149,7 @@ const $=s=>document.querySelector(s);
 const esc=t=>t?t.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'):'';
 
 function loginAdmin(){
-  if($('#adminPass').value === 'admin123'){
+  if($('#adminPass').value === 'renato231218'){
     isAdmin=true; sessionStorage.setItem('is-legend-admin','true'); initAdmin();
   } else { toast('Contraseña incorrecta'); }
 }
@@ -201,15 +201,29 @@ function renderProducts(){
     html += `<div class="admin-card"><h3>${cat.label}</h3><div class="admin-grid">`;
     catProds.forEach(p => {
       html += `
-        <div class="admin-item">
-          <img src="${p.img || ''}" onerror="this.src='https://via.placeholder.com/60?text=LB'">
-          <div style="flex:1">
-            <strong>${esc(p.name)}</strong><br>
-            <span style="color:var(--orange)">$${p.price}</span>
+        <div class="admin-item" style="flex-direction:column; align-items:flex-start;">
+          <div style="display:flex; gap:10px; width:100%; align-items:center;">
+            <img src="${p.img || ''}" onerror="this.src='https://via.placeholder.com/60?text=LB'">
+            <div style="flex:1">
+              <strong>${esc(p.name)}</strong><br>
+              <span style="color:var(--orange)">$${p.price}</span>
+            </div>
+            <div class="admin-controls" style="flex-direction:row;">
+              <button class="admin-btn" onclick="editProduct('${p.id}')">EDITAR DATOS</button>
+              <button class="admin-btn del" onclick="deleteProduct('${p.id}')">X</button>
+            </div>
           </div>
-          <div class="admin-controls">
-            <button class="admin-btn" onclick="editProduct('${p.id}')">EDITAR</button>
-            <button class="admin-btn del" onclick="deleteProduct('${p.id}')">X</button>
+          <div style="width:100%; margin-top:10px; padding-top:10px; border-top:1px solid #222;">
+            <p style="font-size:10px; color:var(--muted); margin-bottom:5px;">IMÁGENES (Slider):</p>
+            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+              ${(p.imgs || []).map((img, idx) => `
+                <div style="position:relative;">
+                  <img src="${img}" style="width:40px;height:40px;border-radius:4px;">
+                  <button onclick="removeProductImg('${p.id}', ${idx})" style="position:absolute;top:-5px;right:-5px;background:red;color:white;border:none;border-radius:50%;width:15px;height:15px;font-size:10px;cursor:pointer;">x</button>
+                </div>
+              `).join('')}
+              <button onclick="addProductImg('${p.id}')" style="width:40px;height:40px;border:1px dashed var(--line);background:transparent;color:var(--muted);cursor:pointer;">+</button>
+            </div>
           </div>
         </div>`;
     });
@@ -259,6 +273,22 @@ async function editProduct(id){
 }
 async function deleteProduct(id){
   if(confirm("¿Borrar?")) { await sb.from('products').delete().eq('id', id); initAdmin(); }
+}
+async function addProductImg(id){
+  const p = prods.find(x => x.id === id);
+  const url = prompt("URL de la nueva imagen:");
+  if(!url) return;
+  const newImgs = [...(p.imgs || []), url];
+  // La primera imagen siempre es p.img (portada)
+  await sb.from('products').update({ imgs: newImgs, img: newImgs[0] }).eq('id', id);
+  toast('Imagen añadida!'); initAdmin();
+}
+async function removeProductImg(id, idx){
+  const p = prods.find(x => x.id === id);
+  let newImgs = [...(p.imgs || [])];
+  newImgs.splice(idx, 1);
+  await sb.from('products').update({ imgs: newImgs, img: newImgs[0] || null }).eq('id', id);
+  toast('Imagen quitada!'); initAdmin();
 }
 async function addNewProduct(){
   const cat = $('#newProdCat').value;
