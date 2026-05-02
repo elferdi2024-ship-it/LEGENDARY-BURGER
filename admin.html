@@ -310,9 +310,15 @@ window.addProductImg = async function(id){
   if(!file) return;
   const url = await uploadImg(file);
   if(!url) return;
-  const newImgs = [...(p.imgs || []), url];
-  await sb.from('products').update({ imgs: newImgs, img: newImgs[0] }).eq('id', id);
-  toast('Imagen subida y añadida!'); initAdmin();
+  const oldImgs = Array.isArray(p.imgs) ? p.imgs : [];
+  const newImgs = [...oldImgs, url];
+  // Actualizamos tanto la principal como la lista del slider
+  await sb.from('products').update({ 
+    imgs: newImgs, 
+    img: newImgs[0] 
+  }).eq('id', id);
+  toast('¡Imagen añadida!');
+  await initAdmin(); // Forzamos recarga de datos
 }
 window.removeProductImg = async function(id, idx){
   const p = prods.find(x => x.id === id);
