@@ -342,14 +342,18 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
   opacity:1 !important;
   animation:none !important;
 }
+.fallback-container{
+  width:100%;
+  height:100%;
+  background:#1a1a1a;
+  display:grid;
+  place-items:center;
+}
 .fallback{
-  color:var(--cream);
+  color:rgba(245,230,200,.1);
   font-family:var(--display);
-  font-size:24px;
-  border:1px solid var(--line);
-  border-radius:6px;
-  padding:7px 10px;
-  box-shadow:3px 3px 0 #000;
+  font-size:48px;
+  user-select:none;
 }
 .badge{
   position:absolute;
@@ -1010,12 +1014,11 @@ function productCard(item){
   
   let media = '';
   if (originalImgs.length === 0) {
-    media = '<span class="fallback">LB</span>';
+    media = '<div class="fallback-container"><span class="fallback">LB</span></div>';
   } else if (isSingle) {
-    media = `<img src="${originalImgs[0]}" alt="${esc(item.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\'fallback\'>LB</span>'">`;
+    media = `<img src="${originalImgs[0]}" alt="${esc(item.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'fallback-container\'><span class=\'fallback\'>LB</span></div>'">`;
   } else {
     const totalTime = originalImgs.length * 3;
-    // Imagen de fondo para evitar negro
     media = `<img src="${originalImgs[0]}" style="position:absolute;inset:0;z-index:0;opacity:0.5;filter:blur(2px)">`;
     media += originalImgs.map((src,index)=>`<img class="slide" src="${src}" alt="${esc(item.name)} ${index+1}" style="animation: productSlide ${totalTime}s infinite; animation-delay: ${index * 3}s; z-index: ${originalImgs.length - index}" onerror="this.style.display='none'">`).join('') + `<span class="product-dots">${originalImgs.map(()=>'<i></i>').join('')}</span>`;
   }
