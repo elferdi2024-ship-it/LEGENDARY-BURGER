@@ -906,63 +906,78 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
 </div>
 
 <script>
+// USANDO LAS CREDENCIALES PROVISTAS POR EL USUARIO
 const SUPABASE_URL = 'https://dwgwbnalrbzvakzbiwmb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3Z3dibmFscmJ6dmFremJpd21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MTQ4OTEsImV4cCI6MjA5MzI5MDg5MX0.im55Wn6fWcQddwaiRgZx1umKYPI2y0fwW0_RuP51ZR0';
-const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Inicialización explícita
+const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: false }
+});
 
 let cats = {};
 let builderSteps = [];
 let WA = '59899000000';
 
 async function initData() {
-  const { data: catData } = await sbClient.from('categories').select('*').order('display_order');
-  const { data: prodData } = await sbClient.from('products').select('*').eq('is_active', true);
-  const { data: configData } = await sbClient.from('site_config').select('*');
+  console.log('Iniciando carga de datos desde Supabase...');
+  try {
+    const { data: catData, error: catError } = await sbClient.from('categories').select('*').order('display_order');
+    const { data: prodData, error: prodError } = await sbClient.from('products').select('*').eq('is_active', true);
+    const { data: configData } = await sbClient.from('site_config').select('*');
+    const { data: bSteps } = await sbClient.from('builder_options').select('*').order('display_order');
 
-  const { data: bSteps } = await sbClient.from('builder_options').select('*').order('display_order');
-
-  const config = {};
-  configData?.forEach(c => config[c.key] = c.value);
-  if(config.whatsapp) WA = config.whatsapp;
-
-  const catsMap = {};
-  catData?.forEach(c => {
-    catsMap[c.id] = { label: c.label, items: [] };
-  });
-
-  prodData?.forEach(p => {
-    if(catsMap[p.category_id]) {
-      catsMap[p.category_id].items.push({
-        id: p.id,
-        name: p.name,
-        desc: p.description,
-        price: p.price,
-        img: p.img,
-        imgs: p.imgs,
-        badge: p.badge
-      });
+    if (catError || prodError) {
+      console.error('Error cargando tablas:', catError || prodError);
+      return;
     }
-  });
 
-  cats = catsMap;
-  builderSteps = bSteps?.map(s => ({
-    id: s.id,
-    title: s.label,
-    multi: s.is_multi,
-    required: s.id === 'base',
-    options: s.options
-  })) || [];
+    console.log('Datos recibidos:', { cats: catData?.length, products: prodData?.length });
 
-  renderMenu();
-  route();
+    const config = {};
+    configData?.forEach(c => config[c.key] = c.value);
+    if(config.whatsapp) WA = config.whatsapp;
+
+    const catsMap = {};
+    catData?.forEach(c => {
+      catsMap[c.id] = { label: c.label, items: [] };
+    });
+
+    prodData?.forEach(p => {
+      if(catsMap[p.category_id]) {
+        catsMap[p.category_id].items.push({
+          id: p.id,
+          name: p.name,
+          desc: p.description,
+          price: parseFloat(p.price),
+          img: p.img,
+          imgs: p.imgs || [],
+          badge: p.badge
+        });
+      }
+    });
+
+    cats = catsMap;
+    builderSteps = bSteps?.map(s => ({
+      id: s.id,
+      title: s.label,
+      multi: s.is_multi,
+      required: s.id === 'base',
+      options: s.options
+    })) || [];
+
+    renderMenu();
+    route();
+    console.log('Menu renderizado con éxito');
+  } catch (err) {
+    console.error('Error crítico en initData:', err);
+  }
 }
 
-// Suscripción en tiempo real
-sbClient.channel('menu-changes')
+// Suscripción Realtime mejorada
+sbClient.channel('any')
   .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, initData)
   .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, initData)
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'site_config' }, initData)
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'builder_options' }, initData)
   .subscribe();
 
 initData();
