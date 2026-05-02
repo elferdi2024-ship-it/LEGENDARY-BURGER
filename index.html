@@ -969,8 +969,9 @@ async function initData() {
     })) || [];
 
     renderMenu();
+    renderBuilder();
     route();
-    console.log('Menu renderizado con éxito');
+    console.log('Menu y Builder renderizados con éxito');
   } catch (err) {
     console.error('Error crítico en initData:', err);
   }
