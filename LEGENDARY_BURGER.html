@@ -1181,6 +1181,7 @@ function editImage(id){
   const item=allItems().find(i=>i.id===id);
   const url=prompt(`URL de imagen o ruta local para ${item.name}:`, item.img || '');
   if(url!==null){
+    if(url.toLowerCase().startsWith('javascript:')){ toast('URL no permitida'); return; }
     item.img=url; 
     if(!item.imgs) item.imgs=[url]; else item.imgs[0]=url;
     saveMenu(); renderAdmin(); toast('Imagen actualizada');
