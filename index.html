@@ -318,9 +318,6 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
   animation:productSlide 16s infinite;
 }
 .product-media .slide:first-child{opacity:1}
-.product-media .slide:nth-child(2){animation-delay:4s}
-.product-media .slide:nth-child(3){animation-delay:8s}
-.product-media .slide:nth-child(4){animation-delay:12s}
 .product-dots{
   position:absolute;
   left:8px;
@@ -337,12 +334,15 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
   box-shadow:1px 1px 0 #000;
 }
 @keyframes productSlide{
-  0%,22%{opacity:1}
-  25%,97%{opacity:0}
-  100%{opacity:1}
+  0%, 20% { opacity: 1; z-index: 2; }
+  25%, 100% { opacity: 0; z-index: 1; }
 }
 /* single image — never animate */
-.product-media.single>img{position:relative;inset:auto;opacity:1!important;animation:none!important}
+.product-media.single img{
+  position:relative;
+  opacity:1 !important;
+  animation:none !important;
+}
 .fallback{
   color:var(--cream);
   font-family:var(--display);
@@ -996,10 +996,14 @@ function productCard(item){
   const isSingle = originalImgs.length === 1;
   let slides = [...originalImgs];
   
-  // Animación original de la versión ANTES
-  const media=originalImgs.length
-    ? slides.map((src,index)=>`<img class="${isSingle?'':'slide'}" src="${src}" alt="${esc(item.name)}${slides.length>1?` ${index+1}`:''}" loading="lazy" onerror="this.remove()">`).join('')+(originalImgs.length>1?`<span class="product-dots">${originalImgs.map(()=>'<i></i>').join('')}</span>`:'')
-    : '<span class="fallback">LB</span>';
+  let media = '';
+  if (originalImgs.length === 0) {
+    media = '<span class="fallback">LB</span>';
+  } else if (isSingle) {
+    media = `<img src="${originalImgs[0]}" alt="${esc(item.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\"fallback\">LB</span>'">`;
+  } else {
+    media = slides.map((src,index)=>`<img class="slide" src="${src}" alt="${esc(item.name)} ${index+1}" loading="lazy" style="animation-delay: ${index * 4}s" onerror="this.remove()">`).join('') + `<span class="product-dots">${originalImgs.map(()=>'<i></i>').join('')}</span>`;
+  }
 
   return `<article class="product-card"><div class="product-media ${isSingle?'single':''}">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}</div><div class="product-body"><h3>${esc(item.name)}</h3><p>${esc(item.desc)}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" aria-label="Agregar ${esc(item.name)}">+</button></div></div></article>`;
 }
