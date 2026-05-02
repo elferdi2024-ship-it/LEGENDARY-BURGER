@@ -315,9 +315,11 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
   position:absolute;
   inset:0;
   opacity:0;
-  animation:productSlide 16s infinite;
+  z-index: 1;
+  transition: opacity 0.5s ease-in-out;
+  animation: productSlide 12s infinite;
 }
-.product-media .slide:first-child{opacity:1}
+.product-media .slide:first-child{opacity:1; z-index: 2;}
 .product-dots{
   position:absolute;
   left:8px;
@@ -334,8 +336,8 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
   box-shadow:1px 1px 0 #000;
 }
 @keyframes productSlide{
-  0%, 20% { opacity: 1; z-index: 2; }
-  25%, 100% { opacity: 0; z-index: 1; }
+  0%, 25% { opacity: 1; z-index: 3; }
+  30%, 100% { opacity: 0; z-index: 1; }
 }
 /* single image — never animate */
 .product-media.single img{
@@ -1002,7 +1004,7 @@ function productCard(item){
   } else if (isSingle) {
     media = `<img src="${originalImgs[0]}" alt="${esc(item.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\"fallback\">LB</span>'">`;
   } else {
-    media = slides.map((src,index)=>`<img class="slide" src="${src}" alt="${esc(item.name)} ${index+1}" loading="lazy" style="animation-delay: ${index * 4}s" onerror="this.remove()">`).join('') + `<span class="product-dots">${originalImgs.map(()=>'<i></i>').join('')}</span>`;
+    media = slides.map((src,index)=>`<img class="slide" src="${src}" alt="${esc(item.name)} ${index+1}" fetchpriority="${index===0?'high':'low'}" style="animation-delay: ${index * 3}s" onerror="this.remove()">`).join('') + `<span class="product-dots">${originalImgs.map(()=>'<i></i>').join('')}</span>`;
   }
 
   return `<article class="product-card"><div class="product-media ${isSingle?'single':''}">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}</div><div class="product-body"><h3>${esc(item.name)}</h3><p>${esc(item.desc)}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" aria-label="Agregar ${esc(item.name)}">+</button></div></div></article>`;
