@@ -928,12 +928,13 @@ async function initData() {
     const { data: catData, error: catError } = await sbClient.from('categories').select('*').order('display_order');
     const { data: prodData, error: prodError } = await sbClient.from('products').select('*').eq('is_active', true);
     const { data: configData } = await sbClient.from('site_config').select('*');
-    const { data: bSteps } = await sbClient.from('builder_options').select('*').order('display_order');
+    const { data: bSteps, error: bError } = await sbClient.from('builder_options').select('*').order('display_order');
 
-    if (catError || prodError) {
-      console.error('Error cargando tablas:', catError || prodError);
+    if (catError || prodError || bError) {
+      console.error('Error cargando tablas:', catError || prodError || bError);
       return;
     }
+    console.log('Builder options recibidas:', bSteps?.length);
 
     console.log('Datos recibidos:', { cats: catData?.length, products: prodData?.length });
 
@@ -1117,6 +1118,7 @@ function route(){
   $('#mobileMenu').classList.remove('open');
   document.body.classList.remove('menu-open');
   if(valid==='menu' || valid==='builder' || valid==='cart') window.scrollTo({top:0,behavior:'instant'});
+  if(valid==='builder') renderBuilder();
 }
 let deliveryMode = 'retiro';
 let pendingItem = null;
