@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --ink:#080808;
@@ -905,92 +906,69 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
 </div>
 
 <script>
-const WA='59899000000';
-const catsBase={
-  carne:{label:'Burger de Carne',items:[
-    {id:'texas',name:'Texas Crispy',desc:'Smash de carne, bacon, salsa BBQ, cheddar, emmental x2, cebolla crispy y huevo frito.',price:390,img:'IMAGENES/Texas Crispy/Texas Crispy.jpg',imgs:['IMAGENES/Texas Crispy/Texas Crispy.jpg','IMAGENES/Texas Crispy/Texas Crispy 2.jpg'],badge:'ESTRELLA'},
-    {id:'only',name:'Only Cheese',desc:'Smash de carne, bacon, medallon de provolone, salsa BBQ y cheddar x2.',price:390,img:'IMAGENES/Only Chesse.jpg'},
-    {id:'triple',name:'Triple Cheese',desc:'Doble smash de carne, cheddar x4, salsa Legendary y cebolla.',price:480,img:'IMAGENES/Triple Chesse/triple chesse 1.jpg',imgs:['IMAGENES/Triple Chesse/triple chesse 1.jpg','IMAGENES/Triple Chesse/triple chesse 2.jpg','IMAGENES/Triple Chesse/triple chesse 3.jpg']},
-    {id:'onion-rings',name:'Onion Rings',desc:'Smash de carne, aros de cebolla x3, muzza x3, mayonesa burger house y bacon.',price:390,img:'IMAGENES/Oniong Rings/Oniong Rings.jpg',imgs:['IMAGENES/Oniong Rings/Oniong Rings.jpg','IMAGENES/Oniong Rings/Oniong Rings 2.jpg','IMAGENES/Oniong Rings/Oniong Rings 3.jpg']},
-    {id:'moon',name:'Moon Burger',desc:'Smash de carne, cheddar x2, salsa barbacoa y cebolla caramelizada.',price:390,img:null},
-    {id:'big-legend',name:'Big Legend',desc:'Doble smash de carne, bacon, salsa Legendary, cheddar x4 y pepinillos.',price:480,img:'IMAGENES/Big Legend/Big Legend.jpg',imgs:['IMAGENES/Big Legend/Big Legend.jpg','IMAGENES/Big Legend/Big Legend 2.jpg'],badge:'TOP'},
-    {id:'kids',name:'Kids Burger',desc:'Smash de carne, cheddar x3 y salsa a eleccion.',price:350,img:'IMAGENES/kid.jpg'}]},
-  pollo:{label:'Otras Burgers',items:[
-    {id:'crispy-bacon',name:'Crispy Bacon',desc:'Pollo crispy, bacon, tomate, cheddar x2 y alioli.',price:380,img:'IMAGENES/Crispy Bacon.jpg'},
-    {id:'crispy-mix',name:'Crispy Mix',desc:'Pollo crispy, cheddar y ensalada coleslaw.',price:380,img:'IMAGENES/Crispy MIX.jpg'}]},
-  veggie:{label:'Veggie',items:[{id:'veggie',name:'Veggie LGY',desc:'Medallon vegetal, huevo frito, emmental, lechuga, tomate y alioli.',price:370,img:'IMAGENES/Vegetariana LGY.jpg'}]},
-  milas:{label:'Milanesas y Chivitos',items:[
-    {id:'mila-americana',name:'Milanesa Americana',desc:'Milanesa de carne, panceta, huevo y salsa BBQ.',price:420,img:'IMAGENES/Mila Americana.jpg'},
-    {id:'mila-napo',name:'Milanesa Napolitana',desc:'Milanesa de carne, jamon, mozzarella y salsa de tomate.',price:420,img:'IMAGENES/napo.jpg'},
-    {id:'chivito',name:'Chivito Legendario',desc:'Lomo tiernizado, jamon, mozzarella, bacon, huevo frito, aceituna, lechuga, tomate y mayonesa.',price:435,img:'IMAGENES/Chivito Legendario/chivito legendario.jpg',badge:'TOP'}]},
-  papas:{label:'Papas',items:[
-    {id:'papas',name:'Papas',desc:'Porcion de papas fritas.',price:200,img:'IMAGENES/fritas.jpg'},
-    {id:'papas-cheddar',name:'Papas Cheddar',desc:'Papas con salsa cheddar caliente.',price:240,img:'IMAGENES/fritas cheddar.jpg'},
-    {id:'papas-bacon',name:'Papas Cheddar y Bacon',desc:'Papas con cheddar y bacon crujiente.',price:280,img:'IMAGENES/papas  cheddar bacon.jpg'}]},
-  extras:{label:'Extras en Burger',items:[
-    {id:'extra-bacon',name:'Bacon',desc:'Extra para sumar a tu burger.',price:35,img:null},
-    {id:'extra-aros',name:'Aros de cebolla',desc:'Extra para sumar a tu burger.',price:35,img:'IMAGENES/Oniong Rings/Oniong Rings.jpg'},
-    {id:'extra-huevo',name:'Huevo',desc:'Extra para sumar a tu burger.',price:35,img:null},
-    {id:'extra-lechuga',name:'Lechuga',desc:'Extra para sumar a tu burger.',price:35,img:null},
-    {id:'extra-tomate',name:'Tomate',desc:'Extra para sumar a tu burger.',price:35,img:null},
-    {id:'extra-carne-cheddar',name:'Carne mas cheddar',desc:'Medallon extra con cheddar.',price:90,img:null}]},
-  bebidas:{label:'Bebidas',items:[
-    {id:'coca',name:'Linea Coca Cola 600ml',desc:'Refresco linea Coca Cola.',price:130,img:null},
-    {id:'agua',name:'Aguas',desc:'Agua con gas o sin gas.',price:100,img:null},
-    {id:'cabezas-botella',name:'Cabezas Bier Botella',desc:'Cerveza artesanal en botella.',price:270,img:null},
-    {id:'cabezas-lata',name:'Cabezas Bier Lata',desc:'Cerveza artesanal en lata.',price:170,img:null},
-    {id:'cabezas-tirada',name:'Cabezas Bier Tirada',desc:'Cerveza artesanal tirada.',price:250,img:null},
-    {id:'cabezas-gintonic',name:'Cabezas Bier Gintonic',desc:'Gintonic de Cabezas Bier.',price:250,img:null},
-    {id:'brik-330',name:'Cerveza Brik 330',desc:'Cerveza Brik 330 ml.',price:110,img:null},
-    {id:'stella',name:'Cerveza Stella Artois',desc:'Cerveza Stella Artois.',price:300,img:null},
-    {id:'moreiz-negra',name:'Moreiz Etiqueta Negra',desc:'Vino Moreiz etiqueta negra.',price:295,img:null},
-    {id:'moreiz-blanca',name:'Moreiz Etiqueta Blanca',desc:'Vino Moreiz etiqueta blanca.',price:198,img:null}]}
-};
-let cats = JSON.parse(localStorage.getItem('legendary-menu') || JSON.stringify(catsBase));
-function saveMenu(){ localStorage.setItem('legendary-menu', JSON.stringify(cats)); renderMenu(); }
+<script>
+const SUPABASE_URL = 'https://dwgwbnalrbzvakzbiwmb.supabase.co';
+const SUPABASE_KEY = '[ELIMINATED_FOR_SECURITY]';
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const builderSteps=[
-  {id:'base',title:'Tipo de proteina',multi:false,required:true,options:[
-    {id:'smash',name:'Smash de carne',code:'SM',price:300},
-    {id:'pollo',name:'Pollo crispy',code:'CR',price:300},
-    {id:'veggie',name:'Patty vegetal',code:'VG',price:280}
-  ]},
-  {id:'qty',title:'Cantidad',multi:false,options:[
-    {id:'single',name:'Simple',code:'S1',price:0,label:'incluido'},
-    {id:'double',name:'Doble',code:'D2',price:120},
-    {id:'triple',name:'Triple',code:'T3',price:240}
-  ]},
-  {id:'bun',title:'Pan',multi:false,options:[
-    {id:'brioche',name:'Brioche',code:'BR',price:0,label:'incluido'},
-    {id:'clasico',name:'Clasico',code:'CL',price:0,label:'incluido'},
-    {id:'integral',name:'Integral',code:'IN',price:0,label:'incluido'}
-  ]},
-  {id:'cheese',title:'Queso',multi:true,options:[
-    {id:'cheddar',name:'Cheddar',code:'CH',price:35},
-    {id:'muzza',name:'Mozzarella',code:'MZ',price:35},
-    {id:'provolone',name:'Provolone',code:'PV',price:35},
-    {id:'emmental',name:'Emmental',code:'EM',price:35}
-  ]},
-  {id:'sauces',title:'Salsas',multi:true,options:[
-    {id:'mayo',name:'Mayonesa',code:'MY',price:0,label:'gratis'},
-    {id:'bbq',name:'BBQ',code:'BQ',price:0,label:'gratis'},
-    {id:'ketchup',name:'Ketchup',code:'KT',price:0,label:'gratis'},
-    {id:'mostaza',name:'Mostaza',code:'MS',price:0,label:'gratis'},
-    {id:'alioli',name:'Alioli',code:'AL',price:0,label:'gratis'},
-    {id:'legendary',name:'Legendary',code:'LG',price:0,label:'gratis'}
-  ]},
-  {id:'toppings',title:'Toppings extra',multi:true,cols3:true,options:[
-    {id:'bacon',name:'Bacon',code:'BC',price:35},
-    {id:'cebolla',name:'Cebolla caramelizada',code:'CB',price:35},
-    {id:'lechuga',name:'Lechuga',code:'LE',price:35},
-    {id:'tomate',name:'Tomate',code:'TM',price:35},
-    {id:'pepinillos',name:'Pepinillos',code:'PK',price:35},
-    {id:'huevo',name:'Huevo frito',code:'HF',price:35},
-    {id:'jalapeno',name:'Jalapeno',code:'JP',price:35},
-    {id:'aros',name:'Aros de cebolla',code:'AR',price:35},
-    {id:'hongos',name:'Hongos',code:'HG',price:35}
-  ]}
-];
+let cats = {};
+let builderSteps = [];
+let WA = '59899000000';
+
+async function initData() {
+  const { data: catData } = await supabase.from('categories').select('*').order('display_order');
+  const { data: prodData } = await supabase.from('products').select('*').eq('is_active', true);
+  const { data: configData } = await supabase.from('site_config').select('*');
+
+  const { data: bSteps } = await supabase.from('builder_options').select('*').order('display_order');
+
+  const config = {};
+  configData?.forEach(c => config[c.key] = c.value);
+  if(config.whatsapp) WA = config.whatsapp;
+
+  const catsMap = {};
+  catData?.forEach(c => {
+    catsMap[c.id] = { label: c.label, items: [] };
+  });
+
+  prodData?.forEach(p => {
+    if(catsMap[p.category_id]) {
+      catsMap[p.category_id].items.push({
+        id: p.id,
+        name: p.name,
+        desc: p.description,
+        price: p.price,
+        img: p.img,
+        imgs: p.imgs,
+        badge: p.badge
+      });
+    }
+  });
+
+  cats = catsMap;
+  builderSteps = bSteps?.map(s => ({
+    id: s.id,
+    title: s.label,
+    multi: s.is_multi,
+    required: s.id === 'base',
+    options: s.options
+  })) || [];
+
+  renderMenu();
+  route();
+}
+
+// Suscripción en tiempo real
+supabase.channel('menu-changes')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, initData)
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, initData)
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'site_config' }, initData)
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'builder_options' }, initData)
+  .subscribe();
+
+initData();
+
+// Builder steps are now dynamic
 const builderState={base:null,qty:'single',bun:'brioche',cheese:[],sauces:[],toppings:[]};
 let cart=JSON.parse(localStorage.getItem('legendary-cart')||'[]');
 const $=s=>document.querySelector(s);
