@@ -264,7 +264,7 @@ function renderCategories(){
 }
 
 // LÓGICA DE PRODUCTOS
-async function editProduct(id){
+window.editProduct = async function(id){
   const p = prods.find(x => x.id === id);
   const n = prompt("Nuevo nombre:", p.name); if(!n) return;
   const pr = prompt("Nuevo precio:", p.price); if(!pr) return;
@@ -285,7 +285,7 @@ async function editProduct(id){
   toast('Actualizado!'); initAdmin();
 }
 
-async function uploadImg(file) {
+window.uploadImg = async function(file) {
   const ext = file.name.split('.').pop();
   const name = `${Date.now()}.${ext}`;
   toast("Subiendo imagen...");
@@ -295,7 +295,7 @@ async function uploadImg(file) {
   return publicUrl;
 }
 
-function pickFile() {
+window.pickFile = function() {
   return new Promise(res => {
     const input = $('#fileInput');
     input.onchange = e => res(e.target.files[0]);
@@ -320,7 +320,7 @@ window.removeProductImg = async function(id, idx){
   await sb.from('products').update({ imgs: newImgs, img: newImgs[0] || null }).eq('id', id);
   toast('Imagen quitada!'); initAdmin();
 }
-async function addNewProduct(){
+window.addNewProduct = async function(){
   const cat = $('#newProdCat').value;
   const name = $('#newProdName').value;
   const price = parseFloat($('#newProdPrice').value);
@@ -331,20 +331,20 @@ async function addNewProduct(){
 }
 
 // LÓGICA DE BUILDER
-async function updateBuilderOpt(stepId, index, field, val){
+window.updateBuilderOpt = async function(stepId, index, field, val){
   const step = bSteps.find(s => s.id === stepId);
   if(field === 'price') val = parseFloat(val);
   step.options[index][field] = val;
   await sb.from('builder_options').update({ options: step.options }).eq('id', stepId);
   toast("Opción guardada");
 }
-async function addBuilderOpt(stepId){
+window.addBuilderOpt = async function(stepId){
   const step = bSteps.find(s => s.id === stepId);
   step.options.push({ id: 'new-'+Date.now(), code: 'X', name: 'Nueva Opción', price: 0 });
   await sb.from('builder_options').update({ options: step.options }).eq('id', stepId);
   initAdmin();
 }
-async function removeBuilderOpt(stepId, index){
+window.removeBuilderOpt = async function(stepId, index){
   if(!confirm("¿Quitar opción?")) return;
   const step = bSteps.find(s => s.id === stepId);
   step.options.splice(index, 1);
@@ -353,7 +353,7 @@ async function removeBuilderOpt(stepId, index){
 }
 
 // CONFIG
-async function saveConfig(){
+window.saveConfig = async function(){
   const wa = $('#confWA').value;
   const del = $('#confDelivery').value;
   await sb.from('site_config').upsert({ key: 'wa_number', value: wa });
