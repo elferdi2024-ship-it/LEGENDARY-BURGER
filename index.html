@@ -1005,11 +1005,31 @@ function productCard(item){
   return `<article class="product-card"><div class="product-media ${isSingle?'single':''}">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}</div><div class="product-body"><h3>${esc(item.name)}</h3><p>${esc(item.desc)}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" aria-label="Agregar ${esc(item.name)}">+</button></div></div></article>`;
 }
 function renderMenu(){
-  const featured=['triple','texas','big-legend','chivito'].map(id=>allItems().find(item=>item.id===id)).filter(Boolean);
-  $('#featuredGrid').innerHTML=featured.map(productCard).join('');
-  $('#tabs').innerHTML=Object.entries(cats).map(([id,cat])=>`<button class="tab" data-cat="${id}">${cat.label}</button>`).join('');
-  $('#tabs .tab')?.classList.add('active');
-  $('#menuContent').innerHTML=Object.entries(cats).map(([id,cat])=>`<div class="menu-block" id="${id}"><h2 class="menu-title">${cat.label}</h2><div class="grid">${cat.items.map(productCard).join('')}</div></div>`).join('');
+  const featuredIds = ['legendary','texas','smash-tecnico','queso-fundido','ritmo-pedido'];
+  const featured = featuredIds.map(id => allItems().find(item => item.id === id)).filter(Boolean);
+  
+  const featuredGrid = $('#featuredGrid');
+  if (featuredGrid) {
+    featuredGrid.innerHTML = featured.length 
+      ? featured.map(productCard).join('') 
+      : '<p style="padding:20px;color:var(--muted)">Cargando destacados...</p>';
+  }
+
+  const tabs = $('#tabs');
+  if (tabs) {
+    tabs.innerHTML = Object.entries(cats).map(([id,cat]) => `<button class="tab" data-cat="${id}">${cat.label}</button>`).join('');
+    tabs.querySelector('.tab')?.classList.add('active');
+  }
+
+  const menuContent = $('#menuContent');
+  if (menuContent) {
+    menuContent.innerHTML = Object.entries(cats).map(([id,cat]) => `
+      <div class="menu-block" id="${id}">
+        <h2 class="menu-title">${cat.label}</h2>
+        <div class="grid">${cat.items.map(productCard).join('')}</div>
+      </div>
+    `).join('');
+  }
 }
 function renderBuilder(){
   $('#builderSteps').innerHTML=builderSteps.map((step,index)=>`<article class="builder-card"><div class="builder-card-head"><div class="builder-num">${index+1}</div><h3>${step.title}</h3>${step.multi?'<span class="builder-hint">Multiple</span>':''}</div><div class="option-grid ${step.cols3?'cols-3':''}">${step.options.map(option=>{
