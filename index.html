@@ -965,8 +965,18 @@ async function initData() {
       title: s.label,
       multi: s.is_multi,
       required: s.id === 'base',
-      options: s.options
+      options: s.options,
+      cols3: s.id === 'toppings' || s.id === 'sauces'
     })) || [];
+
+    // Inicializar builderState dinámicamente según bSteps
+    builderSteps.forEach(step => {
+      if (step.multi) {
+        if (!builderState[step.id]) builderState[step.id] = [];
+      } else {
+        if (!builderState[step.id]) builderState[step.id] = null;
+      }
+    });
 
     renderMenu();
     renderBuilder();
@@ -986,7 +996,7 @@ sbClient.channel('any')
 initData();
 
 // Builder steps are now dynamic
-const builderState={base:null,qty:'single',bun:'brioche',cheese:[],sauces:[],toppings:[]};
+const builderState={};
 let cart=JSON.parse(localStorage.getItem('legendary-cart')||'[]');
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
