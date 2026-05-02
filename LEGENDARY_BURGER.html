@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legendary Burger - Smash Burgers Montevideo</title>
+<meta name="description" content="Legendary Burger - Smash burgers, chivitos, milanesas y papas en Montevideo. Pedi online por WhatsApp.">
+<meta name="theme-color" content="#F05A22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#080808;
+  --coal:#101010;
+  --card:#151515;
+  --line:rgba(245,230,200,.16);
+  --cream:#f5e6c8;
+  --muted:#bcb4a7;
+  --orange:#f05a22;
+  --orange-dark:#c94213;
+  --violet:#6b55ce;
+  --wa-green:#25D366;
+  --display:"Archivo Black", sans-serif;
+  --body:"Space Grotesk", sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  background:
+    linear-gradient(90deg,rgba(245,230,200,.035) 1px,transparent 1px) 0 0/28px 28px,
+    linear-gradient(0deg,rgba(245,230,200,.025) 1px,transparent 1px) 0 0/28px 28px,
+    var(--ink);
+  color:#fff;
+  font-family:var(--body);
+  overflow-x:hidden;
+}
+body.menu-open{overflow:hidden}
+img{display:block;max-width:100%}
+button,a,input,textarea{font:inherit}
+button{border:0;background:none;color:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.nav{
+  position:fixed;
+  z-index:60;
+  top:10px;
+  left:10px;
+  right:10px;
+  height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:0 12px;
+  background:rgba(8,8,8,.82);
+  border:1px solid var(--line);
+  border-radius:14px;
+  backdrop-filter:blur(14px);
+  box-shadow:0 14px 42px rgba(0,0,0,.38);
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand img{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--cream);
+  box-shadow:0 0 0 3px var(--orange);
+}
+.brand span{
+  display:none;
+  font-family:var(--display);
+  color:var(--cream);
+  font-size:15px;
+  letter-spacing:0;
+  white-space:nowrap;
+  text-shadow:2px 2px 0 #000;
+}
+.nav-links{display:none;align-items:center;gap:18px}
+.nav-link{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.2px;
+  transition:.18s;
+}
+.nav-link:hover,.nav-link.active{color:var(--orange)}
+.nav-actions{display:flex;align-items:center;gap:8px}
+.chip,.hamb{
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(245,230,200,.08);
+  color:#fff;
+  font-weight:800;
+  font-size:12px;
+  text-transform:uppercase;
+  box-shadow:0 4px 0 #000;
+}
+.chip{padding:0 13px;gap:7px}
+.chip.primary{background:var(--orange);color:#111}
+.cart-badge{
+  min-width:20px;
+  height:20px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  border-radius:5px;
+  background:var(--cream);
+  color:#111;
+  font-size:11px;
+}
+.cart-badge.show{display:inline-flex}
+.hamb{width:42px;position:relative}
+.hamb:before,.hamb:after,.hamb span{
+  content:"";
+  position:absolute;
+  width:20px;
+  height:2px;
+  background:var(--cream);
+  border-radius:2px;
+}
+.hamb:before{transform:translateY(-7px)}
+.hamb:after{transform:translateY(7px)}
+.mobile-menu{
+  position:fixed;
+  inset:0;
+  z-index:90;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  padding:80px 24px;
+  background:#080808;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:.2s ease;
+}
+.mobile-menu.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.mobile-menu a{
+  width:min(320px,100%);
+  color:var(--cream);
+  font-family:var(--display);
+  font-size:clamp(26px,8vw,38px);
+  line-height:1.05;
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+.mobile-close{
+  position:absolute;
+  top:20px;
+  right:20px;
+  width:44px;
+  height:44px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  color:var(--cream);
+}
+.page{display:none;min-height:100vh;padding-top:86px}
+.page.active{display:block}
+.hero{
+  min-height:calc(100svh - 86px);
+  position:relative;
+  isolation:isolate;
+  display:flex;
+  align-items:flex-end;
+  padding:70px 18px 34px;
+  overflow:hidden;
+}
+.hero:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.55) 48%,#080808 94%),
+    repeating-linear-gradient(-9deg,rgba(240,90,34,.16) 0 10px,transparent 10px 46px);
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background:url("hero.jpeg") center/cover;
+  opacity:.55;
+  filter:saturate(1.18) contrast(1.08);
+  transform:scale(1.02);
+}
+.hero-inner{width:min(100%,1080px);margin:auto}
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  max-width:100%;
+  padding:7px 12px;
+  margin-bottom:16px;
+  border-radius:6px;
+  background:var(--cream);
+  color:#111;
+  font-size:12px;
+  font-weight:800;
+  box-shadow:4px 4px 0 #000;
+}
+.hero-badge i{width:8px;height:8px;border-radius:50%;background:var(--orange);flex:0 0 auto}
+.hero-logo{
+  width:104px;
+  height:104px;
+  object-fit:cover;
+  border-radius:50%;
+  margin-bottom:18px;
+  border:3px solid var(--cream);
+  box-shadow:0 0 0 5px var(--orange),0 22px 46px rgba(0,0,0,.5);
+}
+h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-spacing:0}
+.hero h1{
+  max-width:900px;
+  color:var(--cream);
+  font-size:clamp(44px,14vw,112px);
+  line-height:.9;
+  text-shadow:4px 5px 0 #000;
+}
+.hero h1 em{font-style:normal;color:var(--orange);-webkit-text-stroke:1px #000}
+.hero p{
+  margin:14px 0 22px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  text-shadow:2px 2px 0 #000;
+}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{
+  min-height:48px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:0 18px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+  line-height:1.1;
+  text-transform:uppercase;
+  box-shadow:0 5px 0 #000;
+  transition:transform .18s,box-shadow .18s,background .18s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 0 #000,0 18px 36px rgba(240,90,34,.18)}
+.btn-primary{background:var(--orange);color:#111}
+.btn-purple{background:var(--violet)}
+.btn-ghost{background:rgba(245,230,200,.08)}
+.ticker{
+  overflow:hidden;
+  background:var(--cream);
+  color:#111;
+  box-shadow:0 4px 0 #000 inset,0 -4px 0 #000 inset;
+}
+.ticker-track{display:flex;width:max-content;animation:ticker 24s linear infinite}
+.ticker span{font-family:var(--display);font-size:15px;white-space:nowrap;padding:13px 22px}
+@keyframes ticker{to{transform:translateX(-50%)}}
+.stats{background:var(--orange);color:#111;box-shadow:0 4px 0 #000 inset,0 -4px 0 #000 inset}
+.stats-inner{
+  max-width:1120px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  padding:22px 18px;
+  text-align:center;
+}
+.stat-num{font-family:var(--display);font-size:34px}
+.stat-label{font-weight:800;text-transform:uppercase;font-size:12px;opacity:.72}
+.section{max-width:1180px;margin:auto;padding:54px 18px}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:28px}
+.mark{width:78px;height:6px;background:var(--orange);box-shadow:4px 4px 0 #000;margin-bottom:14px}
+.section-title{
+  color:var(--cream);
+  font-size:clamp(30px,9vw,54px);
+  line-height:1;
+  text-shadow:3px 3px 0 #000;
+}
+.section-title em{font-style:normal;color:var(--orange)}
+.section-sub{margin-top:8px;color:var(--muted);font-weight:700}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+.product-card{
+  display:grid;
+  grid-template-columns:112px 1fr;
+  min-height:136px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--card);
+  box-shadow:0 6px 0 #050505;
+}
+.product-media{
+  position:relative;
+  width:112px;
+  min-height:136px;
+  background:#181818;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+}
+.product-media img{width:100%;height:100%;object-fit:cover}
+.product-media .slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  animation:productSlide 16s infinite;
+}
+.product-media .slide:first-child{opacity:1}
+.product-media .slide:nth-child(2){animation-delay:4s}
+.product-media .slide:nth-child(3){animation-delay:8s}
+.product-media .slide:nth-child(4){animation-delay:12s}
+.product-dots{
+  position:absolute;
+  left:8px;
+  bottom:8px;
+  z-index:2;
+  display:flex;
+  gap:4px;
+}
+.product-dots i{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:rgba(245,230,200,.74);
+  box-shadow:1px 1px 0 #000;
+}
+@keyframes productSlide{
+  0%,22%{opacity:1}
+  25%,97%{opacity:0}
+  100%{opacity:1}
+}
+/* single image — never animate */
+.product-media.single>img{position:relative;inset:auto;opacity:1!important;animation:none!important}
+.fallback{
+  color:var(--cream);
+  font-family:var(--display);
+  font-size:24px;
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:7px 10px;
+  box-shadow:3px 3px 0 #000;
+}
+.badge{
+  position:absolute;
+  top:8px;
+  left:8px;
+  padding:3px 7px;
+  border-radius:4px;
+  background:var(--cream);
+  color:#111;
+  font-size:9px;
+  font-weight:900;
+  box-shadow:2px 2px 0 #000;
+}
+.product-body{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  padding:12px;
+}
+.product-body h3{
+  font-size:16px;
+  line-height:1.1;
+  font-weight:900;
+  color:#fff;
+}
+.product-body p{
+  margin:7px 0 10px;
+  color:#c9c1b2;
+  font-size:12px;
+  line-height:1.35;
+}
+.product-foot{
+  margin-top:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.price{font-family:var(--display);font-size:20px;color:var(--cream);text-shadow:2px 2px 0 #000}
+.plus{
+  width:38px;
+  height:38px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  border-radius:7px;
+  background:var(--orange);
+  color:#111;
+  font-size:23px;
+  font-weight:900;
+  box-shadow:3px 3px 0 #000;
+  transition:background .18s,transform .14s,box-shadow .14s;
+  user-select:none;
+}
+.plus.added{background:var(--cream);transform:scale(1.14);box-shadow:3px 3px 0 #000;color:#111}
+.product-card{transition:transform .18s,box-shadow .18s}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 12px 0 #050505,0 22px 38px rgba(240,90,34,.13)}
+.product-media img{cursor:zoom-in;transition:filter .2s}
+.product-media img:hover{filter:brightness(1.1)}
+
+/* ── Lightbox ── */
+.lightbox{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.92);
+  display:none;align-items:center;justify-content:center;
+  padding:20px;backdrop-filter:blur(10px);
+}
+.lightbox.open{display:flex;animation:fadeIn .25s ease forwards}
+.lightbox-content{
+  position:relative;width:min(800px,100%);
+  transform:scale(.95);animation:zoomIn .3s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.lightbox img{width:100%;height:auto;border-radius:12px;box-shadow:0 24px 64px rgba(0,0,0,.8);border:1px solid var(--line)}
+.lightbox-close{
+  position:absolute;top:-50px;right:0;
+  width:44px;height:44px;background:var(--card);
+  color:var(--cream);border-radius:50%;border:1px solid var(--line);
+  display:grid;place-items:center;font-size:24px;cursor:pointer;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes zoomIn{from{transform:scale(.9) translateY(10px)}to{transform:scale(1) translateY(0)}}
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(5px);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .22s;
+}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal-box{
+  width:min(540px,100%);
+  max-height:82vh;overflow-y:auto;
+  border-radius:14px 14px 0 0;
+  background:var(--coal);
+  border:1px solid var(--line);border-bottom:none;
+  padding:22px 20px 32px;
+  transform:translateY(100%);
+  transition:transform .3s cubic-bezier(.34,1.3,.64,1);
+}
+.modal-overlay.open .modal-box{transform:translateY(0)}
+.modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:4px;
+}
+.modal-head h3{font-family:var(--display);font-size:20px;color:var(--cream)}
+.modal-close{width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:18px}
+.modal-hint{color:var(--muted);font-size:12px;font-weight:700;margin-bottom:16px}
+.ing-list{display:grid;gap:8px;margin-bottom:20px}
+.ing-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;
+  border:1px solid var(--line);border-radius:8px;
+  background:#101010;cursor:pointer;
+  transition:border-color .15s,background .15s;
+}
+.ing-row:hover{background:#181818}
+.ing-row.removed{border-color:rgba(240,90,34,.5);background:rgba(240,90,34,.08)}
+.ing-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--orange);cursor:pointer;flex:0 0 auto}
+.ing-row span{font-size:13px;font-weight:600}
+.ing-row.removed span{text-decoration:line-through;color:var(--muted)}
+/* ── Formulario carrito ── */
+.delivery-toggle{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--line);border-radius:8px;overflow:hidden;
+  margin-bottom:16px;
+}
+.delivery-btn{
+  padding:11px 8px;
+  background:transparent;color:var(--muted);
+  font-weight:900;font-size:12px;text-transform:uppercase;
+  transition:background .18s,color .18s;
+  border:none;
+}
+.delivery-btn.active{background:var(--orange);color:#111}
+.customer-form{display:grid;gap:11px;margin-bottom:18px}
+.form-field{display:flex;flex-direction:column;gap:5px}
+.form-field label{color:var(--muted);font-size:11px;font-weight:900;text-transform:uppercase}
+.form-field input,.form-field textarea{
+  width:100%;min-height:44px;
+  padding:0 12px;
+  border:1px solid var(--line);border-radius:8px;
+  background:#101010;color:#fff;outline:none;
+  transition:border-color .18s;
+}
+.form-field input:focus,.form-field textarea:focus{border-color:var(--orange)}
+.form-field textarea{min-height:76px;padding:10px 12px;resize:vertical}
+.value-band{background:linear-gradient(180deg,#111,#0b0b0b);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.value-grid{max-width:1120px;margin:auto;padding:48px 18px;display:grid;gap:22px}
+.value-img{
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  border-radius:10px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  box-shadow:4px 4px 0 #000;
+}
+.value-item h3{font-size:20px;color:var(--cream);margin-bottom:6px}
+.value-item p{color:var(--muted);line-height:1.55;font-size:14px}
+.value-item .btn-link{display:inline-flex;margin-top:12px;color:var(--orange);font-weight:900;font-size:12px;text-transform:uppercase;gap:6px;align-items:center}
+
+/* ── Admin Dashboard ── */
+.admin-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:20px}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:20px}
+.admin-item{background:#111;border:1px solid var(--line);padding:15px;border-radius:8px;display:flex;gap:15px;align-items:center}
+.admin-item img{width:60px;height:60px;border-radius:6px;object-fit:cover}
+.admin-controls{margin-left:auto;display:flex;flex-direction:column;gap:5px}
+.admin-btn{padding:6px 10px;font-size:11px;background:var(--orange);color:#111;font-weight:900;border-radius:4px;text-transform:uppercase}
+.admin-btn.del{background:#dc2626;color:#fff}
+.admin-login{max-width:400px;margin:100px auto;text-align:center;padding:30px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.admin-form{display:grid;gap:15px;margin-top:20px}
+.admin-form input{width:100%;padding:12px;background:#080808;border:1px solid var(--line);color:#fff;border-radius:8px}
+.builder-promo{
+  max-width:1180px;
+  margin:54px auto 0;
+  padding:42px 20px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:linear-gradient(120deg,rgba(240,90,34,.88),rgba(64,49,120,.88)),url("MENU.jpeg") center/cover;
+  box-shadow:0 10px 0 #050505;
+  text-align:center;
+}
+.builder-promo h2{font-size:clamp(30px,8vw,54px);color:var(--cream);text-shadow:4px 4px 0 #000}
+.builder-promo p{margin:8px 0 22px;font-weight:800}
+.builder-layout{display:grid;gap:18px}
+.builder-steps{display:grid;gap:14px}
+.builder-card,.builder-summary{
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--card);
+  box-shadow:0 8px 0 #050505;
+  overflow:hidden;
+}
+.builder-card-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px;
+  border-bottom:1px solid var(--line);
+}
+.builder-num{
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border-radius:7px;
+  background:var(--orange);
+  color:#111;
+  font-family:var(--display);
+  font-size:13px;
+  box-shadow:3px 3px 0 #000;
+}
+.builder-card h3{font-size:16px;line-height:1.1}
+.builder-hint{margin-left:auto;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase}
+.option-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px}
+.option-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.option{
+  min-height:78px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:7px;
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#101010;
+  color:#fff;
+  text-align:left;
+  transition:.18s;
+}
+.option strong{font-size:13px;line-height:1.1}
+.option span{color:var(--muted);font-size:11px;font-weight:800}
+.option-code{
+  width:max-content;
+  min-width:34px;
+  padding:3px 7px;
+  border-radius:5px;
+  background:#080808;
+  color:var(--orange);
+  border:1px solid var(--line);
+  font-family:var(--display);
+  font-size:11px;
+  box-shadow:2px 2px 0 #000;
+}
+.option.selected{border-color:var(--orange);background:rgba(240,90,34,.12)}
+.builder-field{padding:14px;border-top:1px solid var(--line)}
+.builder-field label{display:block;margin-bottom:7px;color:var(--muted);font-size:12px;font-weight:900;text-transform:uppercase}
+.builder-field input{
+  width:100%;
+  min-height:46px;
+  padding:0 13px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#101010;
+  color:#fff;
+  outline:none;
+}
+.builder-summary{padding:18px;position:sticky;top:100px}
+.builder-summary-logo{
+  width:90px;
+  height:90px;
+  margin:0 auto 14px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid var(--cream);
+  box-shadow:0 0 0 5px var(--orange),0 18px 34px rgba(0,0,0,.36);
+}
+.builder-price{font-family:var(--display);font-size:38px;color:var(--cream);text-align:center;text-shadow:3px 3px 0 #000}
+.builder-price-sub{text-align:center;color:var(--muted);font-size:12px;font-weight:800;margin-bottom:14px;text-transform:uppercase}
+.builder-tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;min-height:34px;margin-bottom:16px}
+.builder-tags span{padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:#101010;color:var(--cream);font-size:11px;font-weight:800}
+.builder-summary .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.loc-card{
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--card);
+  box-shadow:0 8px 0 #050505;
+}
+.open{display:inline-flex;gap:8px;align-items:center;margin-bottom:14px;color:var(--cream);font-weight:900}
+.open i{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(240,90,34,0.7)}70%{box-shadow:0 0 0 10px rgba(240,90,34,0)}100%{box-shadow:0 0 0 0 rgba(240,90,34,0)}}
+.loc-row{display:flex;gap:12px;margin:8px 0;color:var(--muted);line-height:1.5}.loc-row b{width:38px;color:var(--orange)}
+.page-kicker{
+  padding:34px 18px 24px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(240,90,34,.14),transparent);
+}
+.page-kicker-inner{max-width:1180px;margin:auto}
+.tabs{
+  position:sticky;
+  top:84px;
+  z-index:25;
+  display:flex;
+  overflow:auto;
+  background:rgba(8,8,8,.94);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(12px);
+}
+.tab{
+  flex:0 0 auto;
+  padding:14px 16px;
+  color:var(--muted);
+  border-bottom:4px solid transparent;
+  background:transparent;
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.tab.active{color:var(--orange);background:rgba(240,90,34,.12);border-bottom-color:var(--orange)}
+.menu-block{scroll-margin-top:145px;margin-bottom:38px}
+.menu-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+  color:var(--cream);
+  font-size:26px;
+  text-shadow:3px 3px 0 #000;
+}
+.menu-title:after{content:"";height:1px;background:var(--line);flex:1}
+.cart-layout{display:grid;gap:18px}
+.cart-panel{
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--card);
+  box-shadow:0 8px 0 #050505;
+  overflow:hidden;
+}
+.cart-list{padding:14px}
+.empty{padding:46px 14px;text-align:center;color:var(--muted)}
+.cart-item{
+  display:grid;
+  grid-template-columns:58px 1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.cart-thumb{
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border-radius:8px;
+  background:#1b1b1b;
+  color:var(--cream);
+  font-family:var(--display);
+}
+.cart-thumb img{width:100%;height:100%;object-fit:cover}
+.cart-name{font-weight:900}.cart-price{color:var(--orange);font-weight:900}
+.cart-note{margin:3px 0;color:var(--muted);font-size:11px;line-height:1.3}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--line);
+  border-radius:7px;
+  background:#1d1d1d;
+}
+.summary{padding:18px;border-top:1px solid var(--line)}
+.total{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.total strong{font-family:var(--display);font-size:28px;color:var(--cream)}
+footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;text-align:center}
+.foot-logo{color:var(--orange);font-size:22px}.foot-links{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:16px 0}.foot-links a{color:var(--muted);font-size:13px;font-weight:800;text-transform:uppercase}.copy{color:#746f66;font-size:12px}
+.toast{
+  position:fixed;
+  z-index:100;
+  left:18px;
+  right:18px;
+  bottom:18px;
+  padding:14px 16px;
+  border-radius:8px;
+  background:var(--cream);
+  color:#111;
+  font-weight:900;
+  text-align:center;
+  box-shadow:5px 5px 0 #000;
+  transform:translateY(150%);
+  transition:.22s;
+}
+.toast.show{transform:translateY(0)}
+@media(min-width:700px){
+  .brand span{display:block}.nav-links{display:flex}.hamb{display:none}
+  .hero{padding-left:42px;padding-right:42px}
+  .stats-inner,.value-grid{grid-template-columns:repeat(3,1fr)}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .product-card{display:block}
+  .product-media{width:100%;aspect-ratio:4/3;min-height:auto}
+  .product-body{min-height:176px}
+  .cart-layout{grid-template-columns:1fr 340px;align-items:start}
+  .builder-layout{grid-template-columns:1fr 330px;align-items:start}
+  .summary{border-top:0;border-left:1px solid var(--line);position:sticky;top:100px}
+}
+@media(min-width:1080px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1280px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:520px){
+  .page{padding-top:82px}.nav-actions .primary{display:none}
+  .section-head{display:block}
+  .actions .btn{width:100%}
+  .product-card{grid-template-columns:104px 1fr;min-height:126px}
+  .product-media{width:104px;min-height:126px}
+  .product-body{padding:11px}
+  .product-body h3{font-size:15px}.product-body p{font-size:11px}
+  .price{font-size:18px}.plus{width:36px;height:36px}
+  .option-grid,.option-grid.cols-3{grid-template-columns:1fr}
+  .builder-summary{position:static}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="#home" data-route="home"><img src="logo.jpeg" alt="Legendary Burger"><span>LEGENDARY BURGER</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="#home" data-route="home">Inicio</a>
+    <a class="nav-link" href="#menu" data-route="menu">Menu</a>
+    <a class="nav-link" href="#builder" data-route="builder">Arma tu burger</a>
+    <a class="nav-link" href="#cart" data-route="cart">Carrito</a>
+    <a class="nav-link" href="#home" data-scroll="local">Locales</a>
+  </div>
+  <div class="nav-actions">
+    <a class="chip" href="#cart" data-route="cart">Pedido <span class="cart-badge" id="cartBadge">0</span></a>
+    <a class="chip primary" href="#menu" data-route="menu">Pedir</a>
+    <button class="hamb" id="hamb" aria-label="Abrir menu"><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="closeMenu" aria-label="Cerrar menu">x</button>
+  <a href="#home" data-route="home">Inicio</a>
+  <a href="#menu" data-route="menu">Menu</a>
+  <a href="#builder" data-route="builder">Arma tu burger</a>
+  <a href="#cart" data-route="cart">Carrito</a>
+  <a href="#home" data-scroll="local">Locales</a>
+</div>
+
+<main>
+  <section class="page page-home" id="page-home">
+    <div class="hero">
+      <div class="hero-inner">
+        <div class="hero-badge"><i></i> Est. 2024 / Montevideo / Smash Burgers</div>
+        <img class="hero-logo" src="logo.jpeg" alt="Legendary Burger logo">
+        <h1>LEGENDARY<br><em>BURGER</em></h1>
+        <p>Grill Good Vibes</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#menu" data-route="menu">Ver menu</a>
+          <a class="btn btn-purple" href="#builder" data-route="builder">Arma la tuya</a>
+          <a class="btn btn-ghost" href="#cart" data-route="cart">Mi pedido</a>
+        </div>
+      </div>
+    </div>
+    <div class="ticker"><div class="ticker-track"><span>SMASH BURGERS /</span><span>GRILL GOOD VIBES /</span><span>CHIVITO LEGENDARIO /</span><span>PAPAS CHEDDAR BACON /</span><span>MONTEVIDEO 2024 /</span><span>SMASH BURGERS /</span><span>GRILL GOOD VIBES /</span><span>CHIVITO LEGENDARIO /</span><span>PAPAS CHEDDAR BACON /</span><span>MONTEVIDEO 2024 /</span></div></div>
+    <div class="stats"><div class="stats-inner"><div><div class="stat-num">21+</div><div class="stat-label">Opciones en menu</div></div><div><div class="stat-num">100%</div><div class="stat-label">Plancha caliente</div></div><div><div class="stat-num">2024</div><div class="stat-label">Montevideo</div></div></div></div>
+    <section class="section">
+      <div class="section-head"><div><div class="mark"></div><h2 class="section-title">Las que <em>mandan</em></h2><p class="section-sub">Una muestra rapida. El menu completo vive en su propia pagina.</p></div><a class="btn btn-ghost" href="#menu" data-route="menu">Ver todo</a></div>
+      <div class="grid" id="featuredGrid"></div>
+    </section>
+    <section class="value-band">
+      <div class="value-grid">
+        <div class="value-item">
+          <img class="value-img" src="IMAGENES/PERFECTOSMASH1.png" alt="Smash tecnico">
+          <h3>Smash técnico</h3>
+          <p>Corteza real, carne jugosa y salida rápida de cocina bajo presión.</p>
+        </div>
+        <div class="value-item">
+          <img class="value-img" src="IMAGENES/QUESSMASH.jpg" alt="Queso fundido">
+          <h3>Queso fundido</h3>
+          <p>Cheddar protagonista, fundido a la perfección sobre el smash.</p>
+        </div>
+        <div class="value-item">
+          <img class="value-img" src="IMAGENES/Triple Chesse/triple chesse 3.jpg" alt="Ritmo de pedido">
+          <h3>Ritmo de pedido</h3>
+          <p>Menú fácil de escanear, sumá al carrito y mandá tu pedido en segundos.</p>
+          <a href="#menu" data-route="menu" class="btn-link">Ver menú completo ➔</a>
+        </div>
+      </div>
+    </section>
+    <section class="builder-promo"><h2>Arma la <em>tuya</em></h2><p>Elegis cada ingrediente, ves el precio y recien ahi la sumas al pedido.</p><a class="btn btn-purple" href="#builder" data-route="builder">Crear burger personalizada</a></section>
+    <section class="section" id="local"><div class="section-head"><div><div class="mark"></div><h2 class="section-title">Donde <em>encontrarnos</em></h2></div></div><div class="loc-card"><div class="open"><i></i> ABIERTO AHORA</div><h3>Legendary Burger / Montevideo</h3><div class="loc-row"><b>MAP</b><span>Av. [Confirmar con el cliente], Montevideo, Uruguay</span></div><div class="loc-row"><b>HS</b><span>Lun-Jue: 19:00-00:00 | Vie-Dom: 19:00-01:00</span></div><div class="loc-row"><b>WA</b><span>+598 9X XXX XXX</span></div></div></section>
+  </section>
+
+  <section class="page page-menu" id="page-menu">
+    <header class="page-kicker"><div class="page-kicker-inner"><div class="mark"></div><h1 class="section-title">Nuestro <em>menu</em></h1><p class="section-sub">Cards compactas en mobile para pedir sin pelearte con imagenes gigantes.</p></div></header>
+    <nav class="tabs" id="tabs"></nav>
+    <section class="section" id="menuContent"></section>
+  </section>
+
+  <section class="page page-builder" id="page-builder">
+    <header class="page-kicker"><div class="page-kicker-inner"><div class="mark"></div><h1 class="section-title">Arma tu <em>burger</em></h1><p class="section-sub">Elegi base, pan, quesos, salsas y toppings. El precio se actualiza en vivo.</p></div></header>
+    <section class="section builder-layout">
+      <div class="builder-steps" id="builderSteps"></div>
+      <aside class="builder-summary">
+        <img class="builder-summary-logo" src="logo.jpeg" alt="Legendary Burger logo">
+        <div class="builder-price" id="builderPrice">$0</div>
+        <div class="builder-price-sub">precio estimado</div>
+        <div class="builder-tags" id="builderTags"></div>
+        <button class="btn btn-primary" id="addCustomBurger" style="width:100%" disabled>Agregar al pedido</button>
+        <a class="btn btn-ghost" href="#cart" data-route="cart" style="width:100%;margin-top:12px">Ver carrito</a>
+      </aside>
+    </section>
+  </section>
+
+  <section class="page page-cart" id="page-cart">
+    <header class="page-kicker"><div class="page-kicker-inner"><div class="mark"></div><h1 class="section-title">Tu <em>pedido</em></h1><p class="section-sub">Revisa cantidades y envia el pedido por WhatsApp.</p></div></header>
+    <section class="section cart-layout">
+      <div class="cart-panel"><div class="cart-list" id="cartList"></div></div>
+      <aside class="cart-panel summary">
+        <div class="delivery-toggle">
+          <button class="delivery-btn active" id="btnRetiro">🏪 Retirar</button>
+          <button class="delivery-btn" id="btnEnvio">🛵 Envío</button>
+        </div>
+        <div class="customer-form">
+          <div class="form-field">
+            <label>Nombre *</label>
+            <input type="text" id="custName" placeholder="Tu nombre" autocomplete="name">
+          </div>
+          <div class="form-field">
+            <label>Teléfono *</label>
+            <input type="tel" id="custPhone" placeholder="Ej: 099 123 456" autocomplete="tel">
+          </div>
+          <div class="form-field" id="addressField" style="display:none">
+            <label>Dirección *</label>
+            <input type="text" id="custAddress" placeholder="Ej: Av. 18 de Julio 1234, Apto 5A" autocomplete="street-address">
+          </div>
+          <div class="form-field">
+            <label>¿Algo más? / Detalles</label>
+            <textarea id="custNotes" placeholder="Ej: sin sal, bien cocida, timbrar en apto 3..."></textarea>
+          </div>
+        </div>
+        <div class="total"><span>Total</span><strong id="cartTotal">$0</strong></div>
+        <button class="btn" id="checkout" style="width:100%;background:var(--wa-green);color:#fff;font-size:14px;gap:8px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-top:-2px"><path d="M12.031 6.172c-2.32 0-4.519.903-6.16 2.544-1.64 1.641-2.543 3.841-2.543 6.161 0 1.5.385 2.96 1.114 4.247L3.109 23.5l4.512-1.185a8.65 8.65 0 004.41 1.205h.004c2.32 0 4.519-.903 6.16-2.544 1.64-1.641 2.543-3.841 2.543-6.161 0-2.321-.903-4.519-2.544-6.161a8.657 8.657 0 00-6.163-2.54zM12.031 7.422c1.989 0 3.858.775 5.263 2.181 1.406 1.406 2.18 3.275 2.18 5.263 0 1.989-.775 3.858-2.181 5.263-1.406 1.406-3.275 2.18-5.263 2.18h-.003c-1.285 0-2.555-.334-3.673-.966l-.263-.149-2.73.716.728-2.66-.164-.261a7.394 7.394 0 01-1.135-3.963c0-1.989.775-3.858 2.181-5.263 1.406-1.406 3.275-2.18 5.263-2.18zm4.332 5.867l-1.583-.791c-.287-.144-.475-.121-.663.12l-.76 1.012c-.143.19-.332.237-.617.095-.285-.143-1.205-.445-2.296-1.417-.85-.757-1.422-1.691-1.588-1.976-.166-.285-.018-.439.124-.581.129-.127.285-.332.427-.5.143-.166.19-.285.285-.475.095-.19.047-.356-.024-.5-.071-.143-.663-1.594-.91-2.183-.241-.573-.484-.494-.663-.504l-.565-.01c-.19 0-.5.071-.76.356-.261.285-1 1.012-1 2.47s1.059 2.873 1.205 3.063c.143.19 2.083 3.181 5.047 4.462.705.305 1.256.487 1.684.623.708.226 1.353.194 1.862.118.568-.085 1.745-.712 1.994-1.399.25-.688.25-1.278.175-1.401-.075-.124-.261-.19-.547-.333z"/></svg>
+          ENVIAR POR WHATSAPP
+        </button>
+        <a class="btn btn-ghost" href="#menu" data-route="menu" style="width:100%;margin-top:12px">Seguir pidiendo</a>
+      </aside>
+    </section>
+  </section>
+
+  <section class="page page-admin" id="page-admin">
+    <header class="page-kicker"><div class="page-kicker-inner"><div class="mark"></div><h1 class="section-title">Admin <em>Panel</em></h1><p class="section-sub">Gestiona productos, precios e imágenes.</p></div></header>
+    <section class="section" id="adminContent">
+      <div class="admin-login" id="adminLogin">
+        <h3>Acceso Restringido</h3>
+        <div class="admin-form">
+          <input type="password" id="adminPass" placeholder="Contraseña de admin">
+          <button class="btn btn-primary" onclick="checkAdmin()">Entrar</button>
+        </div>
+      </div>
+      <div id="adminDashboard" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+          <h2 class="menu-title">Catálogo</h2>
+          <button class="btn btn-purple" onclick="openNewProduct()">+ Nuevo Producto</button>
+        </div>
+        <div id="adminList"></div>
+      </div>
+    </section>
+  </section>
+</main>
+<footer><div class="foot-logo">LEGENDARY BURGER</div><div class="foot-links"><a href="#home" data-route="home">Inicio</a><a href="#menu" data-route="menu">Menu</a><a href="#builder" data-route="builder">Arma tu burger</a><a href="#cart" data-route="cart">Carrito</a><a href="https://instagram.com/legendaryburgermvd" target="_blank">Instagram</a></div><p class="copy">2024 Legendary Burger / Montevideo, Uruguay</p></footer>
+<div class="modal-overlay" id="ingredientModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modalTitle">Personalizar</h3>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <p class="modal-hint">Desmarcá los ingredientes que no querés 👇</p>
+    <div class="ing-list" id="ingList"></div>
+    <button class="btn btn-primary" id="modalConfirm" style="width:100%">Agregar al pedido ✓</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-content">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <img id="lightboxImg" src="" alt="Zoom product">
+  </div>
+</div>
+
+<script>
+const WA='59899000000';
+let isAdmin = sessionStorage.getItem('is-legend-admin') === 'true';
+const catsBase={
+  carne:{label:'Burger de Carne',items:[
+    {id:'texas',name:'Texas Crispy',desc:'Smash de carne, bacon, salsa BBQ, cheddar, emmental x2, cebolla crispy y huevo frito.',price:390,img:'IMAGENES/Texas Crispy/Texas Crispy.jpg',imgs:['IMAGENES/Texas Crispy/Texas Crispy.jpg','IMAGENES/Texas Crispy/Texas Crispy 2.jpg'],badge:'ESTRELLA'},
+    {id:'only',name:'Only Cheese',desc:'Smash de carne, bacon, medallon de provolone, salsa BBQ y cheddar x2.',price:390,img:'IMAGENES/Only Chesse.jpg'},
+    {id:'triple',name:'Triple Cheese',desc:'Doble smash de carne, cheddar x4, salsa Legendary y cebolla.',price:480,img:'IMAGENES/Triple Chesse/triple chesse 1.jpg',imgs:['IMAGENES/Triple Chesse/triple chesse 1.jpg','IMAGENES/Triple Chesse/triple chesse 2.jpg','IMAGENES/Triple Chesse/triple chesse 3.jpg']},
+    {id:'onion-rings',name:'Onion Rings',desc:'Smash de carne, aros de cebolla x3, muzza x3, mayonesa burger house y bacon.',price:390,img:'IMAGENES/Oniong Rings/Oniong Rings.jpg',imgs:['IMAGENES/Oniong Rings/Oniong Rings.jpg','IMAGENES/Oniong Rings/Oniong Rings 2.jpg','IMAGENES/Oniong Rings/Oniong Rings 3.jpg']},
+    {id:'moon',name:'Moon Burger',desc:'Smash de carne, cheddar x2, salsa barbacoa y cebolla caramelizada.',price:390,img:null},
+    {id:'big-legend',name:'Big Legend',desc:'Doble smash de carne, bacon, salsa Legendary, cheddar x4 y pepinillos.',price:480,img:'IMAGENES/Big Legend/Big Legend.jpg',imgs:['IMAGENES/Big Legend/Big Legend.jpg','IMAGENES/Big Legend/Big Legend 2.jpg'],badge:'TOP'},
+    {id:'kids',name:'Kids Burger',desc:'Smash de carne, cheddar x3 y salsa a eleccion.',price:350,img:'IMAGENES/kid.jpg'}]},
+  pollo:{label:'Otras Burgers',items:[
+    {id:'crispy-bacon',name:'Crispy Bacon',desc:'Pollo crispy, bacon, tomate, cheddar x2 y alioli.',price:380,img:'IMAGENES/Crispy Bacon.jpg'},
+    {id:'crispy-mix',name:'Crispy Mix',desc:'Pollo crispy, cheddar y ensalada coleslaw.',price:380,img:'IMAGENES/Crispy MIX.jpg'}]},
+  veggie:{label:'Veggie',items:[{id:'veggie',name:'Veggie LGY',desc:'Medallon vegetal, huevo frito, emmental, lechuga, tomate y alioli.',price:370,img:'IMAGENES/Vegetariana LGY.jpg'}]},
+  milas:{label:'Milanesas y Chivitos',items:[
+    {id:'mila-americana',name:'Milanesa Americana',desc:'Milanesa de carne, panceta, huevo y salsa BBQ.',price:420,img:'IMAGENES/Mila Americana.jpg'},
+    {id:'mila-napo',name:'Milanesa Napolitana',desc:'Milanesa de carne, jamon, mozzarella y salsa de tomate.',price:420,img:'IMAGENES/napo.jpg'},
+    {id:'chivito',name:'Chivito Legendario',desc:'Lomo tiernizado, jamon, mozzarella, bacon, huevo frito, aceituna, lechuga, tomate y mayonesa.',price:435,img:'IMAGENES/Chivito Legendario/chivito legendario.jpg',badge:'TOP'}]},
+  papas:{label:'Papas',items:[
+    {id:'papas',name:'Papas',desc:'Porcion de papas fritas.',price:200,img:'IMAGENES/fritas.jpg'},
+    {id:'papas-cheddar',name:'Papas Cheddar',desc:'Papas con salsa cheddar caliente.',price:240,img:'IMAGENES/fritas cheddar.jpg'},
+    {id:'papas-bacon',name:'Papas Cheddar y Bacon',desc:'Papas con cheddar y bacon crujiente.',price:280,img:'IMAGENES/papas  cheddar bacon.jpg'}]},
+  extras:{label:'Extras en Burger',items:[
+    {id:'extra-bacon',name:'Bacon',desc:'Extra para sumar a tu burger.',price:35,img:null},
+    {id:'extra-aros',name:'Aros de cebolla',desc:'Extra para sumar a tu burger.',price:35,img:'IMAGENES/Oniong Rings/Oniong Rings.jpg'},
+    {id:'extra-huevo',name:'Huevo',desc:'Extra para sumar a tu burger.',price:35,img:null},
+    {id:'extra-lechuga',name:'Lechuga',desc:'Extra para sumar a tu burger.',price:35,img:null},
+    {id:'extra-tomate',name:'Tomate',desc:'Extra para sumar a tu burger.',price:35,img:null},
+    {id:'extra-carne-cheddar',name:'Carne mas cheddar',desc:'Medallon extra con cheddar.',price:90,img:null}]},
+  bebidas:{label:'Bebidas',items:[
+    {id:'coca',name:'Linea Coca Cola 600ml',desc:'Refresco linea Coca Cola.',price:130,img:null},
+    {id:'agua',name:'Aguas',desc:'Agua con gas o sin gas.',price:100,img:null},
+    {id:'cabezas-botella',name:'Cabezas Bier Botella',desc:'Cerveza artesanal en botella.',price:270,img:null},
+    {id:'cabezas-lata',name:'Cabezas Bier Lata',desc:'Cerveza artesanal en lata.',price:170,img:null},
+    {id:'cabezas-tirada',name:'Cabezas Bier Tirada',desc:'Cerveza artesanal tirada.',price:250,img:null},
+    {id:'cabezas-gintonic',name:'Cabezas Bier Gintonic',desc:'Gintonic de Cabezas Bier.',price:250,img:null},
+    {id:'brik-330',name:'Cerveza Brik 330',desc:'Cerveza Brik 330 ml.',price:110,img:null},
+    {id:'stella',name:'Cerveza Stella Artois',desc:'Cerveza Stella Artois.',price:300,img:null},
+    {id:'moreiz-negra',name:'Moreiz Etiqueta Negra',desc:'Vino Moreiz etiqueta negra.',price:295,img:null},
+    {id:'moreiz-blanca',name:'Moreiz Etiqueta Blanca',desc:'Vino Moreiz etiqueta blanca.',price:198,img:null}]}
+};
+let cats = JSON.parse(localStorage.getItem('legendary-menu') || JSON.stringify(catsBase));
+function saveMenu(){ localStorage.setItem('legendary-menu', JSON.stringify(cats)); renderMenu(); }
+
+const builderSteps=[
+  {id:'base',title:'Tipo de proteina',multi:false,required:true,options:[
+    {id:'smash',name:'Smash de carne',code:'SM',price:300},
+    {id:'pollo',name:'Pollo crispy',code:'CR',price:300},
+    {id:'veggie',name:'Patty vegetal',code:'VG',price:280}
+  ]},
+  {id:'qty',title:'Cantidad',multi:false,options:[
+    {id:'single',name:'Simple',code:'S1',price:0,label:'incluido'},
+    {id:'double',name:'Doble',code:'D2',price:120},
+    {id:'triple',name:'Triple',code:'T3',price:240}
+  ]},
+  {id:'bun',title:'Pan',multi:false,options:[
+    {id:'brioche',name:'Brioche',code:'BR',price:0,label:'incluido'},
+    {id:'clasico',name:'Clasico',code:'CL',price:0,label:'incluido'},
+    {id:'integral',name:'Integral',code:'IN',price:0,label:'incluido'}
+  ]},
+  {id:'cheese',title:'Queso',multi:true,options:[
+    {id:'cheddar',name:'Cheddar',code:'CH',price:35},
+    {id:'muzza',name:'Mozzarella',code:'MZ',price:35},
+    {id:'provolone',name:'Provolone',code:'PV',price:35},
+    {id:'emmental',name:'Emmental',code:'EM',price:35}
+  ]},
+  {id:'sauces',title:'Salsas',multi:true,options:[
+    {id:'mayo',name:'Mayonesa',code:'MY',price:0,label:'gratis'},
+    {id:'bbq',name:'BBQ',code:'BQ',price:0,label:'gratis'},
+    {id:'ketchup',name:'Ketchup',code:'KT',price:0,label:'gratis'},
+    {id:'mostaza',name:'Mostaza',code:'MS',price:0,label:'gratis'},
+    {id:'alioli',name:'Alioli',code:'AL',price:0,label:'gratis'},
+    {id:'legendary',name:'Legendary',code:'LG',price:0,label:'gratis'}
+  ]},
+  {id:'toppings',title:'Toppings extra',multi:true,cols3:true,options:[
+    {id:'bacon',name:'Bacon',code:'BC',price:35},
+    {id:'cebolla',name:'Cebolla caramelizada',code:'CB',price:35},
+    {id:'lechuga',name:'Lechuga',code:'LE',price:35},
+    {id:'tomate',name:'Tomate',code:'TM',price:35},
+    {id:'pepinillos',name:'Pepinillos',code:'PK',price:35},
+    {id:'huevo',name:'Huevo frito',code:'HF',price:35},
+    {id:'jalapeno',name:'Jalapeno',code:'JP',price:35},
+    {id:'aros',name:'Aros de cebolla',code:'AR',price:35},
+    {id:'hongos',name:'Hongos',code:'HG',price:35}
+  ]}
+];
+const builderState={base:null,qty:'single',bun:'brioche',cheese:[],sauces:[],toppings:[]};
+let cart=JSON.parse(localStorage.getItem('legendary-cart')||'[]');
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function allItems(){return Object.values(cats).flatMap(cat=>cat.items)}
+function imageList(item){return item.imgs || (item.img ? [item.img] : [])}
+function firstImage(item){return imageList(item)[0] || null}
+function esc(t){ if(!t)return ''; return t.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+function productCard(item){
+  const originalImgs=imageList(item);
+  const isSingle = originalImgs.length === 1;
+  let slides = [...originalImgs];
+  if(originalImgs.length > 1){
+    while(slides.length < 4) slides = [...slides, ...slides];
+    slides = slides.slice(0, 4);
+  }
+  const media=originalImgs.length
+    ? slides.map((src,index)=>`<img class="${isSingle?'':'slide'}" src="${src}" alt="${esc(item.name)}${slides.length>1?` ${index+1}`:''}" loading="lazy" onerror="this.remove()">`).join('')+(originalImgs.length>1?`<span class="product-dots">${originalImgs.map(()=>'<i></i>').join('')}</span>`:'')
+    : '<span class="fallback">LB</span>';
+  return `<article class="product-card"><div class="product-media ${isSingle?'single':''}">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}</div><div class="product-body"><h3>${esc(item.name)}</h3><p>${esc(item.desc)}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" aria-label="Agregar ${esc(item.name)}">+</button></div></div></article>`;
+}
+function renderMenu(){
+  const featured=['triple','texas','big-legend','chivito'].map(id=>allItems().find(item=>item.id===id)).filter(Boolean);
+  $('#featuredGrid').innerHTML=featured.map(productCard).join('');
+  $('#tabs').innerHTML=Object.entries(cats).map(([id,cat])=>`<button class="tab" data-cat="${id}">${cat.label}</button>`).join('');
+  $('#tabs .tab')?.classList.add('active');
+  $('#menuContent').innerHTML=Object.entries(cats).map(([id,cat])=>`<div class="menu-block" id="${id}"><h2 class="menu-title">${cat.label}</h2><div class="grid">${cat.items.map(productCard).join('')}</div></div>`).join('');
+}
+function renderBuilder(){
+  $('#builderSteps').innerHTML=builderSteps.map((step,index)=>`<article class="builder-card"><div class="builder-card-head"><div class="builder-num">${index+1}</div><h3>${step.title}</h3>${step.multi?'<span class="builder-hint">Multiple</span>':''}</div><div class="option-grid ${step.cols3?'cols-3':''}">${step.options.map(option=>{
+    const selected=step.multi?builderState[step.id].includes(option.id):builderState[step.id]===option.id;
+    return `<button class="option ${selected?'selected':''}" data-builder-step="${step.id}" data-builder-option="${option.id}"><span class="option-code">${option.code}</span><strong>${option.name}</strong><span>${option.price>0?'+$'+option.price:(option.label||'incluido')}</span></button>`;
+  }).join('')}</div></article>`).join('')+`<article class="builder-card"><div class="builder-card-head"><div class="builder-num">N</div><h3>Nombre de tu burger</h3></div><div class="builder-field"><label for="builderName">Opcional</label><input id="builderName" type="text" placeholder="Ej: La Legendaria doble"></div></article>`;
+  updateBuilder();
+}
+function selectedBuilderParts(){
+  const parts=[];
+  builderSteps.forEach(step=>{
+    const value=builderState[step.id];
+    const ids=Array.isArray(value)?value:[value].filter(Boolean);
+    ids.forEach(id=>{
+      const option=step.options.find(entry=>entry.id===id);
+      if(option)parts.push({...option,group:step.title});
+    });
+  });
+  return parts;
+}
+function builderPrice(){
+  return selectedBuilderParts().reduce((sum,part)=>sum+part.price,0);
+}
+function updateBuilder(){
+  const price=builderPrice();
+  $('#builderPrice').textContent='$'+price;
+  $('#builderTags').innerHTML=selectedBuilderParts().map(part=>`<span>${part.code} ${part.name}</span>`).join('');
+  $('#addCustomBurger').disabled=!builderState.base || price<=0;
+}
+function selectBuilder(stepId,optionId){
+  const step=builderSteps.find(entry=>entry.id===stepId);
+  if(!step)return;
+  if(step.multi){
+    const arr=builderState[stepId];
+    const index=arr.indexOf(optionId);
+    if(index>=0)arr.splice(index,1);
+    else arr.push(optionId);
+  }else{
+    builderState[stepId]=optionId;
+  }
+  renderBuilder();
+}
+function addCustomBurger(){
+  const price=builderPrice();
+  if(!builderState.base || price<=0){toast('Elegi una base para empezar');return}
+  const input=$('#builderName');
+  const name=input?.value.trim() || 'Burger personalizada';
+  const parts=selectedBuilderParts().map(part=>part.name);
+  const cartId = 'custom-'+Date.now();
+  cart.push({id:cartId, cartId, name, desc:parts.join(', '), price, img:null, qty:1, custom:true, removedIngredients:[]});
+  save();
+  toast(`${name} agregada al pedido`);
+  location.hash='cart';
+}
+function route(){
+  const page=(location.hash||'#home').replace('#','').split('-')[0];
+  const valid=['home','menu','builder','cart','admin'].includes(page)?page:'home';
+  $$('.page').forEach(el=>el.classList.toggle('active',el.id===`page-${valid}`));
+  $$('[data-route]').forEach(el=>el.classList.toggle('active',el.dataset.route===valid));
+  $('#mobileMenu').classList.remove('open');
+  document.body.classList.remove('menu-open');
+  if(valid==='menu' || valid==='builder' || valid==='cart') window.scrollTo({top:0,behavior:'instant'});
+  if(valid==='admin') renderAdmin();
+}
+function loginAdmin(){
+  const p=$('#adminPass').value;
+  if(p==='admin123'){
+    isAdmin=true; sessionStorage.setItem('is-legend-admin','true'); renderAdmin();
+  }else{ toast('Password incorrecto'); }
+}
+function logoutAdmin(){ isAdmin=false; sessionStorage.removeItem('is-legend-admin'); renderAdmin(); }
+
+function renderAdmin(){
+  if(!isAdmin){
+    $('#adminContent').innerHTML=`
+      <div style="max-width:400px;margin:100px auto;text-align:center;background:var(--cream);padding:40px;border-radius:24px;border:1px solid rgba(0,0,0,0.05)">
+        <h2 style="margin-bottom:20px;color:var(--deep-black)">Acceso Admin</h2>
+        <input type="password" id="adminPass" placeholder="Contraseña" style="width:100%;padding:15px;border-radius:12px;border:1px solid #ddd;margin-bottom:20px;font-size:16px">
+        <button onclick="loginAdmin()" class="btn-primary" style="width:100%">Entrar</button>
+      </div>`;
+    return;
+  }
+  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px">
+    <h2 style="font-size:2rem">Panel de Control</h2>
+    <button onclick="logoutAdmin()" class="btn-outline" style="padding:8px 16px;font-size:0.9rem">Salir</button>
+  </div>
+  <div style="background:var(--cream);padding:25px;border-radius:24px;margin-bottom:40px">
+    <h3 style="margin-bottom:20px">Agregar Nuevo Producto</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px">
+      <select id="newCat" style="padding:12px;border-radius:10px;border:1px solid #ccc">
+        ${Object.entries(cats).map(([id,c])=>`<option value="${id}">${c.label}</option>`).join('')}
+      </select>
+      <input type="text" id="newName" placeholder="Nombre (ej: Smash Pro)" style="padding:12px;border-radius:10px;border:1px solid #ccc">
+      <input type="number" id="newPrice" placeholder="Precio (ej: 450)" style="padding:12px;border-radius:10px;border:1px solid #ccc">
+      <button onclick="addNewProduct()" class="btn-primary">Añadir Producto</button>
+    </div>
+  </div>`;
+
+  Object.entries(cats).forEach(([catId, cat])=>{
+    html+=`<h3 style="margin:40px 0 20px;padding-left:10px;border-left:4px solid var(--orange)">${cat.label}</h3>
+    <div style="display:grid;gap:15px">`;
+    cat.items.forEach(item=>{
+      html+=`<div style="background:white;padding:20px;border-radius:20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,0.03)">
+        <div style="display:flex;align-items:center;gap:15px">
+          <img src="${item.img || ''}" style="width:60px;height:60px;border-radius:12px;object-fit:cover;background:#eee" onerror="this.src='https://via.placeholder.com/60?text=LB'">
+          <div>
+            <strong style="display:block;font-size:1.1rem">${item.name}</strong>
+            <span style="color:#666;font-size:0.9rem">$${item.price}</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button onclick="editPrice('${item.id}')" class="btn-outline" style="padding:8px 12px;font-size:0.8rem">Precio</button>
+          <button onclick="editImage('${item.id}')" class="btn-outline" style="padding:8px 12px;font-size:0.8rem">Imagen</button>
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  $('#adminContent').innerHTML=html;
+}
+
+function editPrice(id){
+  const item=allItems().find(i=>i.id===id);
+  const p=prompt(`Nuevo precio para ${item.name}:`, item.price);
+  if(p && !isNaN(p)){
+    item.price=parseInt(p); saveMenu(); renderAdmin(); toast('Precio actualizado');
+  }
+}
+
+function editImage(id){
+  const item=allItems().find(i=>i.id===id);
+  const url=prompt(`URL de imagen o ruta local para ${item.name}:`, item.img || '');
+  if(url!==null){
+    item.img=url; 
+    if(!item.imgs) item.imgs=[url]; else item.imgs[0]=url;
+    saveMenu(); renderAdmin(); toast('Imagen actualizada');
+  }
+}
+
+function addNewProduct(){
+  const catId=$('#newCat').value;
+  const name=esc($('#newName').value.trim());
+  const price=parseInt($('#newPrice').value);
+  if(!name || isNaN(price)){ toast('Completa nombre y precio'); return; }
+  const id=name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')+'-'+Date.now();
+  cats[catId].items.push({id, name, desc:'Producto gestionado vía panel.', price, img:null, imgs:[]});
+  saveMenu(); renderAdmin();
+  $('#newName').value=''; $('#newPrice').value='';
+  toast('Producto añadido!');
+}
+let deliveryMode = 'retiro';
+let pendingItem = null;
+function save(){localStorage.setItem('legendary-cart',JSON.stringify(cart));renderCart()}
+function getCategory(id) {
+  for (const [catId, cat] of Object.entries(cats)) {
+    if (cat.items.some(item => item.id === id)) return catId;
+  }
+  return null;
+}
+function parseIngredients(desc) {
+  if(!desc) return [];
+  const clean = desc.replace(/\.$/, '');
+  const parts = clean.split(/, | y /);
+  return parts.filter(p => p.trim().length > 0).map(p => p.trim());
+}
+function add(id, btn){
+  const item=allItems().find(entry=>entry.id===id);
+  if(!item)return;
+  
+  if (btn) {
+    btn.textContent = '✓';
+    btn.classList.add('added');
+    setTimeout(() => {
+      btn.textContent = '+';
+      btn.classList.remove('added');
+    }, 1400);
+  }
+
+  const catId = getCategory(id);
+  const hasIngredients = ['carne', 'pollo', 'veggie', 'milas'].includes(catId);
+  const ingredients = parseIngredients(item.desc);
+
+  if (hasIngredients && ingredients.length > 1) {
+    pendingItem = item;
+    $('#modalTitle').textContent = item.name;
+    $('#ingList').innerHTML = ingredients.map(ing => `
+      <label class="ing-row">
+        <input type="checkbox" class="ing-check" value="${ing}" checked>
+        <span>${ing}</span>
+      </label>
+    `).join('');
+    $('#ingredientModal').classList.add('open');
+  } else {
+    addToCart(item, []);
+  }
+}
+function addToCart(item, removedIngredients) {
+  const removedKey = removedIngredients.slice().sort().join('|');
+  const cartId = item.custom ? item.id : (item.id + (removedKey ? '-' + removedKey : ''));
+  
+  const existing = cart.find(entry => entry.cartId === cartId);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({
+      ...item,
+      img: firstImage(item),
+      qty: 1,
+      removedIngredients,
+      cartId
+    });
+  }
+  save();
+  if(!item.custom) toast(`${item.name} agregado`);
+}
+function renderCart(){
+  const count=cart.reduce((sum,item)=>sum+item.qty,0);
+  const total=cart.reduce((sum,item)=>sum+item.qty*item.price,0);
+  $('#cartBadge').textContent=count;
+  $('#cartBadge').classList.toggle('show',count>0);
+  $('#cartTotal').textContent='$'+total;
+  $('#cartList').innerHTML=cart.length?cart.map(item=>{
+    const removedText = item.removedIngredients && item.removedIngredients.length > 0 
+      ? `<br><span style="color:var(--orange);font-size:11px;font-weight:700">❌ Sin: ${[...item.removedIngredients].sort().join(', ')}</span>`
+      : '';
+    return `<div class="cart-item"><div class="cart-thumb">${item.img?`<img src="${item.img}" alt="${item.name}">`:'LB'}</div><div><div class="cart-name">${item.name}</div>${item.desc?`<div class="cart-note">${item.desc}${removedText}</div>`:''}<div class="cart-price">$${item.price*item.qty}</div></div><div class="qty"><button data-dec="${item.cartId||item.id}" aria-label="Quitar">-</button><span>${item.qty}</span><button data-inc="${item.cartId||item.id}" aria-label="Sumar">+</button></div></div>`;
+  }).join(''):'<div class="empty">Tu pedido esta vacio.</div>';
+}
+function toast(text){
+  const el=$('#toast');
+  el.textContent=text;
+  el.classList.add('show');
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+}
+function checkout(){
+  if(!cart.length){toast('Agrega algo al pedido primero');return}
+  const name = $('#custName').value.trim();
+  const phone = $('#custPhone').value.trim();
+  const address = $('#custAddress').value.trim();
+  const notes = $('#custNotes').value.trim();
+  if (!name || !phone) {
+    toast('Ingresá tu nombre y teléfono por favor');
+    return;
+  }
+  if (deliveryMode === 'envio' && !address) {
+    toast('Ingresá tu dirección para el envío');
+    return;
+  }
+  const total=cart.reduce((sum,item)=>sum+item.qty*item.price,0);
+  let msg='*🍔 NUEVO PEDIDO — LEGENDARY BURGER*\n\n';
+  msg+='📋 *PEDIDO:*\n';
+  cart.forEach(item=>{
+    msg+=`• *${item.name}* x${item.qty} — $${item.price*item.qty}\n`;
+    if (item.removedIngredients && item.removedIngredients.length > 0) {
+      const sorted = [...item.removedIngredients].sort();
+      msg+=`   └ ❌ *Sin:* _${sorted.join(', ')}_\n`;
+    }
+  });
+  msg+=`\n━━━━━━━━━━━━━━━━━━\n💰 *TOTAL: $${total}*\n\n`;
+  msg+=`🚗 *MODALIDAD:* ${deliveryMode === 'retiro' ? '🏪 Retiro en local' : '🛵 Envío a domicilio'}\n`;
+  msg+=`👤 *Nombre:* ${name}\n`;
+  msg+=`📞 *Teléfono:* ${phone}\n`;
+  if (deliveryMode === 'envio') {
+    msg+=`📍 *Dirección:* ${address}\n`;
+  }
+  if (notes) {
+    msg+=`\n📝 *Notas:* _${notes}_\n`;
+  }
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+function checkAdmin(){
+  const pass = $('#adminPass').value;
+  if(pass === 'admin123') { // Contraseña simple
+    isAdmin = true;
+    sessionStorage.setItem('is-legend-admin', 'true');
+    renderAdmin();
+  } else {
+    toast('Contraseña incorrecta');
+  }
+}
+function renderAdmin(){
+  if(!isAdmin) {
+    $('#adminLogin').style.display = 'block';
+    $('#adminDashboard').style.display = 'none';
+    return;
+  }
+  $('#adminLogin').style.display = 'none';
+  $('#adminDashboard').style.display = 'block';
+  
+  let html = '';
+  Object.entries(cats).forEach(([catId, cat]) => {
+    html += `<div class="admin-card"><h3 style="margin-bottom:15px">${cat.label}</h3><div class="admin-grid">`;
+    cat.items.forEach(item => {
+      html += `
+        <div class="admin-item">
+          <img src="${firstImage(item) || 'LB'}" alt="${item.name}">
+          <div>
+            <strong>${item.name}</strong><br>
+            <span style="color:var(--orange)">$${item.price}</span>
+          </div>
+          <div class="admin-controls">
+            <button class="admin-btn" onclick="editProduct('${catId}','${item.id}')">Editar</button>
+            <button class="admin-btn del" onclick="deleteProduct('${catId}','${item.id}')">Eliminar</button>
+          </div>
+        </div>`;
+    });
+    html += `</div></div>`;
+  });
+  $('#adminList').innerHTML = html;
+}
+function editProduct(catId, itemId){
+  const item = cats[catId].items.find(i => i.id === itemId);
+  if(!item) return;
+  const newPrice = prompt('Nuevo Precio:', item.price);
+  if(newPrice === null) return;
+  const newImg = prompt('URL Imagen (o ruta local):', item.img || '');
+  if(newImg === null) return;
+  
+  item.price = parseFloat(newPrice);
+  item.img = newImg;
+  if(item.imgs) item.imgs[0] = newImg; // Update first image in carousel if exists
+  saveMenu();
+  renderAdmin();
+  toast('Producto actualizado');
+}
+function deleteProduct(catId, itemId){
+  if(!confirm('¿Seguro quieres eliminar este producto?')) return;
+  cats[catId].items = cats[catId].items.filter(i => i.id !== itemId);
+  saveMenu();
+  renderAdmin();
+}
+function openNewProduct(){
+  const catId = prompt('ID de categoría (carne, pollo, veggie, milas, papas, extras, bebidas):', 'carne');
+  if(!cats[catId]) { toast('Categoría no válida'); return; }
+  const name = prompt('Nombre del producto:');
+  if(!name) return;
+  const price = prompt('Precio:');
+  const img = prompt('URL Imagen:');
+  const desc = prompt('Descripción:');
+  
+  const newItem = {
+    id: 'new-' + Date.now(),
+    name,
+    price: parseFloat(price),
+    img,
+    desc: desc || ''
+  };
+  cats[catId].items.push(newItem);
+  saveMenu();
+  renderAdmin();
+}
+function openLightbox(src){
+  $('#lightboxImg').src=src;
+  $('#lightbox').classList.add('open');
+  document.body.classList.add('menu-open');
+}
+function closeLightbox(){
+  $('#lightbox').classList.remove('open');
+  document.body.classList.remove('menu-open');
+}
+window.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
+document.addEventListener('click',event=>{
+  const prodImg=event.target.closest('.product-media img');
+  if(prodImg) openLightbox(prodImg.src);
+  
+  const lightboxOverlay=event.target.closest('.lightbox');
+  if(lightboxOverlay && !event.target.closest('.lightbox-content')) closeLightbox();
+  
+  const addBtn=event.target.closest('[data-add]');
+  if(addBtn)add(addBtn.dataset.add, addBtn);
+  const inc=event.target.closest('[data-inc]');
+  if(inc){const item=cart.find(entry=>(entry.cartId||entry.id)===inc.dataset.inc);if(item){item.qty++;save()}}
+  const dec=event.target.closest('[data-dec]');
+  if(dec){const item=cart.find(entry=>(entry.cartId||entry.id)===dec.dataset.dec);if(item){item.qty--;if(item.qty<=0)cart=cart.filter(entry=>(entry.cartId||entry.id)!==(item.cartId||item.id));save()}}
+  const local=event.target.closest('[data-scroll="local"]');
+  if(local){setTimeout(()=>$('#local')?.scrollIntoView({behavior:'smooth'}),60)}
+  const tab=event.target.closest('[data-cat]');
+  if(tab)document.getElementById(tab.dataset.cat)?.scrollIntoView({behavior:'smooth',block:'start'});
+  const builderOption=event.target.closest('[data-builder-step]');
+  if(builderOption)selectBuilder(builderOption.dataset.builderStep,builderOption.dataset.builderOption);
+  const routeBtn=event.target.closest('[data-route]');
+  if(routeBtn && routeBtn.dataset.route === 'admin') renderAdmin();
+  const ingRow=event.target.closest('.ing-row');
+  if(ingRow && event.target.tagName !== 'INPUT'){
+    const cb = ingRow.querySelector('input');
+    cb.checked = !cb.checked;
+    ingRow.classList.toggle('removed', !cb.checked);
+  } else if (ingRow && event.target.tagName === 'INPUT') {
+    ingRow.classList.toggle('removed', !event.target.checked);
+  }
+});
+$('#btnRetiro').addEventListener('click', () => {
+  deliveryMode = 'retiro';
+  $('#btnRetiro').classList.add('active');
+  $('#btnEnvio').classList.remove('active');
+  $('#addressField').style.display = 'none';
+});
+$('#btnEnvio').addEventListener('click', () => {
+  deliveryMode = 'envio';
+  $('#btnEnvio').classList.add('active');
+  $('#btnRetiro').classList.remove('active');
+  $('#addressField').style.display = 'flex';
+});
+$('#modalClose').addEventListener('click', () => {
+  $('#ingredientModal').classList.remove('open');
+});
+$('#modalConfirm').addEventListener('click', () => {
+  const removed = $$('.ing-check:not(:checked)').map(el => el.value);
+  addToCart(pendingItem, removed);
+  $('#ingredientModal').classList.remove('open');
+});
+$('#hamb').addEventListener('click',()=>{document.body.classList.add('menu-open');$('#mobileMenu').classList.add('open')});
+$('#closeMenu').addEventListener('click',()=>{document.body.classList.remove('menu-open');$('#mobileMenu').classList.remove('open')});
+$('#checkout').addEventListener('click',checkout);
+$('#addCustomBurger').addEventListener('click',addCustomBurger);
+window.addEventListener('hashchange',route);
+renderMenu();
+renderBuilder();
+renderCart();
+route();
+const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){$$('.tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.cat===entry.target.id))}})},{rootMargin:'-45% 0px -45% 0px'});
+$$('.menu-block').forEach(block=>observer.observe(block));
+</script>
+</body>
+</html>
