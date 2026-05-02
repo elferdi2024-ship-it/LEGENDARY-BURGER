@@ -1049,8 +1049,16 @@ function renderMenu(){
   }
 }
 function renderBuilder(){
-  $('#builderSteps').innerHTML=builderSteps.map((step,index)=>`<article class="builder-card"><div class="builder-card-head"><div class="builder-num">${index+1}</div><h3>${step.title}</h3>${step.multi?'<span class="builder-hint">Multiple</span>':''}</div><div class="option-grid ${step.cols3?'cols-3':''}">${step.options.map(option=>{
-    const selected=step.multi?builderState[step.id].includes(option.id):builderState[step.id]===option.id;
+  const container = $('#builderSteps');
+  if (!container) return;
+  
+  if (!builderSteps || builderSteps.length === 0) {
+    container.innerHTML = '<p style="padding:20px;color:var(--muted)">Cargando opciones...</p>';
+    return;
+  }
+
+  container.innerHTML=builderSteps.map((step,index)=>`<article class="builder-card"><div class="builder-card-head"><div class="builder-num">${index+1}</div><h3>${step.title}</h3>${step.multi?'<span class="builder-hint">Multiple</span>':''}</div><div class="option-grid ${step.cols3?'cols-3':''}">${(step.options || []).map(option=>{
+    const selected=step.multi?(builderState[step.id]||[]).includes(option.id):builderState[step.id]===option.id;
     return `<button class="option ${selected?'selected':''}" data-builder-step="${step.id}" data-builder-option="${option.id}"><span class="option-code">${option.code}</span><strong>${option.name}</strong><span>${option.price>0?'+$'+option.price:(option.label||'incluido')}</span></button>`;
   }).join('')}</div></article>`).join('')+`<article class="builder-card"><div class="builder-card-head"><div class="builder-num">N</div><h3>Nombre de tu burger</h3></div><div class="builder-field"><label for="builderName">Opcional</label><input id="builderName" type="text" placeholder="Ej: La Legendaria doble"></div></article>`;
   updateBuilder();
