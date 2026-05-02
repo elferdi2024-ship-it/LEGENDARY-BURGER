@@ -1002,7 +1002,7 @@ function productCard(item){
   if (originalImgs.length === 0) {
     media = '<span class="fallback">LB</span>';
   } else if (isSingle) {
-    media = `<img src="${originalImgs[0]}" alt="${esc(item.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\"fallback\">LB</span>'">`;
+    media = `<img src="${originalImgs[0]}" alt="${esc(item.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\'fallback\'>LB</span>'">`;
   } else {
     media = originalImgs.map((src,index)=>`<img class="slide" src="${src}" alt="${esc(item.name)} ${index+1}" fetchpriority="${index===0?'high':'low'}" style="animation-delay: ${index * 3}s" onerror="this.style.display='none'">`).join('') + `<span class="product-dots">${originalImgs.map(()=>'<i></i>').join('')}</span>`;
   }
