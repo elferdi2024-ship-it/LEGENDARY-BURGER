@@ -1004,15 +1004,18 @@ let cart=JSON.parse(localStorage.getItem('legendary-cart')||'[]');
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 function allItems(){return Object.values(cats).flatMap(cat=>cat.items)}
-function imageList(item){return (item.imgs && item.imgs.length > 0) ? item.imgs : (item.img ? [item.img] : [])}
+function imageList(item){
+  if (item.imgs && Array.isArray(item.imgs) && item.imgs.length > 0) return item.imgs;
+  if (item.img && item.img.trim() !== '') return [item.img];
+  return [];
+}
 function firstImage(item){return imageList(item)[0] || null}
 function esc(t){ if(!t)return ''; return t.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
 function productCard(item){
   const originalImgs=imageList(item);
   const isSingle = originalImgs.length === 1;
-  let slides = [...originalImgs];
-  
   let media = '';
+  
   if (originalImgs.length === 0) {
     media = '<div class="fallback-container"><span class="fallback">LB</span></div>';
   } else if (isSingle) {
