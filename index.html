@@ -908,18 +908,18 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
 <script>
 const SUPABASE_URL = 'https://dwgwbnalrbzvakzbiwmb.supabase.co';
 const SUPABASE_KEY = '[ELIMINATED_FOR_SECURITY]';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let cats = {};
 let builderSteps = [];
 let WA = '59899000000';
 
 async function initData() {
-  const { data: catData } = await supabase.from('categories').select('*').order('display_order');
-  const { data: prodData } = await supabase.from('products').select('*').eq('is_active', true);
-  const { data: configData } = await supabase.from('site_config').select('*');
+  const { data: catData } = await sbClient.from('categories').select('*').order('display_order');
+  const { data: prodData } = await sbClient.from('products').select('*').eq('is_active', true);
+  const { data: configData } = await sbClient.from('site_config').select('*');
 
-  const { data: bSteps } = await supabase.from('builder_options').select('*').order('display_order');
+  const { data: bSteps } = await sbClient.from('builder_options').select('*').order('display_order');
 
   const config = {};
   configData?.forEach(c => config[c.key] = c.value);
@@ -958,7 +958,7 @@ async function initData() {
 }
 
 // Suscripción en tiempo real
-supabase.channel('menu-changes')
+sbClient.channel('menu-changes')
   .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, initData)
   .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, initData)
   .on('postgres_changes', { event: '*', schema: 'public', table: 'site_config' }, initData)
