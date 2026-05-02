@@ -66,6 +66,7 @@ h1, h2, h3 { font-family: var(--display); margin-bottom: 10px; }
       <button onclick="loginAdmin()" class="btn-primary">Entrar</button>
     </div>
   </div>
+  <input type="file" id="fileInput" style="display:none" accept="image/*">
 
   <div id="adminDashboard" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px">
@@ -267,21 +268,50 @@ async function editProduct(id){
   const p = prods.find(x => x.id === id);
   const n = prompt("Nuevo nombre:", p.name); if(!n) return;
   const pr = prompt("Nuevo precio:", p.price); if(!pr) return;
-  const im = prompt("URL Imagen:", p.img || '');
+  
+  if(confirm("¿Quieres cambiar la imagen principal seleccionando un archivo local?\n(Cancelar para usar URL o dejar igual)")) {
+    const file = await pickFile();
+    if(file) {
+      const url = await uploadImg(file);
+      if(url) {
+        await sb.from('products').update({ name: n, price: parseFloat(pr), img: url }).eq('id', id);
+        toast('Actualizado con nueva foto!'); initAdmin(); return;
+      }
+    }
+  }
+  
+  const im = prompt("URL Imagen (o deja la actual):", p.img || '');
   await sb.from('products').update({ name: n, price: parseFloat(pr), img: im }).eq('id', id);
   toast('Actualizado!'); initAdmin();
 }
-async function deleteProduct(id){
-  if(confirm("¿Borrar?")) { await sb.from('products').delete().eq('id', id); initAdmin(); }
+
+async function uploadImg(file) {
+  const ext = file.name.split('.').pop();
+  const name = `${Date.now()}.${ext}`;
+  toast("Subiendo imagen...");
+  const { data, error } = await sb.storage.from('products').upload(name, file);
+  if(error) { console.error(error); toast("Error al subir"); return null; }
+  const { data: { publicUrl } } = sb.storage.from('products').getPublicUrl(name);
+  return publicUrl;
 }
+
+function pickFile() {
+  return new Promise(res => {
+    const input = $('#fileInput');
+    input.onchange = e => res(e.target.files[0]);
+    input.click();
+  });
+}
+
 window.addProductImg = async function(id){
   const p = prods.find(x => x.id === id);
-  const url = prompt("URL de la nueva imagen:");
+  const file = await pickFile();
+  if(!file) return;
+  const url = await uploadImg(file);
   if(!url) return;
   const newImgs = [...(p.imgs || []), url];
-  // La primera imagen siempre es p.img (portada)
   await sb.from('products').update({ imgs: newImgs, img: newImgs[0] }).eq('id', id);
-  toast('Imagen añadida!'); initAdmin();
+  toast('Imagen subida y añadida!'); initAdmin();
 }
 window.removeProductImg = async function(id, idx){
   const p = prods.find(x => x.id === id);
