@@ -919,6 +919,7 @@ const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 
 let cats = {};
 let builderSteps = [];
+const builderState={};
 let WA = '59899000000';
 
 async function initData() {
@@ -996,7 +997,6 @@ sbClient.channel('any')
 initData();
 
 // Builder steps are now dynamic
-const builderState={};
 let cart=JSON.parse(localStorage.getItem('legendary-cart')||'[]');
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
