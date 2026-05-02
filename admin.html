@@ -28,106 +28,202 @@ body{
   background: var(--ink);
   color:#fff;
   font-family:var(--body);
-  padding: 40px 20px;
+  padding: 20px;
 }
 .admin-container { max-width: 1200px; margin: 0 auto; }
 .admin-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:20px}
-.admin-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:20px}
-.admin-item{background:#111;border:1px solid var(--line);padding:15px;border-radius:8px;display:flex;gap:15px;align-items:center}
-.admin-item img{width:60px;height:60px;border-radius:6px;object-fit:cover}
-.admin-controls{margin-left:auto;display:flex;flex-direction:column;gap:5px}
-.admin-btn{padding:6px 12px;font-size:11px;background:var(--orange);color:#111;font-weight:900;border-radius:4px;text-transform:uppercase; border:none; cursor:pointer;}
-.admin-btn.del{background:#dc2626;color:#fff}
-.admin-btn.secondary{background:#333;color:#fff}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:20px}
+.admin-item{background:#111;border:1px solid var(--line);padding:20px;border-radius:12px;display:flex;flex-direction:column;gap:15px;position:relative;transition:.3s;}
+.admin-item:hover{border-color:var(--orange)}
+.admin-item img.main-thumb{width:100%;height:180px;border-radius:8px;object-fit:cover;background:#000}
+.admin-controls{display:flex;gap:10px;width:100%}
+.admin-btn{flex:1;padding:12px;font-size:11px;background:var(--orange);color:#111;font-weight:900;border-radius:8px;text-transform:uppercase; border:none; cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.admin-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(240,90,34,.3)}
+.admin-btn.del{background:#222;color:#dc2626;flex:0 0 44px;border:1px solid rgba(220,38,38,.2)}
+.admin-btn.del:hover{background:#dc2626;color:#fff}
 .admin-login{max-width:400px;margin:100px auto;text-align:center;padding:40px;background:var(--card);border:1px solid var(--line);border-radius:14px}
 .admin-form{display:grid;gap:15px;margin-top:20px}
-.admin-form input, .admin-form select{width:100%;padding:12px;background:#080808;border:1px solid var(--line);color:#fff;border-radius:8px; font-size: 16px;}
-.btn-primary{background:var(--orange);color:#111;padding:12px;border-radius:8px;font-weight:900;text-transform:uppercase;border:none;cursor:pointer;width:100%;}
-.btn-outline{border:1px solid var(--line);padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;background:transparent;color:#fff;text-decoration:none;display:inline-block;}
+.admin-form label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.admin-form input, .admin-form select, .admin-form textarea{width:100%;padding:14px;background:#080808;border:1px solid var(--line);color:#fff;border-radius:8px; font-size: 16px;font-family:inherit}
+.admin-form input:focus{border-color:var(--orange);outline:none}
+.btn-primary{background:var(--orange);color:#111;padding:16px;border-radius:8px;font-weight:900;text-transform:uppercase;border:none;cursor:pointer;width:100%;font-size:14px;letter-spacing:1px}
+.btn-outline{border:1px solid var(--line);padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;background:transparent;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+.btn-outline:hover{background:var(--line)}
 .toast{
-  position:fixed;z-index:100;left:50%;bottom:30px;transform:translateX(-50%) translateY(150%);
-  padding:14px 24px;border-radius:12px;background:var(--cream);color:#111;font-weight:900;
-  text-align:center;box-shadow:5px 5px 0 #000;transition:.3s;
+  position:fixed;z-index:1000;left:50%;bottom:30px;transform:translateX(-50%) translateY(150%);
+  padding:16px 32px;border-radius:12px;background:var(--orange);color:#111;font-weight:900;
+  text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .toast.show{transform:translateX(-50%) translateY(0)}
-h1, h2, h3 { font-family: var(--display); margin-bottom: 10px; }
-.mark{width:78px;height:6px;background:var(--orange);box-shadow:4px 4px 0 #000;margin-bottom:14px}
-.builder-step-admin{border-bottom:1px solid var(--line);padding:15px 0}
-.builder-option-admin{display:flex;align-items:center;gap:10px;margin-bottom:8px;background:#111;padding:8px;border-radius:6px}
+h1, h2, h3 { font-family: var(--display); text-transform: uppercase; letter-spacing:-1px}
+.mark{width:60px;height:4px;background:var(--orange);margin-bottom:12px}
+.nav-tabs{display:flex;gap:10px;overflow-x:auto;padding:10px 0;margin-bottom:30px;border-bottom:1px solid var(--line);scrollbar-width:none}
+.tab-btn{background:transparent;border:none;color:var(--muted);padding:10px 20px;font-weight:700;cursor:pointer;white-space:nowrap;border-radius:8px;transition:.2s}
+.tab-btn.active{background:var(--line);color:var(--orange)}
+.img-slider-admin{display:flex;gap:8px;overflow-x:auto;padding:5px 0;scrollbar-width:none}
+.slider-item-admin{position:relative;flex:0 0 60px;height:60px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.slider-item-admin img{width:100%;height:100%;object-fit:cover}
+.slider-item-admin .del-img{position:absolute;top:2px;right:2px;background:rgba(220,38,38,.8);color:#fff;border:none;width:18px;height:18px;border-radius:50%;font-size:10px;cursor:pointer;display:grid;place-items:center}
+.add-img-btn{flex:0 0 60px;height:60px;border:2px dashed var(--line);border-radius:8px;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;display:grid;place-items:center}
+.add-img-btn:hover{border-color:var(--orange);color:var(--orange)}
+
+/* Modal Editar */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:500;display:none;place-items:center;padding:20px}
+.modal-box{background:var(--card);width:100%;max-width:600px;border-radius:16px;border:1px solid var(--line);overflow:hidden;animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.modal-header{padding:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-body{padding:20px;max-height:80vh;overflow-y:auto}
+.close-modal{background:transparent;border:none;color:#fff;font-size:24px;cursor:pointer}
+
 </style>
 </head>
 <body>
+
 <div class="admin-container">
+  <!-- Login -->
   <div id="adminLogin" class="admin-login">
     <div class="mark" style="margin: 0 auto 20px;"></div>
-    <h2>Acceso Admin</h2>
+    <h2 style="font-size:24px">Legendary Admin</h2>
     <div class="admin-form">
-      <input type="password" id="adminPass" placeholder="Contraseña">
-      <button onclick="loginAdmin()" class="btn-primary">Entrar</button>
+      <input type="password" id="adminPass" placeholder="Contraseña Maestra">
+      <button onclick="loginAdmin()" class="btn-primary">Entrar al Sistema</button>
     </div>
   </div>
+
   <input type="file" id="fileInput" style="display:none" accept="image/*">
 
+  <!-- Dashboard -->
   <div id="adminDashboard" style="display:none">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px">
+    <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;flex-wrap:wrap;gap:20px">
       <div>
         <div class="mark"></div>
-        <h1>Legendary Panel</h1>
+        <h1 style="font-size:32px">Panel de Control</h1>
+        <p style="color:var(--muted);font-size:14px">Gestión en tiempo real de Legendary Burger</p>
       </div>
-      <div style="display:flex; gap:10px;">
-        <a href="/" class="btn-outline">Ver Web</a>
-        <button onclick="logoutAdmin()" class="btn-outline">Salir</button>
+      <div style="display:flex; gap:12px;">
+        <a href="/" class="btn-outline">Ver Sitio</a>
+        <button onclick="logoutAdmin()" class="btn-outline" style="border-color:#dc2626;color:#dc2626">Cerrar Sesión</button>
       </div>
-    </div>
+    </header>
 
-    <div class="admin-card" style="display:flex;gap:10px;overflow-x:auto;padding:10px;background:#000">
-      <button onclick="setView('products')" class="admin-btn">🍔 Productos</button>
-      <button onclick="setView('builder')" class="admin-btn">🛠️ Builder</button>
-      <button onclick="setView('categories')" class="admin-btn">📂 Categorías</button>
-      <button onclick="setView('config')" class="admin-btn">⚙️ Config</button>
-    </div>
+    <nav class="nav-tabs">
+      <button onclick="setView('products')" class="tab-btn active" id="tab-products">🍔 Productos</button>
+      <button onclick="setView('builder')" class="tab-btn" id="tab-builder">🛠️ Armador</button>
+      <button onclick="setView('categories')" class="tab-btn" id="tab-categories">📂 Categorías</button>
+      <button onclick="setView('config')" class="tab-btn" id="tab-config">⚙️ Ajustes</button>
+    </nav>
 
+    <!-- Secciones -->
     <div id="view-products" class="view-section">
-      <div class="admin-card">
-        <h3>Nuevo Producto</h3>
-        <div class="admin-form" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px">
-          <select id="newProdCat"></select>
-          <input type="text" id="newProdName" placeholder="Nombre">
-          <input type="number" id="newProdPrice" placeholder="Precio">
-          <button onclick="addNewProduct()" class="btn-primary" style="height:46px; padding:0;">Añadir</button>
-        </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h2 style="font-size:20px">Catálogo de Productos</h2>
+        <button onclick="openNewProductModal()" class="btn-primary" style="width:auto;padding:10px 20px;font-size:12px">+ Nuevo Producto</button>
       </div>
       <div id="adminList"></div>
     </div>
 
     <div id="view-builder" class="view-section" style="display:none">
-      <div class="admin-card">
-        <h3>Gestionar Armador (Builder)</h3>
-        <div id="builderAdminList"></div>
-      </div>
+      <h2 style="font-size:20px;margin-bottom:20px">Personalización del Armador</h2>
+      <div id="builderAdminList"></div>
     </div>
 
     <div id="view-categories" class="view-section" style="display:none">
       <div class="admin-card">
-        <h3>Categorías</h3>
-        <div class="admin-form" style="display:grid;grid-template-columns:1fr auto;gap:15px">
-          <input type="text" id="newCatName" placeholder="Nueva Categoría">
-          <button onclick="addNewCategory()" class="btn-primary">Añadir</button>
+        <h3>Gestionar Categorías</h3>
+        <div class="admin-form" style="display:grid;grid-template-columns:1fr auto;gap:15px;align-items:end">
+          <div>
+            <label>Nombre de Categoría</label>
+            <input type="text" id="newCatName" placeholder="Ej: Bebidas">
+          </div>
+          <button onclick="addNewCategory()" class="btn-primary" style="height:50px">Añadir</button>
         </div>
-        <div id="categoryList" style="margin-top:20px"></div>
+        <div id="categoryList" style="margin-top:30px"></div>
       </div>
     </div>
 
     <div id="view-config" class="view-section" style="display:none">
       <div class="admin-card">
-        <h3>Configuración General</h3>
+        <h3>Configuración Global</h3>
         <div class="admin-form">
-          <label>WhatsApp Pedidos (Número completo sin +)</label>
-          <input type="text" id="confWA" placeholder="59899000000">
-          <label>Precio de Envío ($)</label>
-          <input type="number" id="confDelivery" placeholder="100">
-          <button onclick="saveConfig()" class="btn-primary">Guardar Todo</button>
+          <div>
+            <label>WhatsApp para Pedidos (Formato: 59899000000)</label>
+            <input type="text" id="confWA" placeholder="59899000000">
+          </div>
+          <div>
+            <label>Costo de Envío Base ($)</label>
+            <input type="number" id="confDelivery" placeholder="100">
+          </div>
+          <button onclick="saveConfig()" class="btn-primary">Guardar Cambios</button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Edición de Producto -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modalEditTitle">Editar Producto</h3>
+      <button class="close-modal" onclick="closeModal('editModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="admin-form" id="editForm">
+        <input type="hidden" id="editId">
+        <div>
+          <label>Nombre del Producto</label>
+          <input type="text" id="editName">
+        </div>
+        <div>
+          <label>Descripción / Ingredientes</label>
+          <textarea id="editDesc" rows="3" style="width:100%;padding:14px;background:#080808;border:1px solid var(--line);color:#fff;border-radius:8px;font-family:inherit"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
+          <div>
+            <label>Precio ($)</label>
+            <input type="number" id="editPrice">
+          </div>
+          <div>
+            <label>Categoría</label>
+            <select id="editCat"></select>
+          </div>
+        </div>
+        <div>
+          <label>Badge (Opcional - Ej: POPULAR, NUEVO)</label>
+          <input type="text" id="editBadge">
+        </div>
+        <div>
+          <label>URL Imagen Principal</label>
+          <input type="text" id="editImgUrl">
+        </div>
+        <button onclick="saveProductEdit()" class="btn-primary">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Producto -->
+<div class="modal-overlay" id="newProdModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Añadir Nuevo Producto</h3>
+      <button class="close-modal" onclick="closeModal('newProdModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="admin-form">
+        <div>
+          <label>Nombre</label>
+          <input type="text" id="newProdName">
+        </div>
+        <div>
+          <label>Categoría</label>
+          <select id="newProdCat"></select>
+        </div>
+        <div>
+          <label>Precio ($)</label>
+          <input type="number" id="newProdPrice">
+        </div>
+        <button onclick="addNewProduct()" class="btn-primary">Crear Producto</button>
       </div>
     </div>
   </div>
@@ -147,8 +243,10 @@ let prods = [];
 let bSteps = [];
 
 const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
 const esc=t=>t?t.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'):'';
 
+// AUTH
 function loginAdmin(){
   if($('#adminPass').value === 'renato231218'){
     isAdmin=true; sessionStorage.setItem('is-legend-admin','true'); initAdmin();
@@ -156,13 +254,15 @@ function loginAdmin(){
 }
 function logoutAdmin(){ isAdmin=false; sessionStorage.removeItem('is-legend-admin'); location.reload(); }
 
+// NAVEGACIÓN
 function setView(view){
   currentView = view;
   $$('.view-section').forEach(v => v.style.display = 'none');
+  $$('.tab-btn').forEach(b => b.classList.remove('active'));
   $(`#view-${view}`).style.display = 'block';
+  $(`#tab-${view}`).classList.add('active');
   renderView();
 }
-const $$=s=>Array.from(document.querySelectorAll(s));
 
 async function initAdmin() {
   if(!isAdmin) return;
@@ -185,7 +285,10 @@ async function initAdmin() {
     if(del) $('#confDelivery').value = del.value;
   }
 
-  $('#newProdCat').innerHTML = cats.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
+  const catOptions = cats.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
+  $('#newProdCat').innerHTML = catOptions;
+  $('#editCat').innerHTML = catOptions;
+
   renderView();
 }
 
@@ -195,103 +298,187 @@ function renderView(){
   if(currentView === 'categories') renderCategories();
 }
 
+// RENDER PRODUCTOS
 function renderProducts(){
   let html = '';
   cats.forEach(cat => {
     const catProds = prods.filter(p => p.category_id === cat.id);
-    html += `<div class="admin-card"><h3>${cat.label}</h3><div class="admin-grid">`;
+    if(catProds.length === 0) return;
+
+    html += `
+      <div class="admin-card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+          <div class="mark" style="margin:0;width:30px"></div>
+          <h3 style="margin:0">${cat.label}</h3>
+          <span style="background:var(--line);padding:2px 8px;border-radius:4px;font-size:10px;color:var(--muted)">${catProds.length}</span>
+        </div>
+        <div class="admin-grid">`;
+    
     catProds.forEach(p => {
+      const hasImg = p.img && p.img.length > 5;
       html += `
-        <div class="admin-item" style="flex-direction:column; align-items:flex-start;">
-            <div style="width:60px;height:60px;background:#222;border-radius:6px;display:grid;place-items:center;overflow:hidden;">
-              ${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="font-size:10px;color:var(--muted)">LB</span>`}
-            </div>
-            <div style="flex:1">
-              <strong>${esc(p.name)}</strong><br>
-              <span style="color:var(--orange)">$${p.price}</span>
-            </div>
-            <div class="admin-controls" style="flex-direction:row;">
-              <button class="admin-btn" onclick="editProduct('${p.id}')">EDITAR DATOS</button>
-              <button class="admin-btn del" onclick="deleteProduct('${p.id}')">X</button>
+        <div class="admin-item">
+          <div style="position:relative;width:100%">
+            ${hasImg ? `<img src="${p.img}" class="main-thumb">` : `<div class="main-thumb" style="display:grid;place-items:center;color:#333;font-family:var(--display)">LB</div>`}
+            ${p.badge ? `<span style="position:absolute;top:10px;left:10px;background:var(--orange);color:#111;padding:4px 8px;font-size:9px;font-weight:900;border-radius:4px">${p.badge}</span>` : ''}
+          </div>
+          
+          <div style="flex:1">
+            <h4 style="font-size:16px;margin-bottom:4px">${esc(p.name)}</h4>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="color:var(--orange);font-weight:700;font-size:18px">$${p.price}</span>
+              <span style="font-size:10px;color:var(--muted)">ID: ${p.id.split('-')[0]}</span>
             </div>
           </div>
-          <div style="width:100%; margin-top:10px; padding-top:10px; border-top:1px solid #222;">
-            <p style="font-size:10px; color:var(--muted); margin-bottom:5px;">IMÁGENES (Slider):</p>
-            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+
+          <div style="border-top:1px solid var(--line);padding-top:10px">
+            <p style="font-size:10px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px">Galería Slider</p>
+            <div class="img-slider-admin">
               ${(p.imgs || []).map((img, idx) => `
-                <div style="position:relative;">
-                  <img src="${img}" style="width:40px;height:40px;border-radius:4px;">
-                  <button onclick="removeProductImg('${p.id}', ${idx})" style="position:absolute;top:-5px;right:-5px;background:red;color:white;border:none;border-radius:50%;width:15px;height:15px;font-size:10px;cursor:pointer;">x</button>
+                <div class="slider-item-admin">
+                  <img src="${img}">
+                  <button class="del-img" onclick="removeProductImg('${p.id}', ${idx})">&times;</button>
                 </div>
               `).join('')}
-              <button onclick="addProductImg('${p.id}')" style="width:40px;height:40px;border:1px dashed var(--line);background:transparent;color:var(--muted);cursor:pointer;">+</button>
+              <button class="add-img-btn" onclick="addProductImg('${p.id}')">+</button>
             </div>
+          </div>
+
+          <div class="admin-controls">
+            <button class="admin-btn" onclick="openEditModal('${p.id}')">✏️ Editar Datos</button>
+            <button class="admin-btn del" onclick="deleteProduct('${p.id}')" title="Eliminar">🗑️</button>
           </div>
         </div>`;
     });
     html += `</div></div>`;
   });
-  $('#adminList').innerHTML = html;
+  $('#adminList').innerHTML = html || '<p style="text-align:center;color:var(--muted);padding:40px">No hay productos en esta categoría.</p>';
 }
 
+// RENDER BUILDER
 function renderBuilderAdmin(){
   let html = '';
   bSteps.forEach(step => {
-    html += `<div class="builder-step-admin">
-      <h3>${step.label} ${step.is_multi ? '(Múltiple)' : ''}</h3>
-      <div id="opts-${step.id}">
+    html += `<div class="admin-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="margin:0">${step.label} <span style="font-size:12px;color:var(--muted)">${step.is_multi ? '(Múltiple)' : '(Único)'}</span></h3>
+        <button class="admin-btn" onclick="addBuilderOpt('${step.id}')" style="width:auto;padding:8px 15px">+ Añadir</button>
+      </div>
+      <div style="display:grid;gap:10px">
         ${step.options.map((opt, i) => `
-          <div class="builder-option-admin">
-            <span style="width:30px;font-weight:900;color:var(--orange)">${opt.code}</span>
-            <input type="text" value="${opt.name}" onchange="updateBuilderOpt('${step.id}', ${i}, 'name', this.value)" style="flex:1;padding:5px">
-            <input type="number" value="${opt.price}" onchange="updateBuilderOpt('${step.id}', ${i}, 'price', this.value)" style="width:80px;padding:5px">
-            <button class="admin-btn del" onclick="removeBuilderOpt('${step.id}', ${i})">X</button>
+          <div class="builder-option-admin" style="background:#080808;border:1px solid var(--line)">
+            <span style="width:40px;font-weight:900;color:var(--orange);font-family:var(--display)">${opt.code}</span>
+            <input type="text" value="${opt.name}" onchange="updateBuilderOpt('${step.id}', ${i}, 'name', this.value)" style="flex:1;background:transparent;border:none;color:#fff">
+            <div style="display:flex;align-items:center;gap:5px;background:var(--line);padding:4px 10px;border-radius:6px">
+              <span style="font-size:12px;color:var(--muted)">$</span>
+              <input type="number" value="${opt.price}" onchange="updateBuilderOpt('${step.id}', ${i}, 'price', this.value)" style="width:60px;background:transparent;border:none;color:#fff;font-weight:700">
+            </div>
+            <button class="admin-btn del" style="padding:8px" onclick="removeBuilderOpt('${step.id}', ${i})">&times;</button>
           </div>
         `).join('')}
       </div>
-      <button class="admin-btn" onclick="addBuilderOpt('${step.id}')">+ Añadir Opción</button>
     </div>`;
   });
   $('#builderAdminList').innerHTML = html;
 }
 
+// RENDER CATEGORÍAS
 function renderCategories(){
   $('#categoryList').innerHTML = cats.map(cat => `
-    <div style="display:flex;justify-content:space-between;padding:12px;background:#111;margin-bottom:8px;border-radius:8px;border:1px solid var(--line)">
-      <span>${cat.label}</span>
-      <button class="admin-btn del" onclick="deleteCategory('${cat.id}')">ELIMINAR</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;background:#111;margin-bottom:10px;border-radius:12px;border:1px solid var(--line)">
+      <div style="display:flex;align-items:center;gap:15px">
+        <span style="font-weight:700;font-size:18px">${cat.label}</span>
+        <span style="color:var(--muted);font-size:12px">Orden: ${cat.display_order}</span>
+      </div>
+      <button class="admin-btn del" style="flex:0 0 auto;width:auto;padding:8px 15px" onclick="deleteCategory('${cat.id}')">ELIMINAR</button>
     </div>
   `).join('');
 }
 
-// LÓGICA DE PRODUCTOS
-window.editProduct = async function(id){
-  const p = prods.find(x => x.id === id);
-  const n = prompt("Nuevo nombre:", p.name); if(!n) return;
-  const pr = prompt("Nuevo precio:", p.price); if(!pr) return;
-  
-  if(confirm("¿Quieres cambiar la imagen principal seleccionando un archivo local?\n(Cancelar para usar URL o dejar igual)")) {
-    const file = await pickFile();
-    if(file) {
-      const url = await uploadImg(file);
-      if(url) {
-        await sb.from('products').update({ name: n, price: parseFloat(pr), img: url }).eq('id', id);
-        toast('Actualizado con nueva foto!'); initAdmin(); return;
-      }
-    }
-  }
-  
-  const im = prompt("URL Imagen (o deja la actual):", p.img || '');
-  await sb.from('products').update({ name: n, price: parseFloat(pr), img: im }).eq('id', id);
-  toast('Actualizado!'); initAdmin();
+// ACCIONES PRODUCTOS
+function openNewProductModal() {
+  $('#newProdModal').style.display = 'grid';
 }
 
+async function addNewProduct(){
+  const cat = $('#newProdCat').value;
+  const name = $('#newProdName').value;
+  const price = parseFloat($('#newProdPrice').value);
+  if(!name || isNaN(price)) return toast("Completa todos los campos");
+  
+  const id = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g,'-') + '-' + Date.now();
+  
+  toast("Creando...");
+  const { error } = await sb.from('products').insert({ 
+    id, 
+    category_id: cat, 
+    name, 
+    price, 
+    description: 'Deliciosa opción de Legendary Burger',
+    imgs: []
+  });
+  
+  if(error) { toast("Error al crear"); console.error(error); }
+  else { 
+    closeModal('newProdModal');
+    toast("¡Producto Creado!"); 
+    initAdmin(); 
+  }
+}
+
+async function deleteProduct(id) {
+  if(!confirm("¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.")) return;
+  toast("Eliminando...");
+  await sb.from('products').delete().eq('id', id);
+  toast("Producto eliminado");
+  initAdmin();
+}
+
+// MODAL EDITAR
+function openEditModal(id) {
+  const p = prods.find(x => x.id === id);
+  $('#editId').value = p.id;
+  $('#editName').value = p.name;
+  $('#editDesc').value = p.description || '';
+  $('#editPrice').value = p.price;
+  $('#editCat').value = p.category_id;
+  $('#editBadge').value = p.badge || '';
+  $('#editImgUrl').value = p.img || '';
+  $('#editModal').style.display = 'grid';
+}
+
+async function saveProductEdit() {
+  const id = $('#editId').value;
+  const updates = {
+    name: $('#editName').value,
+    description: $('#editDesc').value,
+    price: parseFloat($('#editPrice').value),
+    category_id: $('#editCat').value,
+    badge: $('#editBadge').value,
+    img: $('#editImgUrl').value
+  };
+
+  toast("Guardando...");
+  const { error } = await sb.from('products').update(updates).eq('id', id);
+  if(error) toast("Error al guardar");
+  else {
+    closeModal('editModal');
+    toast("Cambios guardados");
+    initAdmin();
+  }
+}
+
+function closeModal(id) {
+  $(`#${id}`).style.display = 'none';
+}
+
+// IMÁGENES
 window.uploadImg = async function(file) {
   const ext = file.name.split('.').pop();
-  const name = `${Date.now()}.${ext}`;
+  const name = `prod_${Date.now()}.${ext}`;
   toast("Subiendo imagen...");
   const { data, error } = await sb.storage.from('products').upload(name, file);
-  if(error) { console.error(error); toast("Error al subir"); return null; }
+  if(error) { console.error(error); toast("Error de Storage"); return null; }
   const { data: { publicUrl } } = sb.storage.from('products').getPublicUrl(name);
   return publicUrl;
 }
@@ -299,58 +486,89 @@ window.uploadImg = async function(file) {
 window.pickFile = function() {
   return new Promise(res => {
     const input = $('#fileInput');
-    input.onchange = e => res(e.target.files[0]);
+    input.onchange = e => {
+      const file = e.target.files[0];
+      e.target.value = ''; // Reset para poder elegir el mismo archivo
+      res(file);
+    };
     input.click();
   });
 }
 
 window.addProductImg = async function(id){
-  const p = prods.find(x => x.id === id);
   const file = await pickFile();
   if(!file) return;
   const url = await uploadImg(file);
   if(!url) return;
+  
+  const p = prods.find(x => x.id === id);
   const oldImgs = Array.isArray(p.imgs) ? p.imgs : [];
   const newImgs = [...oldImgs, url];
-  // Actualizamos tanto la principal como la lista del slider
-  await sb.from('products').update({ 
-    imgs: newImgs, 
-    img: newImgs[0] 
-  }).eq('id', id);
+  
+  // Si no tiene imagen principal, ponemos esta como principal
+  const updateData = { imgs: newImgs };
+  if(!p.img || p.img.length < 5) updateData.img = url;
+
+  await sb.from('products').update(updateData).eq('id', id);
   toast('¡Imagen añadida!');
-  await initAdmin(); // Forzamos recarga de datos
+  initAdmin();
 }
+
 window.removeProductImg = async function(id, idx){
+  if(!confirm("¿Quitar esta imagen del slider?")) return;
   const p = prods.find(x => x.id === id);
   let newImgs = [...(p.imgs || [])];
   newImgs.splice(idx, 1);
-  await sb.from('products').update({ imgs: newImgs, img: newImgs[0] || null }).eq('id', id);
-  toast('Imagen quitada!'); initAdmin();
-}
-window.addNewProduct = async function(){
-  const cat = $('#newProdCat').value;
-  const name = $('#newProdName').value;
-  const price = parseFloat($('#newProdPrice').value);
-  if(!name || isNaN(price)) return toast("Completa datos");
-  const id = name.toLowerCase().replace(/\s+/g,'-') + '-' + Date.now();
-  await sb.from('products').insert({ id, category_id: cat, name, price, description: 'Nuevo' });
-  initAdmin(); toast("Creado!");
+  
+  // Si quitamos la que era la principal, ponemos la siguiente (o null)
+  const updateData = { imgs: newImgs };
+  if(p.img === p.imgs[idx]) updateData.img = newImgs[0] || '';
+
+  await sb.from('products').update(updateData).eq('id', id);
+  toast('Imagen removida');
+  initAdmin();
 }
 
-// LÓGICA DE BUILDER
+// CATEGORÍAS
+async function addNewCategory() {
+  const label = $('#newCatName').value;
+  if(!label) return toast("Escribe un nombre");
+  const id = label.toLowerCase().replace(/\s+/g, '-');
+  const order = cats.length + 1;
+  
+  await sb.from('categories').insert({ id, label, display_order: order });
+  $('#newCatName').value = '';
+  initAdmin();
+  toast("Categoría añadida");
+}
+
+async function deleteCategory(id) {
+  const hasProds = prods.some(p => p.category_id === id);
+  if(hasProds) return alert("No puedes eliminar una categoría que tiene productos. Mueve los productos primero.");
+  if(!confirm("¿Eliminar categoría?")) return;
+  
+  await sb.from('categories').delete().eq('id', id);
+  initAdmin();
+  toast("Categoría eliminada");
+}
+
+// BUILDER ACTIONS
 window.updateBuilderOpt = async function(stepId, index, field, val){
   const step = bSteps.find(s => s.id === stepId);
   if(field === 'price') val = parseFloat(val);
   step.options[index][field] = val;
   await sb.from('builder_options').update({ options: step.options }).eq('id', stepId);
-  toast("Opción guardada");
+  toast("Guardado");
 }
+
 window.addBuilderOpt = async function(stepId){
   const step = bSteps.find(s => s.id === stepId);
-  step.options.push({ id: 'new-'+Date.now(), code: 'X', name: 'Nueva Opción', price: 0 });
+  step.options.push({ id: 'opt-'+Date.now(), code: '+', name: 'Nueva Opción', price: 0 });
   await sb.from('builder_options').update({ options: step.options }).eq('id', stepId);
   initAdmin();
+  toast("Opción añadida");
 }
+
 window.removeBuilderOpt = async function(stepId, index){
   if(!confirm("¿Quitar opción?")) return;
   const step = bSteps.find(s => s.id === stepId);
@@ -363,17 +581,20 @@ window.removeBuilderOpt = async function(stepId, index){
 window.saveConfig = async function(){
   const wa = $('#confWA').value;
   const del = $('#confDelivery').value;
+  toast("Guardando...");
   await sb.from('site_config').upsert({ key: 'wa_number', value: wa });
   await sb.from('site_config').upsert({ key: 'delivery_price', value: del });
-  toast("Configuración guardada");
+  toast("Configuración actualizada");
 }
 
 function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// Iniciar
 initAdmin();
+
 </script>
 </body>
 </html>
