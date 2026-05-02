@@ -36,21 +36,24 @@ body{
 .admin-item{background:#111;border:1px solid var(--line);padding:15px;border-radius:8px;display:flex;gap:15px;align-items:center}
 .admin-item img{width:60px;height:60px;border-radius:6px;object-fit:cover}
 .admin-controls{margin-left:auto;display:flex;flex-direction:column;gap:5px}
-.admin-btn{padding:6px 10px;font-size:11px;background:var(--orange);color:#111;font-weight:900;border-radius:4px;text-transform:uppercase; border:none; cursor:pointer;}
+.admin-btn{padding:6px 12px;font-size:11px;background:var(--orange);color:#111;font-weight:900;border-radius:4px;text-transform:uppercase; border:none; cursor:pointer;}
 .admin-btn.del{background:#dc2626;color:#fff}
+.admin-btn.secondary{background:#333;color:#fff}
 .admin-login{max-width:400px;margin:100px auto;text-align:center;padding:40px;background:var(--card);border:1px solid var(--line);border-radius:14px}
 .admin-form{display:grid;gap:15px;margin-top:20px}
 .admin-form input, .admin-form select{width:100%;padding:12px;background:#080808;border:1px solid var(--line);color:#fff;border-radius:8px; font-size: 16px;}
 .btn-primary{background:var(--orange);color:#111;padding:12px;border-radius:8px;font-weight:900;text-transform:uppercase;border:none;cursor:pointer;width:100%;}
-.btn-outline{border:1px solid var(--line);padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;}
+.btn-outline{border:1px solid var(--line);padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;background:transparent;color:#fff;text-decoration:none;display:inline-block;}
 .toast{
-  position:fixed;z-index:100;left:18px;right:18px;bottom:18px;padding:14px 16px;
-  border-radius:8px;background:var(--cream);color:#111;font-weight:900;text-align:center;
-  box-shadow:5px 5px 0 #000;transform:translateY(150%);transition:.22s;
+  position:fixed;z-index:100;left:50%;bottom:30px;transform:translateX(-50%) translateY(150%);
+  padding:14px 24px;border-radius:12px;background:var(--cream);color:#111;font-weight:900;
+  text-align:center;box-shadow:5px 5px 0 #000;transition:.3s;
 }
-.toast.show{transform:translateY(0)}
+.toast.show{transform:translateX(-50%) translateY(0)}
 h1, h2, h3 { font-family: var(--display); margin-bottom: 10px; }
 .mark{width:78px;height:6px;background:var(--orange);box-shadow:4px 4px 0 #000;margin-bottom:14px}
+.builder-step-admin{border-bottom:1px solid var(--line);padding:15px 0}
+.builder-option-admin{display:flex;align-items:center;gap:10px;margin-bottom:8px;background:#111;padding:8px;border-radius:6px}
 </style>
 </head>
 <body>
@@ -68,7 +71,7 @@ h1, h2, h3 { font-family: var(--display); margin-bottom: 10px; }
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px">
       <div>
         <div class="mark"></div>
-        <h1>Panel de Control</h1>
+        <h1>Legendary Panel</h1>
       </div>
       <div style="display:flex; gap:10px;">
         <a href="/" class="btn-outline">Ver Web</a>
@@ -76,14 +79,14 @@ h1, h2, h3 { font-family: var(--display); margin-bottom: 10px; }
       </div>
     </div>
 
-    <div id="adminMenu" class="admin-card" style="display:flex;gap:15px;overflow-x:auto;padding:15px">
+    <div class="admin-card" style="display:flex;gap:10px;overflow-x:auto;padding:10px;background:#000">
       <button onclick="setView('products')" class="admin-btn">🍔 Productos</button>
-      <button onclick="setView('categories')" class="admin-btn">📂 Categorías</button>
       <button onclick="setView('builder')" class="admin-btn">🛠️ Builder</button>
+      <button onclick="setView('categories')" class="admin-btn">📂 Categorías</button>
       <button onclick="setView('config')" class="admin-btn">⚙️ Config</button>
     </div>
 
-    <div id="view-products">
+    <div id="view-products" class="view-section">
       <div class="admin-card">
         <h3>Nuevo Producto</h3>
         <div class="admin-form" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px">
@@ -96,9 +99,16 @@ h1, h2, h3 { font-family: var(--display); margin-bottom: 10px; }
       <div id="adminList"></div>
     </div>
 
-    <div id="view-categories" style="display:none">
+    <div id="view-builder" class="view-section" style="display:none">
       <div class="admin-card">
-        <h3>Gestionar Categorías</h3>
+        <h3>Gestionar Armador (Builder)</h3>
+        <div id="builderAdminList"></div>
+      </div>
+    </div>
+
+    <div id="view-categories" class="view-section" style="display:none">
+      <div class="admin-card">
+        <h3>Categorías</h3>
         <div class="admin-form" style="display:grid;grid-template-columns:1fr auto;gap:15px">
           <input type="text" id="newCatName" placeholder="Nueva Categoría">
           <button onclick="addNewCategory()" class="btn-primary">Añadir</button>
@@ -107,23 +117,15 @@ h1, h2, h3 { font-family: var(--display); margin-bottom: 10px; }
       </div>
     </div>
 
-    <div id="view-builder" style="display:none">
+    <div id="view-config" class="view-section" style="display:none">
       <div class="admin-card">
-        <h3>Opciones del Builder</h3>
-        <p style="font-size:12px;margin-bottom:10px;color:var(--muted)">Edita las opciones que aparecen en el personalizador.</p>
-        <div id="builderList"></div>
-      </div>
-    </div>
-
-    <div id="view-config" style="display:none">
-      <div class="admin-card">
-        <h3>Configuración del Sitio</h3>
+        <h3>Configuración General</h3>
         <div class="admin-form">
-          <div class="form-field">
-            <label>WhatsApp (ej: 59899123456)</label>
-            <input type="text" id="confWA" placeholder="Número de WhatsApp">
-          </div>
-          <button onclick="saveConfig()" class="btn-primary">Guardar Configuración</button>
+          <label>WhatsApp Pedidos (Número completo sin +)</label>
+          <input type="text" id="confWA" placeholder="59899000000">
+          <label>Precio de Envío ($)</label>
+          <input type="number" id="confDelivery" placeholder="100">
+          <button onclick="saveConfig()" class="btn-primary">Guardar Todo</button>
         </div>
       </div>
     </div>
@@ -135,62 +137,61 @@ h1, h2, h3 { font-family: var(--display); margin-bottom: 10px; }
 <script>
 const SUPABASE_URL = 'https://dwgwbnalrbzvakzbiwmb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3Z3dibmFscmJ6dmFremJpd21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MTQ4OTEsImV4cCI6MjA5MzI5MDg5MX0.im55Wn6fWcQddwaiRgZx1umKYPI2y0fwW0_RuP51ZR0';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let isAdmin = sessionStorage.getItem('is-legend-admin') === 'true';
 let currentView = 'products';
 let cats = [];
 let prods = [];
+let bSteps = [];
 
 const $=s=>document.querySelector(s);
-function esc(t){ if(!t)return ''; return t.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+const esc=t=>t?t.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'):'';
 
 function loginAdmin(){
   if($('#adminPass').value === 'admin123'){
     isAdmin=true; sessionStorage.setItem('is-legend-admin','true'); initAdmin();
   } else { toast('Contraseña incorrecta'); }
 }
-
 function logoutAdmin(){ isAdmin=false; sessionStorage.removeItem('is-legend-admin'); location.reload(); }
 
 function setView(view){
   currentView = view;
-  ['products','categories','builder','config'].forEach(v => {
-    $(`#view-${v}`).style.display = v === view ? 'block' : 'none';
-  });
+  $$('.view-section').forEach(v => v.style.display = 'none');
+  $(`#view-${view}`).style.display = 'block';
   renderView();
 }
+const $$=s=>Array.from(document.querySelectorAll(s));
 
 async function initAdmin() {
-  if(!isAdmin) return renderLogin();
-  const { data: catData } = await supabase.from('categories').select('*').order('display_order');
-  const { data: prodData } = await supabase.from('products').select('*');
-  const { data: configData } = await supabase.from('site_config').select('*');
+  if(!isAdmin) return;
+  $('#adminLogin').style.display = 'none';
+  $('#adminDashboard').style.display = 'block';
+
+  const { data: catData } = await sb.from('categories').select('*').order('display_order');
+  const { data: prodData } = await sb.from('products').select('*').order('created_at',{ascending:false});
+  const { data: configData } = await sb.from('site_config').select('*');
+  const { data: builderData } = await sb.from('builder_options').select('*').order('display_order');
 
   cats = catData || [];
   prods = prodData || [];
+  bSteps = builderData || [];
   
   if(configData) {
-    const wa = configData.find(c => c.key === 'whatsapp');
+    const wa = configData.find(c => c.key === 'wa_number');
+    const del = configData.find(c => c.key === 'delivery_price');
     if(wa) $('#confWA').value = wa.value;
+    if(del) $('#confDelivery').value = del.value;
   }
 
   $('#newProdCat').innerHTML = cats.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
   renderView();
 }
 
-function renderLogin(){
-  $('#adminLogin').style.display = 'block';
-  $('#adminDashboard').style.display = 'none';
-}
-
 function renderView(){
-  $('#adminLogin').style.display = 'none';
-  $('#adminDashboard').style.display = 'block';
-
   if(currentView === 'products') renderProducts();
+  if(currentView === 'builder') renderBuilderAdmin();
   if(currentView === 'categories') renderCategories();
-  // Builder rendering omitted for brevity in MVP but logic exists
 }
 
 function renderProducts(){
@@ -198,18 +199,17 @@ function renderProducts(){
   cats.forEach(cat => {
     const catProds = prods.filter(p => p.category_id === cat.id);
     html += `<div class="admin-card"><h3>${cat.label}</h3><div class="admin-grid">`;
-    catProds.forEach(item => {
-      const firstImg = item.imgs?.[0] || item.img || '';
+    catProds.forEach(p => {
       html += `
         <div class="admin-item">
-          <img src="${firstImg}" onerror="this.src='https://via.placeholder.com/60?text=LB'">
-          <div>
-            <strong>${esc(item.name)}</strong><br>
-            <span style="color:var(--orange)">$${item.price}</span>
+          <img src="${p.img || ''}" onerror="this.src='https://via.placeholder.com/60?text=LB'">
+          <div style="flex:1">
+            <strong>${esc(p.name)}</strong><br>
+            <span style="color:var(--orange)">$${p.price}</span>
           </div>
           <div class="admin-controls">
-            <button class="admin-btn" onclick="editProduct('${item.id}')">Editar</button>
-            <button class="admin-btn del" onclick="deleteProduct('${item.id}')">Borrar</button>
+            <button class="admin-btn" onclick="editProduct('${p.id}')">EDITAR</button>
+            <button class="admin-btn del" onclick="deleteProduct('${p.id}')">X</button>
           </div>
         </div>`;
     });
@@ -218,57 +218,92 @@ function renderProducts(){
   $('#adminList').innerHTML = html;
 }
 
+function renderBuilderAdmin(){
+  let html = '';
+  bSteps.forEach(step => {
+    html += `<div class="builder-step-admin">
+      <h3>${step.label} ${step.is_multi ? '(Múltiple)' : ''}</h3>
+      <div id="opts-${step.id}">
+        ${step.options.map((opt, i) => `
+          <div class="builder-option-admin">
+            <span style="width:30px;font-weight:900;color:var(--orange)">${opt.code}</span>
+            <input type="text" value="${opt.name}" onchange="updateBuilderOpt('${step.id}', ${i}, 'name', this.value)" style="flex:1;padding:5px">
+            <input type="number" value="${opt.price}" onchange="updateBuilderOpt('${step.id}', ${i}, 'price', this.value)" style="width:80px;padding:5px">
+            <button class="admin-btn del" onclick="removeBuilderOpt('${step.id}', ${i})">X</button>
+          </div>
+        `).join('')}
+      </div>
+      <button class="admin-btn" onclick="addBuilderOpt('${step.id}')">+ Añadir Opción</button>
+    </div>`;
+  });
+  $('#builderAdminList').innerHTML = html;
+}
+
 function renderCategories(){
   $('#categoryList').innerHTML = cats.map(cat => `
-    <div style="display:flex;justify-content:space-between;padding:10px;background:#111;margin-bottom:5px;border-radius:6px;border:1px solid var(--line)">
+    <div style="display:flex;justify-content:space-between;padding:12px;background:#111;margin-bottom:8px;border-radius:8px;border:1px solid var(--line)">
       <span>${cat.label}</span>
-      <button onclick="deleteCategory('${cat.id}')" style="color:#dc2626;font-size:12px;font-weight:700">ELIMINAR</button>
+      <button class="admin-btn del" onclick="deleteCategory('${cat.id}')">ELIMINAR</button>
     </div>
   `).join('');
 }
 
+// LÓGICA DE PRODUCTOS
 async function editProduct(id){
-  const item = prods.find(p => p.id === id);
-  const newPrice = prompt('Nuevo Precio:', item.price);
-  if(newPrice === null) return;
-  const newName = prompt('Nuevo Nombre:', item.name);
-  if(newName === null) return;
-
-  await supabase.from('products').update({ price: parseFloat(newPrice), name: newName }).eq('id', id);
-  toast('Actualizado!');
-  initAdmin();
+  const p = prods.find(x => x.id === id);
+  const n = prompt("Nuevo nombre:", p.name); if(!n) return;
+  const pr = prompt("Nuevo precio:", p.price); if(!pr) return;
+  const im = prompt("URL Imagen:", p.img || '');
+  await sb.from('products').update({ name: n, price: parseFloat(pr), img: im }).eq('id', id);
+  toast('Actualizado!'); initAdmin();
 }
-
 async function deleteProduct(id){
-  if(!confirm('¿Borrar?')) return;
-  await supabase.from('products').delete().eq('id', id);
-  initAdmin();
+  if(confirm("¿Borrar?")) { await sb.from('products').delete().eq('id', id); initAdmin(); }
 }
-
 async function addNewProduct(){
-  const category_id = $('#newProdCat').value;
-  const name = $('#newProdName').value.trim();
+  const cat = $('#newProdCat').value;
+  const name = $('#newProdName').value;
   const price = parseFloat($('#newProdPrice').value);
-  if(!name || isNaN(price)) return toast('Completa datos');
-  
+  if(!name || isNaN(price)) return toast("Completa datos");
   const id = name.toLowerCase().replace(/\s+/g,'-') + '-' + Date.now();
-  await supabase.from('products').insert({ id, category_id, name, price, description: 'Nuevo producto' });
-  $('#newProdName').value = ''; $('#newProdPrice').value = '';
+  await sb.from('products').insert({ id, category_id: cat, name, price, description: 'Nuevo' });
+  initAdmin(); toast("Creado!");
+}
+
+// LÓGICA DE BUILDER
+async function updateBuilderOpt(stepId, index, field, val){
+  const step = bSteps.find(s => s.id === stepId);
+  if(field === 'price') val = parseFloat(val);
+  step.options[index][field] = val;
+  await sb.from('builder_options').update({ options: step.options }).eq('id', stepId);
+  toast("Opción guardada");
+}
+async function addBuilderOpt(stepId){
+  const step = bSteps.find(s => s.id === stepId);
+  step.options.push({ id: 'new-'+Date.now(), code: 'X', name: 'Nueva Opción', price: 0 });
+  await sb.from('builder_options').update({ options: step.options }).eq('id', stepId);
   initAdmin();
-  toast('Producto añadido!');
+}
+async function removeBuilderOpt(stepId, index){
+  if(!confirm("¿Quitar opción?")) return;
+  const step = bSteps.find(s => s.id === stepId);
+  step.options.splice(index, 1);
+  await sb.from('builder_options').update({ options: step.options }).eq('id', stepId);
+  initAdmin();
 }
 
+// CONFIG
 async function saveConfig(){
-  const wa = $('#confWA').value.trim();
-  await supabase.from('site_config').upsert({ key: 'whatsapp', value: wa });
-  toast('Configuración guardada!');
+  const wa = $('#confWA').value;
+  const del = $('#confDelivery').value;
+  await sb.from('site_config').upsert({ key: 'wa_number', value: wa });
+  await sb.from('site_config').upsert({ key: 'delivery_price', value: del });
+  toast("Configuración guardada");
 }
 
-function toast(text){
-  const el=$('#toast');
-  el.textContent=text;
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),2200);
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 initAdmin();
