@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Legendary Burger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#080808;
+  --coal:#101010;
+  --card:#151515;
+  --line:rgba(245,230,200,.16);
+  --cream:#f5e6c8;
+  --muted:#bcb4a7;
+  --orange:#f05a22;
+  --orange-dark:#c94213;
+  --wa-green:#25D366;
+  --display:"Archivo Black", sans-serif;
+  --body:"Space Grotesk", sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;
+  background: var(--ink);
+  color:#fff;
+  font-family:var(--body);
+  padding: 40px 20px;
+}
+.admin-container { max-width: 1200px; margin: 0 auto; }
+.admin-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:20px}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:20px}
+.admin-item{background:#111;border:1px solid var(--line);padding:15px;border-radius:8px;display:flex;gap:15px;align-items:center}
+.admin-item img{width:60px;height:60px;border-radius:6px;object-fit:cover}
+.admin-controls{margin-left:auto;display:flex;flex-direction:column;gap:5px}
+.admin-btn{padding:6px 10px;font-size:11px;background:var(--orange);color:#111;font-weight:900;border-radius:4px;text-transform:uppercase; border:none; cursor:pointer;}
+.admin-btn.del{background:#dc2626;color:#fff}
+.admin-login{max-width:400px;margin:100px auto;text-align:center;padding:40px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.admin-form{display:grid;gap:15px;margin-top:20px}
+.admin-form input, .admin-form select{width:100%;padding:12px;background:#080808;border:1px solid var(--line);color:#fff;border-radius:8px; font-size: 16px;}
+.btn-primary{background:var(--orange);color:#111;padding:12px;border-radius:8px;font-weight:900;text-transform:uppercase;border:none;cursor:pointer;width:100%;}
+.btn-outline{border:1px solid var(--line);padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;}
+.toast{
+  position:fixed;z-index:100;left:18px;right:18px;bottom:18px;padding:14px 16px;
+  border-radius:8px;background:var(--cream);color:#111;font-weight:900;text-align:center;
+  box-shadow:5px 5px 0 #000;transform:translateY(150%);transition:.22s;
+}
+.toast.show{transform:translateY(0)}
+h1, h2, h3 { font-family: var(--display); margin-bottom: 10px; }
+.mark{width:78px;height:6px;background:var(--orange);box-shadow:4px 4px 0 #000;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="admin-container">
+  <div id="adminLogin" class="admin-login">
+    <div class="mark" style="margin: 0 auto 20px;"></div>
+    <h2>Acceso Admin</h2>
+    <div class="admin-form">
+      <input type="password" id="adminPass" placeholder="Contraseña">
+      <button onclick="loginAdmin()" class="btn-primary">Entrar</button>
+    </div>
+  </div>
+
+  <div id="adminDashboard" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px">
+      <div>
+        <div class="mark"></div>
+        <h1>Panel de Control</h1>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <a href="/" class="btn-outline">Ver Web</a>
+        <button onclick="logoutAdmin()" class="btn-outline">Salir</button>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h3>Nuevo Producto</h3>
+      <div class="admin-form" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px">
+        <select id="newCat">
+          <option value="carne">Carne</option>
+          <option value="pollo">Pollo</option>
+          <option value="veggie">Veggie</option>
+          <option value="milas">Milas/Chivitos</option>
+          <option value="papas">Papas</option>
+          <option value="extras">Extras</option>
+          <option value="bebidas">Bebidas</option>
+        </select>
+        <input type="text" id="newName" placeholder="Nombre">
+        <input type="number" id="newPrice" placeholder="Precio">
+        <button onclick="addNewProduct()" class="btn-primary" style="height:46px; padding:0;">Añadir</button>
+      </div>
+    </div>
+
+    <div id="adminList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let isAdmin = sessionStorage.getItem('is-legend-admin') === 'true';
+const catsBase={
+  carne:{label:'Burger de Carne',items:[]},
+  pollo:{label:'Otras Burgers',items:[]},
+  veggie:{label:'Veggie',items:[]},
+  milas:{label:'Milanesas y Chivitos',items:[]},
+  papas:{label:'Papas',items:[]},
+  extras:{label:'Extras en Burger',items:[]},
+  bebidas:{label:'Bebidas',items:[]}
+};
+let cats = JSON.parse(localStorage.getItem('legendary-menu') || JSON.stringify(catsBase));
+
+function saveMenu(){ 
+  localStorage.setItem('legendary-menu', JSON.stringify(cats)); 
+  renderAdmin(); 
+}
+
+const $=s=>document.querySelector(s);
+function esc(t){ if(!t)return ''; return t.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+
+function loginAdmin(){
+  if($('#adminPass').value === 'admin123'){
+    isAdmin=true; sessionStorage.setItem('is-legend-admin','true'); renderAdmin();
+  } else { toast('Contraseña incorrecta'); }
+}
+
+function logoutAdmin(){ isAdmin=false; sessionStorage.removeItem('is-legend-admin'); renderAdmin(); }
+
+function renderAdmin(){
+  if(!isAdmin){
+    $('#adminLogin').style.display = 'block';
+    $('#adminDashboard').style.display = 'none';
+    return;
+  }
+  $('#adminLogin').style.display = 'none';
+  $('#adminDashboard').style.display = 'block';
+  
+  let html = '';
+  Object.entries(cats).forEach(([catId, cat]) => {
+    html += `<div class="admin-card"><h3>${cat.label}</h3><div class="admin-grid">`;
+    cat.items.forEach(item => {
+      const firstImg = item.imgs?.[0] || item.img || '';
+      html += `
+        <div class="admin-item">
+          <img src="${firstImg}" onerror="this.src='https://via.placeholder.com/60?text=LB'">
+          <div>
+            <strong>${esc(item.name)}</strong><br>
+            <span style="color:var(--orange)">$${item.price}</span>
+          </div>
+          <div class="admin-controls">
+            <button class="admin-btn" onclick="editProduct('${catId}','${item.id}')">Editar</button>
+            <button class="admin-btn del" onclick="deleteProduct('${catId}','${item.id}')">Borrar</button>
+          </div>
+        </div>`;
+    });
+    html += `</div></div>`;
+  });
+  $('#adminList').innerHTML = html;
+}
+
+function editProduct(catId, itemId){
+  const item = cats[catId].items.find(i => i.id === itemId);
+  if(!item) return;
+  const newPrice = prompt('Nuevo Precio:', item.price);
+  if(newPrice === null) return;
+  const newImg = prompt('URL Imagen (o ruta local):', item.img || '');
+  if(newImg === null) return;
+  
+  if(newImg.toLowerCase().startsWith('javascript:')){ toast('URL no permitida'); return; }
+  
+  item.price = parseFloat(newPrice);
+  item.img = newImg;
+  if(!item.imgs) item.imgs = [newImg]; else item.imgs[0] = newImg;
+  saveMenu();
+  toast('Producto actualizado');
+}
+
+function deleteProduct(catId, itemId){
+  if(!confirm('¿Seguro quieres eliminar este producto?')) return;
+  cats[catId].items = cats[catId].items.filter(i => i.id !== itemId);
+  saveMenu();
+}
+
+function addNewProduct(){
+  const catId=$('#newCat').value;
+  const name=esc($('#newName').value.trim());
+  const price=parseFloat($('#newPrice').value);
+  if(!name || isNaN(price)){ toast('Completa nombre y precio'); return; }
+  const id=name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')+'-'+Date.now();
+  cats[catId].items.push({id, name, desc:'Producto gestionado vía panel.', price, img:null, imgs:[]});
+  saveMenu();
+  $('#newName').value=''; $('#newPrice').value='';
+  toast('Producto añadido!');
+}
+
+function toast(text){
+  const el=$('#toast');
+  el.textContent=text;
+  el.classList.add('show');
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+renderAdmin();
+</script>
+</body>
+</html>

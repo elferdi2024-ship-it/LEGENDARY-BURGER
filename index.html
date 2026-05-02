@@ -511,17 +511,7 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
 .value-item p{color:var(--muted);line-height:1.55;font-size:14px}
 .value-item .btn-link{display:inline-flex;margin-top:12px;color:var(--orange);font-weight:900;font-size:12px;text-transform:uppercase;gap:6px;align-items:center}
 
-/* ── Admin Dashboard ── */
-.admin-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:20px}
-.admin-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:20px}
-.admin-item{background:#111;border:1px solid var(--line);padding:15px;border-radius:8px;display:flex;gap:15px;align-items:center}
-.admin-item img{width:60px;height:60px;border-radius:6px;object-fit:cover}
-.admin-controls{margin-left:auto;display:flex;flex-direction:column;gap:5px}
-.admin-btn{padding:6px 10px;font-size:11px;background:var(--orange);color:#111;font-weight:900;border-radius:4px;text-transform:uppercase}
-.admin-btn.del{background:#dc2626;color:#fff}
-.admin-login{max-width:400px;margin:100px auto;text-align:center;padding:30px;background:var(--card);border:1px solid var(--line);border-radius:14px}
-.admin-form{display:grid;gap:15px;margin-top:20px}
-.admin-form input{width:100%;padding:12px;background:#080808;border:1px solid var(--line);color:#fff;border-radius:8px}
+/* ── Builder Promo ── */
 .builder-promo{
   max-width:1180px;
   margin:54px auto 0;
@@ -893,25 +883,6 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
     </section>
   </section>
 
-  <section class="page page-admin" id="page-admin">
-    <header class="page-kicker"><div class="page-kicker-inner"><div class="mark"></div><h1 class="section-title">Admin <em>Panel</em></h1><p class="section-sub">Gestiona productos, precios e imágenes.</p></div></header>
-    <section class="section" id="adminContent">
-      <div class="admin-login" id="adminLogin">
-        <h3>Acceso Restringido</h3>
-        <div class="admin-form">
-          <input type="password" id="adminPass" placeholder="Contraseña de admin">
-          <button class="btn btn-primary" onclick="checkAdmin()">Entrar</button>
-        </div>
-      </div>
-      <div id="adminDashboard" style="display:none">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-          <h2 class="menu-title">Catálogo</h2>
-          <button class="btn btn-purple" onclick="openNewProduct()">+ Nuevo Producto</button>
-        </div>
-        <div id="adminList"></div>
-      </div>
-    </section>
-  </section>
 </main>
 <footer><div class="foot-logo">LEGENDARY BURGER</div><div class="foot-links"><a href="#home" data-route="home">Inicio</a><a href="#menu" data-route="menu">Menu</a><a href="#builder" data-route="builder">Arma tu burger</a><a href="#cart" data-route="cart">Carrito</a><a href="https://instagram.com/legendaryburgermvd" target="_blank">Instagram</a></div><p class="copy">2024 Legendary Burger / Montevideo, Uruguay</p></footer>
 <div class="modal-overlay" id="ingredientModal">
@@ -935,7 +906,6 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
 
 <script>
 const WA='59899000000';
-let isAdmin = sessionStorage.getItem('is-legend-admin') === 'true';
 const catsBase={
   carne:{label:'Burger de Carne',items:[
     {id:'texas',name:'Texas Crispy',desc:'Smash de carne, bacon, salsa BBQ, cheddar, emmental x2, cebolla crispy y huevo frito.',price:390,img:'IMAGENES/Texas Crispy/Texas Crispy.jpg',imgs:['IMAGENES/Texas Crispy/Texas Crispy.jpg','IMAGENES/Texas Crispy/Texas Crispy 2.jpg'],badge:'ESTRELLA'},
@@ -1104,100 +1074,12 @@ function addCustomBurger(){
 }
 function route(){
   const page=(location.hash||'#home').replace('#','').split('-')[0];
-  const valid=['home','menu','builder','cart','admin'].includes(page)?page:'home';
+  const valid=['home','menu','builder','cart'].includes(page)?page:'home';
   $$('.page').forEach(el=>el.classList.toggle('active',el.id===`page-${valid}`));
   $$('[data-route]').forEach(el=>el.classList.toggle('active',el.dataset.route===valid));
   $('#mobileMenu').classList.remove('open');
   document.body.classList.remove('menu-open');
   if(valid==='menu' || valid==='builder' || valid==='cart') window.scrollTo({top:0,behavior:'instant'});
-  if(valid==='admin') renderAdmin();
-}
-function loginAdmin(){
-  const p=$('#adminPass').value;
-  if(p==='admin123'){
-    isAdmin=true; sessionStorage.setItem('is-legend-admin','true'); renderAdmin();
-  }else{ toast('Password incorrecto'); }
-}
-function logoutAdmin(){ isAdmin=false; sessionStorage.removeItem('is-legend-admin'); renderAdmin(); }
-
-function renderAdmin(){
-  if(!isAdmin){
-    $('#adminContent').innerHTML=`
-      <div style="max-width:400px;margin:100px auto;text-align:center;background:var(--cream);padding:40px;border-radius:24px;border:1px solid rgba(0,0,0,0.05)">
-        <h2 style="margin-bottom:20px;color:var(--deep-black)">Acceso Admin</h2>
-        <input type="password" id="adminPass" placeholder="Contraseña" style="width:100%;padding:15px;border-radius:12px;border:1px solid #ddd;margin-bottom:20px;font-size:16px">
-        <button onclick="loginAdmin()" class="btn-primary" style="width:100%">Entrar</button>
-      </div>`;
-    return;
-  }
-  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px">
-    <h2 style="font-size:2rem">Panel de Control</h2>
-    <button onclick="logoutAdmin()" class="btn-outline" style="padding:8px 16px;font-size:0.9rem">Salir</button>
-  </div>
-  <div style="background:var(--cream);padding:25px;border-radius:24px;margin-bottom:40px">
-    <h3 style="margin-bottom:20px">Agregar Nuevo Producto</h3>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px">
-      <select id="newCat" style="padding:12px;border-radius:10px;border:1px solid #ccc">
-        ${Object.entries(cats).map(([id,c])=>`<option value="${id}">${c.label}</option>`).join('')}
-      </select>
-      <input type="text" id="newName" placeholder="Nombre (ej: Smash Pro)" style="padding:12px;border-radius:10px;border:1px solid #ccc">
-      <input type="number" id="newPrice" placeholder="Precio (ej: 450)" style="padding:12px;border-radius:10px;border:1px solid #ccc">
-      <button onclick="addNewProduct()" class="btn-primary">Añadir Producto</button>
-    </div>
-  </div>`;
-
-  Object.entries(cats).forEach(([catId, cat])=>{
-    html+=`<h3 style="margin:40px 0 20px;padding-left:10px;border-left:4px solid var(--orange)">${cat.label}</h3>
-    <div style="display:grid;gap:15px">`;
-    cat.items.forEach(item=>{
-      html+=`<div style="background:white;padding:20px;border-radius:20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,0.03)">
-        <div style="display:flex;align-items:center;gap:15px">
-          <img src="${item.img || ''}" style="width:60px;height:60px;border-radius:12px;object-fit:cover;background:#eee" onerror="this.src='https://via.placeholder.com/60?text=LB'">
-          <div>
-            <strong style="display:block;font-size:1.1rem">${item.name}</strong>
-            <span style="color:#666;font-size:0.9rem">$${item.price}</span>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px">
-          <button onclick="editPrice('${item.id}')" class="btn-outline" style="padding:8px 12px;font-size:0.8rem">Precio</button>
-          <button onclick="editImage('${item.id}')" class="btn-outline" style="padding:8px 12px;font-size:0.8rem">Imagen</button>
-        </div>
-      </div>`;
-    });
-    html+=`</div>`;
-  });
-  $('#adminContent').innerHTML=html;
-}
-
-function editPrice(id){
-  const item=allItems().find(i=>i.id===id);
-  const p=prompt(`Nuevo precio para ${item.name}:`, item.price);
-  if(p && !isNaN(p)){
-    item.price=parseInt(p); saveMenu(); renderAdmin(); toast('Precio actualizado');
-  }
-}
-
-function editImage(id){
-  const item=allItems().find(i=>i.id===id);
-  const url=prompt(`URL de imagen o ruta local para ${item.name}:`, item.img || '');
-  if(url!==null){
-    if(url.toLowerCase().startsWith('javascript:')){ toast('URL no permitida'); return; }
-    item.img=url; 
-    if(!item.imgs) item.imgs=[url]; else item.imgs[0]=url;
-    saveMenu(); renderAdmin(); toast('Imagen actualizada');
-  }
-}
-
-function addNewProduct(){
-  const catId=$('#newCat').value;
-  const name=esc($('#newName').value.trim());
-  const price=parseInt($('#newPrice').value);
-  if(!name || isNaN(price)){ toast('Completa nombre y precio'); return; }
-  const id=name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')+'-'+Date.now();
-  cats[catId].items.push({id, name, desc:'Producto gestionado vía panel.', price, img:null, imgs:[]});
-  saveMenu(); renderAdmin();
-  $('#newName').value=''; $('#newPrice').value='';
-  toast('Producto añadido!');
 }
 let deliveryMode = 'retiro';
 let pendingItem = null;
@@ -1320,87 +1202,6 @@ function checkout(){
   }
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
 }
-function checkAdmin(){
-  const pass = $('#adminPass').value;
-  if(pass === 'admin123') { // Contraseña simple
-    isAdmin = true;
-    sessionStorage.setItem('is-legend-admin', 'true');
-    renderAdmin();
-  } else {
-    toast('Contraseña incorrecta');
-  }
-}
-function renderAdmin(){
-  if(!isAdmin) {
-    $('#adminLogin').style.display = 'block';
-    $('#adminDashboard').style.display = 'none';
-    return;
-  }
-  $('#adminLogin').style.display = 'none';
-  $('#adminDashboard').style.display = 'block';
-  
-  let html = '';
-  Object.entries(cats).forEach(([catId, cat]) => {
-    html += `<div class="admin-card"><h3 style="margin-bottom:15px">${cat.label}</h3><div class="admin-grid">`;
-    cat.items.forEach(item => {
-      html += `
-        <div class="admin-item">
-          <img src="${firstImage(item) || 'LB'}" alt="${item.name}">
-          <div>
-            <strong>${item.name}</strong><br>
-            <span style="color:var(--orange)">$${item.price}</span>
-          </div>
-          <div class="admin-controls">
-            <button class="admin-btn" onclick="editProduct('${catId}','${item.id}')">Editar</button>
-            <button class="admin-btn del" onclick="deleteProduct('${catId}','${item.id}')">Eliminar</button>
-          </div>
-        </div>`;
-    });
-    html += `</div></div>`;
-  });
-  $('#adminList').innerHTML = html;
-}
-function editProduct(catId, itemId){
-  const item = cats[catId].items.find(i => i.id === itemId);
-  if(!item) return;
-  const newPrice = prompt('Nuevo Precio:', item.price);
-  if(newPrice === null) return;
-  const newImg = prompt('URL Imagen (o ruta local):', item.img || '');
-  if(newImg === null) return;
-  
-  item.price = parseFloat(newPrice);
-  item.img = newImg;
-  if(item.imgs) item.imgs[0] = newImg; // Update first image in carousel if exists
-  saveMenu();
-  renderAdmin();
-  toast('Producto actualizado');
-}
-function deleteProduct(catId, itemId){
-  if(!confirm('¿Seguro quieres eliminar este producto?')) return;
-  cats[catId].items = cats[catId].items.filter(i => i.id !== itemId);
-  saveMenu();
-  renderAdmin();
-}
-function openNewProduct(){
-  const catId = prompt('ID de categoría (carne, pollo, veggie, milas, papas, extras, bebidas):', 'carne');
-  if(!cats[catId]) { toast('Categoría no válida'); return; }
-  const name = prompt('Nombre del producto:');
-  if(!name) return;
-  const price = prompt('Precio:');
-  const img = prompt('URL Imagen:');
-  const desc = prompt('Descripción:');
-  
-  const newItem = {
-    id: 'new-' + Date.now(),
-    name,
-    price: parseFloat(price),
-    img,
-    desc: desc || ''
-  };
-  cats[catId].items.push(newItem);
-  saveMenu();
-  renderAdmin();
-}
 function openLightbox(src){
   $('#lightboxImg').src=src;
   $('#lightbox').classList.add('open');
@@ -1430,8 +1231,6 @@ document.addEventListener('click',event=>{
   if(tab)document.getElementById(tab.dataset.cat)?.scrollIntoView({behavior:'smooth',block:'start'});
   const builderOption=event.target.closest('[data-builder-step]');
   if(builderOption)selectBuilder(builderOption.dataset.builderStep,builderOption.dataset.builderOption);
-  const routeBtn=event.target.closest('[data-route]');
-  if(routeBtn && routeBtn.dataset.route === 'admin') renderAdmin();
   const ingRow=event.target.closest('.ing-row');
   if(ingRow && event.target.tagName !== 'INPUT'){
     const cb = ingRow.querySelector('input');
