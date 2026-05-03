@@ -1348,5 +1348,6 @@ route();
 const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){$$('.tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.cat===entry.target.id))}})},{rootMargin:'-45% 0px -45% 0px'});
 $$('.menu-block').forEach(block=>observer.observe(block));
 </script>
+<script src="orders.js"></script>
 </body>
 </html>

@@ -57,7 +57,7 @@ async function sendOrder() {
       customer_address: address || null,
       delivery_mode:    deliveryMode,              // 'retiro' | 'envio'
       payment_method:   selectedPayment,           // 'efectivo' | 'transferencia' | 'mercadopago'
-      payment_change:   change   || null,
+      payment_change:   (typeof change !== 'undefined' ? change : null),
       notes:            notes    || null,
       items: cart.map(item => ({
         id:                  item.id,
