@@ -207,10 +207,31 @@ button { border: 0; cursor: pointer; }
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  padding: 20px;
-  flex: 1;
-  align-items: start;
-  min-height: 0;
+  padding: 16px;
+  height: calc(100vh - 72px);
+  overflow: hidden;
+}
+
+/* Card Design */
+.order-card {
+  background: #1e1e2d;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(255,255,255,.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+  overflow: hidden;
+  transition: all .2s cubic-bezier(.4,0,.2,1);
+  position: relative;
+}
+.order-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.12);
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+
+.card-strip {
+  height: 3px;
+  width: 100%;
 }
 
 /* Column */
@@ -306,39 +327,61 @@ button { border: 0; cursor: pointer; }
 .order-card[data-status="listo"]      .card-strip { background: var(--col-listo); }
 .order-card[data-status="entregado"]  .card-strip { background: var(--col-entregado); }
 
-.card-body { padding: 12px 14px; }
+.card-body { padding: 14px 16px; }
 
-/* Card header row */
 .card-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
-  gap: 8px;
+  margin-bottom: 12px;
 }
 .card-id {
   font-family: var(--font-d);
-  font-size: 13px;
-  color: var(--cream);
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-}
-.card-mode {
-  font-size: 11px;
-  font-weight: 800;
-  padding: 3px 8px;
-  border-radius: 6px;
-  white-space: nowrap;
-}
-.card-mode.retiro { background: rgba(107,85,206,.25); color: #a78bfa; }
-.card-mode.envio  { background: rgba(37,211,102,.15); color: #4ade80; }
-.card-time {
   font-size: 11px;
   color: var(--muted);
-  font-weight: 700;
-  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-.card-time.urgent { color: var(--red); }
+.card-mode {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.card-mode.retiro { background: rgba(107,85,206,.15); color: #a78bfa; border: 1px solid rgba(107,85,206,.3); }
+.card-mode.envio  { background: rgba(37,211,102,.1); color: #4ade80; border: 1px solid rgba(37,211,102,.3); }
+
+.card-time {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.card-time.urgent { color: #ff4b4b; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+.card-customer {
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.card-phone {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.card-address {
+  color: #fbbf24;
+  font-weight: 600;
+}
 
 /* Customer */
 .card-customer {
@@ -355,97 +398,98 @@ button { border: 0; cursor: pointer; }
 
 /* Items */
 .card-items {
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 8px 0;
-  margin-bottom: 10px;
+  background: rgba(0,0,0,.2);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 14px;
 }
 .card-item {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   font-size: 13px;
-  font-weight: 700;
-  padding: 2px 0;
-  gap: 6px;
+  font-weight: 600;
+  padding: 3px 0;
 }
-.card-item-name { flex: 1; color: var(--cream); }
-.card-item-total { color: var(--orange); white-space: nowrap; flex-shrink: 0; }
+.card-item-name { color: #fff; }
+.card-item-total { color: var(--muted); font-size: 11px; }
 .card-item-removed {
   font-size: 11px;
-  color: #f87171;
+  color: #ff6b6b;
   font-weight: 700;
-  padding-left: 10px;
+  padding-left: 12px;
+  margin-bottom: 4px;
+  opacity: .9;
 }
 
-/* Footer */
 .card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  border-top: 1px dashed rgba(255,255,255,.1);
+  padding-top: 12px;
 }
 .card-payment {
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 700;
   color: var(--muted);
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  background: rgba(255,255,255,.05);
+  padding: 4px 8px;
+  border-radius: 6px;
 }
 .card-total {
   font-family: var(--font-d);
-  font-size: 17px;
+  font-size: 20px;
   color: var(--orange);
+  text-shadow: 0 0 15px rgba(240,90,34,.3);
 }
 .card-notes {
-  font-size: 11px;
+  background: rgba(251,191,36,.1);
   color: #fbbf24;
+  font-size: 11px;
   font-weight: 700;
-  margin-top: 6px;
-  display: flex;
-  gap: 4px;
-  align-items: flex-start;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-top: 12px;
+  border-left: 3px solid #fbbf24;
 }
 
 /* Advance button */
 .card-actions {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
+  margin-top: 14px;
   display: flex;
   gap: 8px;
 }
 .btn-advance {
   flex: 1;
-  padding: 9px 10px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 10px;
   font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.3px;
-  transition: opacity .2s, transform .1s;
-  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border: none;
+  transition: all .2s;
 }
-.btn-advance:hover  { opacity: .82; }
-.btn-advance:active { transform: scale(.97); }
-.btn-advance:disabled { opacity: .35; cursor: default; }
+.btn-advance:hover { transform: translateY(-1px); filter: brightness(1.1); }
 
-.order-card[data-status="nuevo"]      .btn-advance.primary { background: var(--col-preparando); color: #000; }
-.order-card[data-status="preparando"] .btn-advance.primary { background: var(--col-listo);      color: #000; }
-.order-card[data-status="listo"]      .btn-advance.primary { background: var(--col-entregado);  color: #fff; }
-.order-card[data-status="entregado"]  .btn-advance.primary { background: var(--slate);          color: #fff; opacity: .5; cursor: default; }
+.order-card[data-status="nuevo"]      .btn-advance { background: var(--orange); color: #fff; }
+.order-card[data-status="preparando"] .btn-advance { background: #4ade80; color: #000; }
+.order-card[data-status="listo"]      .btn-advance { background: #60a5fa; color: #fff; }
+.order-card[data-status="entregado"]  .btn-advance { display: none; }
 
 .btn-cancel {
-  background: rgba(239,68,68,.15);
-  color: #f87171;
-  border: 1px solid rgba(239,68,68,.25);
-  border-radius: 8px;
-  padding: 9px 12px;
-  font-size: 12px;
-  font-weight: 800;
-  transition: background .2s;
+  background: #2d2d3d;
+  color: #ff6b6b;
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 10px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
-.btn-cancel:hover { background: rgba(239,68,68,.28); }
+.btn-cancel:hover { background: #ff6b6b; color: #fff; }
 
 /* Notification toast */
 .notif-toast {
@@ -743,18 +787,33 @@ function buildCard(order) {
       <div class="card-strip"></div>
       <div class="card-body">
         <div class="card-head">
-          <span class="card-id">${shortId(order.id)}</span>
-          <span class="card-mode ${order.delivery_mode}">${order.delivery_mode === 'envio' ? '🛵 Envío' : '🏪 Retiro'}</span>
-          <span class="card-time ${urgent ? 'urgent' : ''}" data-created="${order.created_at}">${timeAgo(order.created_at)}</span>
+          <span class="card-id">#${shortId(order.id)}</span>
+          <span class="card-time ${urgent ? 'urgent' : ''}" data-created="${order.created_at}">
+            ${urgent ? '🔥 ' : '🕒 '}${timeAgo(order.created_at)}
+          </span>
         </div>
-        <div class="card-customer">${order.customer_name}</div>
-        <div class="card-phone">${order.customer_phone}${order.customer_address ? ' · ' + order.customer_address : ''}</div>
-        <div class="card-items">${itemsHTML}</div>
+
+        <div class="card-customer">👤 ${order.customer_name}</div>
+        
+        <div class="card-phone">
+          <span>📞 ${order.customer_phone}</span>
+          ${order.customer_address ? `<span class="card-address">📍 ${order.customer_address}</span>` : ''}
+          <span class="card-mode ${order.delivery_mode}" style="margin-top:4px; align-self: flex-start;">
+            ${order.delivery_mode === 'envio' ? '🛵 Envío a domicilio' : '🏪 Retiro en local'}
+          </span>
+        </div>
+
+        <div class="card-items">
+          ${itemsHTML}
+        </div>
+
+        ${notesHTML}
+
         <div class="card-footer">
           <span class="card-payment">${paymentIcon(order.payment_method)}${changeHTML}</span>
           <span class="card-total">$${order.total}</span>
         </div>
-        ${notesHTML}
+
         <div class="card-actions">${actionHTML}</div>
       </div>
     </div>
@@ -839,11 +898,23 @@ function attachCardEvents() {
   document.querySelectorAll('.btn-cancel[data-cancel-id]').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
-      if (!confirm('¿Cancelar este pedido? No se puede deshacer.')) return;
+      if (!confirm('¿Borrar este pedido permanentemente? No se podrá recuperar.')) return;
+      
       const id = btn.dataset.cancelId;
+      
+      // 1. Eliminar de Supabase
+      const { error } = await sb.from('orders').delete().eq('id', id);
+      
+      if (error) {
+        console.error('[panel] Error al borrar:', error.message);
+        alert('No se pudo borrar de la base de datos: ' + error.message);
+        return;
+      }
+
+      // 2. Si se borró bien, limpiar localmente
       delete orders[id];
-      document.getElementById('card-' + id)?.remove();
       renderAll();
+      showNotif('Pedido borrado');
     });
   });
 
