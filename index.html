@@ -1279,9 +1279,6 @@ function toast(text){
   clearTimeout(window.toastTimer);
   window.toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
 }
-  const waUrl = `https://wa.me/${WA}?text=${encodeURIComponent(buildComanda())}`;
-  window.open(waUrl, '_blank');
-}
 function openLightbox(src){
   $('#lightboxImg').src=src;
   $('#lightbox').classList.add('open');
