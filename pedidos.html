@@ -220,9 +220,9 @@ button { border: 0; cursor: pointer; }
   margin-bottom: 14px;
   border: 1px solid rgba(255,255,255,.05);
   box-shadow: 0 4px 12px rgba(0,0,0,.3);
-  overflow: hidden;
   transition: all .2s cubic-bezier(.4,0,.2,1);
   position: relative;
+  min-height: min-content;
 }
 .order-card:hover {
   transform: translateY(-2px);
@@ -758,20 +758,20 @@ function buildCard(order) {
       <div class="card-strip"></div>
       <div class="card-body">
         <div class="card-head">
-          <span class="card-id">#${shortId(order.id)}</span>
+          <span class="card-id">${shortId(order.id)}</span>
           <span class="card-time ${urgent ? 'urgent' : ''}" data-created="${order.created_at}">
             ${urgent ? '🔥 ' : '🕒 '}${timeAgo(order.created_at)}
           </span>
         </div>
 
-        <div class="card-customer">👤 ${order.customer_name}</div>
+        <div class="card-customer" style="font-size:15px; margin-bottom:2px">👤 ${order.customer_name}</div>
         
-        <div class="card-phone">
+        <div class="card-phone" style="margin-bottom:8px">
           <span>📞 ${order.customer_phone}</span>
-          ${order.customer_address ? `<span class="card-address">📍 ${order.customer_address}</span>` : ''}
-          <span class="card-mode ${order.delivery_mode}" style="margin-top:4px; align-self: flex-start;">
-            ${order.delivery_mode === 'envio' ? '🛵 Envío a domicilio' : '🏪 Retiro en local'}
-          </span>
+          ${order.customer_address ? `<span class="card-address" style="font-size:11px">📍 ${order.customer_address}</span>` : ''}
+          <div class="card-mode ${order.delivery_mode}" style="margin-top:6px; display:inline-block; width:fit-content">
+            ${order.delivery_mode === 'envio' ? '🛵 Envío' : '🏪 Retiro'}
+          </div>
         </div>
 
         <div class="card-items">
