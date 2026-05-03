@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Panel de Cocina — Legendary Burger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+/* ── Reset & Variables ────────────────────────────── */
+:root {
+  --ink:     #080808;
+  --coal:    #111111;
+  --card:    #181818;
+  --border:  rgba(245,230,200,.13);
+  --cream:   #f5e6c8;
+  --muted:   #8a8278;
+  --orange:  #f05a22;
+  --amber:   #f5a623;
+  --green:   #22c55e;
+  --slate:   #475569;
+  --red:     #ef4444;
+  --font-d:  "Archivo Black", sans-serif;
+  --font-b:  "Space Grotesk", sans-serif;
+
+  --col-nuevo:      #f05a22;
+  --col-preparando: #f5a623;
+  --col-listo:      #22c55e;
+  --col-entregado:  #475569;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  min-height: 100vh;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-b);
+  overflow-x: hidden;
+}
+button, input { font: inherit; }
+button { border: 0; cursor: pointer; }
+
+/* ── LOGIN ──────────────────────────────────────── */
+#loginScreen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(240,90,34,.18) 0%, transparent 70%),
+    linear-gradient(90deg,rgba(245,230,200,.03) 1px,transparent 1px) 0 0/28px 28px,
+    linear-gradient(0deg,rgba(245,230,200,.02) 1px,transparent 1px) 0 0/28px 28px,
+    var(--ink);
+  padding: 24px;
+}
+.login-box {
+  background: var(--coal);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px 36px 36px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 32px 64px rgba(0,0,0,.6), 0 0 0 1px rgba(240,90,34,.15);
+  text-align: center;
+}
+.login-logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--orange);
+  box-shadow: 0 0 0 5px rgba(240,90,34,.2);
+  margin: 0 auto 20px;
+  display: block;
+}
+.login-title {
+  font-family: var(--font-d);
+  font-size: 22px;
+  color: var(--cream);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.login-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+.login-field {
+  width: 100%;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 16px;
+  color: #fff;
+  font-size: 15px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color .2s;
+}
+.login-field:focus { border-color: var(--orange); }
+.login-btn {
+  width: 100%;
+  background: var(--orange);
+  color: #fff;
+  font-family: var(--font-d);
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  padding: 14px;
+  border-radius: 10px;
+  margin-top: 4px;
+  transition: opacity .2s, transform .15s;
+}
+.login-btn:hover  { opacity: .88; }
+.login-btn:active { transform: scale(.98); }
+.login-btn:disabled { opacity: .5; cursor: default; }
+.login-error {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--red);
+  min-height: 18px;
+  font-weight: 700;
+}
+
+/* ── PANEL ──────────────────────────────────────── */
+#panelScreen { display: none; min-height: 100vh; flex-direction: column; }
+#panelScreen.visible { display: flex; }
+
+/* Header */
+.panel-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  height: 60px;
+  background: rgba(8,8,8,.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+.ph-brand {
+  font-family: var(--font-d);
+  font-size: 15px;
+  color: var(--orange);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ph-stats {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: center;
+}
+.ph-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.ph-stat .s-count {
+  font-family: var(--font-d);
+  font-size: 16px;
+}
+.ph-stat.s-nuevo      { border-color: rgba(240,90,34,.35); }
+.ph-stat.s-preparando { border-color: rgba(245,166,35,.35); }
+.ph-stat.s-listo      { border-color: rgba(34,197,94,.35);  }
+.ph-stat.s-entregado  { border-color: rgba(71,85,105,.35);  }
+.ph-time {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.ph-logout {
+  background: rgba(255,255,255,.07);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  transition: color .2s, border-color .2s;
+  flex-shrink: 0;
+}
+.ph-logout:hover { color: var(--red); border-color: var(--red); }
+
+/* Kanban board */
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 20px;
+  flex: 1;
+  align-items: start;
+  min-height: 0;
+}
+
+/* Column */
+.kb-col {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+  transition: background .2s;
+}
+.kb-col.drag-over { background: rgba(240,90,34,.08); border-color: var(--orange); }
+
+.kb-col-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 2px solid;
+  border-radius: 16px 16px 0 0;
+  font-family: var(--font-d);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 60px;
+  z-index: 10;
+  background: var(--coal);
+}
+.kb-col[data-status="nuevo"]      .kb-col-header { border-color: var(--col-nuevo);      color: var(--col-nuevo); }
+.kb-col[data-status="preparando"] .kb-col-header { border-color: var(--col-preparando); color: var(--col-preparando); }
+.kb-col[data-status="listo"]      .kb-col-header { border-color: var(--col-listo);      color: var(--col-listo); }
+.kb-col[data-status="entregado"]  .kb-col-header { border-color: var(--col-entregado);  color: var(--col-entregado); }
+
+.kb-col-header .col-icon { font-size: 18px; }
+.kb-col-header .col-label { flex: 1; }
+.col-badge {
+  background: rgba(255,255,255,.1);
+  border-radius: 20px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-family: var(--font-b);
+  font-weight: 800;
+}
+
+.kb-col-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.kb-empty {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 32px 16px;
+  opacity: .5;
+}
+
+/* Order Card */
+.order-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  transition: box-shadow .2s, transform .15s;
+}
+.order-card:active { cursor: grabbing; }
+.order-card.dragging { opacity: .4; transform: scale(.97); }
+.order-card.new-flash { animation: newFlash .6s ease; }
+
+@keyframes newFlash {
+  0%   { box-shadow: 0 0 0 0   rgba(240,90,34,.9); }
+  50%  { box-shadow: 0 0 0 12px rgba(240,90,34,.4); }
+  100% { box-shadow: 0 0 0 0   rgba(240,90,34,0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-12px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.order-card { animation: slideIn .3s ease; }
+
+/* Card top strip (colored by status) */
+.card-strip {
+  height: 4px;
+}
+.order-card[data-status="nuevo"]      .card-strip { background: var(--col-nuevo); }
+.order-card[data-status="preparando"] .card-strip { background: var(--col-preparando); }
+.order-card[data-status="listo"]      .card-strip { background: var(--col-listo); }
+.order-card[data-status="entregado"]  .card-strip { background: var(--col-entregado); }
+
+.card-body { padding: 12px 14px; }
+
+/* Card header row */
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+.card-id {
+  font-family: var(--font-d);
+  font-size: 13px;
+  color: var(--cream);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.card-mode {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.card-mode.retiro { background: rgba(107,85,206,.25); color: #a78bfa; }
+.card-mode.envio  { background: rgba(37,211,102,.15); color: #4ade80; }
+.card-time {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.card-time.urgent { color: var(--red); }
+
+/* Customer */
+.card-customer {
+  font-weight: 800;
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 2px;
+}
+.card-phone {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+/* Items */
+.card-items {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+  margin-bottom: 10px;
+}
+.card-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 2px 0;
+  gap: 6px;
+}
+.card-item-name { flex: 1; color: var(--cream); }
+.card-item-total { color: var(--orange); white-space: nowrap; flex-shrink: 0; }
+.card-item-removed {
+  font-size: 11px;
+  color: #f87171;
+  font-weight: 700;
+  padding-left: 10px;
+}
+
+/* Footer */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.card-payment {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.card-total {
+  font-family: var(--font-d);
+  font-size: 17px;
+  color: var(--orange);
+}
+.card-notes {
+  font-size: 11px;
+  color: #fbbf24;
+  font-weight: 700;
+  margin-top: 6px;
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+/* Advance button */
+.card-actions {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+}
+.btn-advance {
+  flex: 1;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  transition: opacity .2s, transform .1s;
+  text-align: center;
+}
+.btn-advance:hover  { opacity: .82; }
+.btn-advance:active { transform: scale(.97); }
+.btn-advance:disabled { opacity: .35; cursor: default; }
+
+.order-card[data-status="nuevo"]      .btn-advance.primary { background: var(--col-preparando); color: #000; }
+.order-card[data-status="preparando"] .btn-advance.primary { background: var(--col-listo);      color: #000; }
+.order-card[data-status="listo"]      .btn-advance.primary { background: var(--col-entregado);  color: #fff; }
+.order-card[data-status="entregado"]  .btn-advance.primary { background: var(--slate);          color: #fff; opacity: .5; cursor: default; }
+
+.btn-cancel {
+  background: rgba(239,68,68,.15);
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,.25);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  transition: background .2s;
+}
+.btn-cancel:hover { background: rgba(239,68,68,.28); }
+
+/* Notification toast */
+.notif-toast {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background: var(--orange);
+  color: #fff;
+  font-family: var(--font-d);
+  font-size: 14px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  z-index: 200;
+  box-shadow: 0 8px 32px rgba(240,90,34,.5);
+  transform: translateX(120%);
+  transition: transform .3s cubic-bezier(.175,.885,.32,1.275);
+  max-width: 280px;
+  pointer-events: none;
+}
+.notif-toast.show { transform: translateX(0); }
+
+/* Loading overlay */
+.panel-loading {
+  position: fixed;
+  inset: 0;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 100;
+  font-family: var(--font-d);
+  color: var(--orange);
+  font-size: 18px;
+}
+.panel-loading.hidden { display: none; }
+.spin {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(240,90,34,.25);
+  border-top-color: var(--orange);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 1200px) {
+  .kanban { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 680px) {
+  .kanban { grid-template-columns: 1fr; padding: 12px; }
+  .ph-stats { display: none; }
+  .ph-time { display: none; }
+  .kb-col-header { top: 60px; }
+}
+@media (min-width: 1600px) {
+  .panel-header { padding: 0 32px; }
+  .kanban { padding: 24px 32px; gap: 20px; }
+  .card-body { padding: 14px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOADING ─────────────────────────────────────── -->
+<div class="panel-loading hidden" id="loadingOverlay">
+  <div class="spin"></div>
+  <span>Cargando pedidos...</span>
+</div>
+
+<!-- ── NOTIFICATION TOAST ──────────────────────────── -->
+<div class="notif-toast" id="notifToast">🍔 ¡Nuevo pedido!</div>
+
+<!-- ══════════════════════════════════════════════════
+     LOGIN
+══════════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <img class="login-logo" src="logo.jpeg" alt="Legendary Burger"
+         onerror="this.style.display='none'">
+    <h1 class="login-title">PANEL DE COCINA</h1>
+    <p class="login-sub">Legendary Burger · Acceso restringido</p>
+    <input class="login-field" id="loginUser" type="text"
+           placeholder="Usuario" autocomplete="username">
+    <input class="login-field" id="loginPass" type="password"
+           placeholder="Contraseña" autocomplete="current-password">
+    <button class="login-btn" id="loginBtn">Entrar →</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PANEL DE COCINA
+══════════════════════════════════════════════════ -->
+<div id="panelScreen">
+  <header class="panel-header">
+    <div class="ph-brand">🍔 LEGENDARY BURGER · COCINA</div>
+    <div class="ph-stats">
+      <div class="ph-stat s-nuevo">
+        🆕 <span class="s-count" id="statNuevo">0</span> nuevos
+      </div>
+      <div class="ph-stat s-preparando">
+        🔥 <span class="s-count" id="statPreparando">0</span> prep.
+      </div>
+      <div class="ph-stat s-listo">
+        ✅ <span class="s-count" id="statListo">0</span> listos
+      </div>
+      <div class="ph-stat s-entregado">
+        📦 <span class="s-count" id="statEntregado">0</span> hoy
+      </div>
+    </div>
+    <div class="ph-time" id="phTime">--:--</div>
+    <button class="ph-logout" id="logoutBtn">Salir</button>
+  </header>
+
+  <div class="kanban">
+    <!-- Columna Nuevo -->
+    <div class="kb-col" data-status="nuevo" id="col-nuevo">
+      <div class="kb-col-header">
+        <span class="col-icon">🆕</span>
+        <span class="col-label">NUEVO</span>
+        <span class="col-badge" id="badge-nuevo">0</span>
+      </div>
+      <div class="kb-col-body" id="body-nuevo">
+        <div class="kb-empty">Sin pedidos nuevos</div>
+      </div>
+    </div>
+
+    <!-- Columna En Preparación -->
+    <div class="kb-col" data-status="preparando" id="col-preparando">
+      <div class="kb-col-header">
+        <span class="col-icon">🔥</span>
+        <span class="col-label">EN PREPARACIÓN</span>
+        <span class="col-badge" id="badge-preparando">0</span>
+      </div>
+      <div class="kb-col-body" id="body-preparando">
+        <div class="kb-empty">Sin pedidos en preparación</div>
+      </div>
+    </div>
+
+    <!-- Columna Listo -->
+    <div class="kb-col" data-status="listo" id="col-listo">
+      <div class="kb-col-header">
+        <span class="col-icon">✅</span>
+        <span class="col-label">LISTO</span>
+        <span class="col-badge" id="badge-listo">0</span>
+      </div>
+      <div class="kb-col-body" id="body-listo">
+        <div class="kb-empty">Sin pedidos listos</div>
+      </div>
+    </div>
+
+    <!-- Columna Entregado -->
+    <div class="kb-col" data-status="entregado" id="col-entregado">
+      <div class="kb-col-header">
+        <span class="col-icon">📦</span>
+        <span class="col-label">ENTREGADO</span>
+        <span class="col-badge" id="badge-entregado">0</span>
+      </div>
+      <div class="kb-col-body" id="body-entregado">
+        <div class="kb-empty">Sin entregas hoy</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SCRIPT PRINCIPAL
+══════════════════════════════════════════════════ -->
+<script>
+// ── Supabase credentials (copiar de index.html) ───────
+const SUPABASE_URL = 'https://dwgwbnalrbzvakzbiwmb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3Z3dibmFscmJ6dmFremJpd21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MTQ4OTEsImV4cCI6MjA5MzI5MDg5MX0.im55Wn6fWcQddwaiRgZx1umKYPI2y0fwW0_RuP51ZR0';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: false }
+});
+
+// ── Estado global ─────────────────────────────────────
+const STATUSES = ['nuevo', 'preparando', 'listo', 'entregado'];
+
+const NEXT_STATUS = {
+  nuevo:      'preparando',
+  preparando: 'listo',
+  listo:      'entregado',
+  entregado:  null
+};
+
+const BTN_LABEL = {
+  nuevo:      '→ Iniciar preparación',
+  preparando: '✓ Marcar listo',
+  listo:      '📦 Marcar entregado',
+  entregado:  'Entregado'
+};
+
+let orders = {};           // { [id]: orderObject }
+let panelUser = 'admin';
+let panelPass = 'legendary2024';
+let realtimeChannel = null;
+let tickerInterval   = null;
+let clockInterval    = null;
+
+// ── Helpers ───────────────────────────────────────────
+const $ = s => document.querySelector(s);
+
+function shortId(id) {
+  // Muestra los últimos 6 chars del UUID: #A1B2C3
+  return '#' + (id || '').replace(/-/g, '').slice(-6).toUpperCase();
+}
+
+function timeAgo(dateStr) {
+  const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+  if (diff < 60)   return `hace ${diff}s`;
+  if (diff < 3600) return `hace ${Math.floor(diff / 60)}min`;
+  return `hace ${Math.floor(diff / 3600)}h`;
+}
+
+function isUrgent(dateStr) {
+  const diff = (Date.now() - new Date(dateStr)) / 1000 / 60;
+  return diff > 15; // más de 15 min → urgente
+}
+
+function playDing() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [523, 659, 784].forEach((freq, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'sine';
+      const t = ctx.currentTime + i * 0.18;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.35, t + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+      osc.start(t);
+      osc.stop(t + 0.5);
+    });
+  } catch (e) { /* audio no disponible */ }
+}
+
+function showNotif(msg) {
+  const el = $('#notifToast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const el = $('#phTime');
+  if (el) el.textContent = `${h}:${m}`;
+}
+
+// ── Render ────────────────────────────────────────────
+function paymentIcon(method) {
+  const icons = { efectivo: '💵', transferencia: '🏦', mercadopago: '💙' };
+  const labels = { efectivo: 'Efectivo', transferencia: 'Transf.', mercadopago: 'MercadoPago' };
+  return (icons[method] || '💳') + ' ' + (labels[method] || method || '?');
+}
+
+function buildCard(order) {
+  const items = Array.isArray(order.items) ? order.items : [];
+  const nextStatus = NEXT_STATUS[order.status];
+  const urgent = order.status !== 'entregado' && isUrgent(order.created_at);
+
+  const itemsHTML = items.map(it => {
+    const removed = (it.removed_ingredients || it.removedIngredients || []);
+    return `
+      <div class="card-item">
+        <span class="card-item-name">${it.qty}x ${it.name}</span>
+        <span class="card-item-total">$${it.line_total ?? (it.qty * it.unit_price)}</span>
+      </div>
+      ${removed.length ? `<div class="card-item-removed">❌ Sin: ${removed.join(', ')}</div>` : ''}
+    `;
+  }).join('');
+
+  const notesHTML = order.notes
+    ? `<div class="card-notes">📝 <span>${order.notes}</span></div>`
+    : '';
+
+  const changeHTML = (order.payment_method === 'efectivo' && order.payment_change)
+    ? ` (paga $${order.payment_change})`
+    : '';
+
+  const actionHTML = nextStatus
+    ? `<button class="btn-advance primary" data-order-id="${order.id}" data-next="${nextStatus}">
+         ${BTN_LABEL[order.status]}
+       </button>
+       <button class="btn-cancel" data-cancel-id="${order.id}" title="Cancelar pedido">✕</button>`
+    : `<button class="btn-advance primary" disabled>${BTN_LABEL[order.status]}</button>`;
+
+  return `
+    <div class="order-card" id="card-${order.id}" data-status="${order.status}" draggable="true" data-order-id="${order.id}">
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-head">
+          <span class="card-id">${shortId(order.id)}</span>
+          <span class="card-mode ${order.delivery_mode}">${order.delivery_mode === 'envio' ? '🛵 Envío' : '🏪 Retiro'}</span>
+          <span class="card-time ${urgent ? 'urgent' : ''}" data-created="${order.created_at}">${timeAgo(order.created_at)}</span>
+        </div>
+        <div class="card-customer">${order.customer_name}</div>
+        <div class="card-phone">${order.customer_phone}${order.customer_address ? ' · ' + order.customer_address : ''}</div>
+        <div class="card-items">${itemsHTML}</div>
+        <div class="card-footer">
+          <span class="card-payment">${paymentIcon(order.payment_method)}${changeHTML}</span>
+          <span class="card-total">$${order.total}</span>
+        </div>
+        ${notesHTML}
+        <div class="card-actions">${actionHTML}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderAll() {
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
+  // Ordenar: nuevo/preparando/listo → más antiguo primero (urgencia)
+  //          entregado → más reciente primero
+  const sorted = Object.values(orders).sort((a, b) => {
+    if (a.status === 'entregado') return new Date(b.created_at) - new Date(a.created_at);
+    return new Date(a.created_at) - new Date(b.created_at);
+  });
+
+  STATUSES.forEach(status => {
+    const body  = document.getElementById('body-' + status);
+    const badge = document.getElementById('badge-' + status);
+    if (!body) return;
+
+    let filtered = sorted.filter(o => o.status === status);
+
+    // Para entregado: sólo mostrar los de hoy
+    if (status === 'entregado') {
+      filtered = filtered.filter(o => new Date(o.created_at) >= todayStart);
+    }
+
+    body.innerHTML = filtered.length
+      ? filtered.map(buildCard).join('')
+      : `<div class="kb-empty">${emptyLabel(status)}</div>`;
+
+    if (badge) badge.textContent = filtered.length;
+  });
+
+  updateStats();
+  attachCardEvents();
+}
+
+function emptyLabel(status) {
+  const labels = {
+    nuevo:      'Sin pedidos nuevos',
+    preparando: 'Todo en orden 👌',
+    listo:      'Nada listo aún',
+    entregado:  'Sin entregas hoy'
+  };
+  return labels[status] || '';
+}
+
+function updateStats() {
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
+  const counts = { nuevo: 0, preparando: 0, listo: 0, entregado: 0 };
+  Object.values(orders).forEach(o => {
+    if (o.status in counts) {
+      if (o.status === 'entregado' && new Date(o.created_at) < todayStart) return;
+      counts[o.status]++;
+    }
+  });
+
+  $('#statNuevo')?.textContent !== undefined && (document.getElementById('statNuevo').textContent = counts.nuevo);
+  document.getElementById('statPreparando').textContent = counts.preparando;
+  document.getElementById('statListo').textContent      = counts.listo;
+  document.getElementById('statEntregado').textContent  = counts.entregado;
+}
+
+// ── Eventos de las tarjetas ───────────────────────────
+function attachCardEvents() {
+  // Botones de avance de estado
+  document.querySelectorAll('.btn-advance[data-next]').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id   = btn.dataset.orderId;
+      const next = btn.dataset.next;
+      await updateOrderStatus(id, next);
+    });
+  });
+
+  // Botones de cancelar
+  document.querySelectorAll('.btn-cancel[data-cancel-id]').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!confirm('¿Cancelar este pedido? No se puede deshacer.')) return;
+      const id = btn.dataset.cancelId;
+      delete orders[id];
+      document.getElementById('card-' + id)?.remove();
+      renderAll();
+    });
+  });
+
+  // Drag & Drop — source
+  document.querySelectorAll('.order-card[draggable]').forEach(card => {
+    card.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('orderId', card.dataset.orderId);
+      card.classList.add('dragging');
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+    });
+  });
+
+  // Actualizar tiempos cada 30s
+  if (!tickerInterval) {
+    tickerInterval = setInterval(updateTimestamps, 30_000);
+  }
+}
+
+function updateTimestamps() {
+  document.querySelectorAll('.card-time[data-created]').forEach(el => {
+    const created = el.dataset.created;
+    el.textContent = timeAgo(created);
+    el.classList.toggle('urgent', isUrgent(created));
+  });
+}
+
+// ── Drag & Drop — columns ─────────────────────────────
+function setupDragDrop() {
+  STATUSES.forEach(status => {
+    const col = document.getElementById('col-' + status);
+    if (!col) return;
+
+    col.addEventListener('dragover', e => {
+      e.preventDefault();
+      col.classList.add('drag-over');
+    });
+    col.addEventListener('dragleave', () => {
+      col.classList.remove('drag-over');
+    });
+    col.addEventListener('drop', async e => {
+      e.preventDefault();
+      col.classList.remove('drag-over');
+      const orderId = e.dataTransfer.getData('orderId');
+      if (!orderId || orders[orderId]?.status === status) return;
+      await updateOrderStatus(orderId, status);
+    });
+  });
+}
+
+// ── Supabase operations ───────────────────────────────
+async function updateOrderStatus(id, newStatus) {
+  if (!orders[id]) return;
+
+  // Optimistic update
+  orders[id].status = newStatus;
+  renderAll();
+
+  const { error } = await sb
+    .from('orders')
+    .update({ status: newStatus })
+    .eq('id', id);
+
+  if (error) {
+    console.error('[panel] Error actualizando estado:', error.message);
+    showNotif('⚠️ Error al actualizar — reintentando...');
+    // La actualización realtime corregirá el estado si falla
+  }
+}
+
+async function loadOrders() {
+  showLoading(true);
+
+  // Traer: todos los pedidos activos + entregados de hoy
+  const todayISO = new Date();
+  todayISO.setHours(0, 0, 0, 0);
+
+  const { data, error } = await sb
+    .from('orders')
+    .select('*')
+    .or(`status.neq.entregado,created_at.gte.${todayISO.toISOString()}`)
+    .order('created_at', { ascending: false })
+    .limit(200);
+
+  showLoading(false);
+
+  if (error) {
+    console.error('[panel] Error cargando pedidos:', error.message);
+    return;
+  }
+
+  orders = {};
+  (data || []).forEach(o => { orders[o.id] = o; });
+  renderAll();
+}
+
+// ── Realtime ──────────────────────────────────────────
+function subscribeRealtime() {
+  if (realtimeChannel) {
+    sb.removeChannel(realtimeChannel);
+  }
+
+  realtimeChannel = sb.channel('kitchen-panel')
+    .on('postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'orders' },
+      payload => {
+        const order = payload.new;
+        orders[order.id] = order;
+        renderAll();
+        playDing();
+        showNotif(`🍔 Nuevo pedido de ${order.customer_name}!`);
+
+        // Flash visual en la tarjeta recién insertada
+        setTimeout(() => {
+          const card = document.getElementById('card-' + order.id);
+          if (card) card.classList.add('new-flash');
+        }, 100);
+      }
+    )
+    .on('postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'orders' },
+      payload => {
+        const order = payload.new;
+        // Solo actualizar si el cambio viene del servidor
+        // (evitar conflicto con el optimistic update local)
+        if (orders[order.id]?.status !== order.status) {
+          orders[order.id] = order;
+          renderAll();
+        } else {
+          orders[order.id] = order;
+        }
+      }
+    )
+    .subscribe(status => {
+      if (status === 'SUBSCRIBED') {
+        console.log('[panel] Realtime conectado ✅');
+      }
+    });
+}
+
+// ── Login / Auth ──────────────────────────────────────
+async function loadCredentials() {
+  const { data } = await sb
+    .from('site_config')
+    .select('key, value')
+    .in('key', ['panel_user', 'panel_pass']);
+
+  (data || []).forEach(row => {
+    if (row.key === 'panel_user') panelUser = row.value;
+    if (row.key === 'panel_pass') panelPass = row.value;
+  });
+}
+
+function checkSession() {
+  return sessionStorage.getItem('lb_panel_auth') === 'ok';
+}
+
+function setSession() {
+  sessionStorage.setItem('lb_panel_auth', 'ok');
+}
+
+function clearSession() {
+  sessionStorage.removeItem('lb_panel_auth');
+}
+
+async function doLogin() {
+  const user     = $('#loginUser')?.value.trim();
+  const pass     = $('#loginPass')?.value.trim();
+  const errorEl  = $('#loginError');
+  const btn      = $('#loginBtn');
+
+  if (!user || !pass) {
+    errorEl.textContent = 'Completá usuario y contraseña.';
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = 'Verificando...';
+  errorEl.textContent = '';
+
+  await loadCredentials();
+
+  if (user === panelUser && pass === panelPass) {
+    setSession();
+    showPanel();
+  } else {
+    errorEl.textContent = 'Usuario o contraseña incorrectos.';
+    btn.disabled    = false;
+    btn.textContent = 'Entrar →';
+  }
+}
+
+function showPanel() {
+  $('#loginScreen').style.display = 'none';
+  $('#panelScreen').classList.add('visible');
+  initPanel();
+}
+
+function showLogin() {
+  clearSession();
+  $('#loginScreen').style.display = '';
+  $('#panelScreen').classList.remove('visible');
+  if (realtimeChannel) sb.removeChannel(realtimeChannel);
+  if (clockInterval)   clearInterval(clockInterval);
+}
+
+// ── Panel init ────────────────────────────────────────
+function showLoading(show) {
+  const el = $('#loadingOverlay');
+  if (el) el.classList.toggle('hidden', !show);
+}
+
+async function initPanel() {
+  updateClock();
+  clockInterval = setInterval(updateClock, 10_000);
+  setupDragDrop();
+  await loadOrders();
+  subscribeRealtime();
+}
+
+// ── Startup ───────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Login events
+  $('#loginBtn').addEventListener('click', doLogin);
+  $('#loginPass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+  $('#logoutBtn').addEventListener('click', showLogin);
+
+  // Auto-login si hay sesión activa
+  if (checkSession()) {
+    showPanel();
+  }
+});
+</script>
+</body>
+</html>

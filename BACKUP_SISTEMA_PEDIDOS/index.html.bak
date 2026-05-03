@@ -501,19 +501,6 @@ h1,h2,.section-title,.menu-title,.foot-logo{font-family:var(--display);letter-sp
 }
 .form-field input:focus,.form-field textarea:focus{border-color:var(--orange)}
 .form-field textarea{min-height:76px;padding:10px 12px;resize:vertical}
-.payment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.payment-btn{
-  padding:10px 4px;
-  background:#101010;color:var(--muted);
-  border:1px solid var(--line);border-radius:8px;
-  font-size:10px;font-weight:900;text-transform:uppercase;
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  transition:.15s;
-}
-.payment-btn svg{width:18px;height:18px;opacity:.6}
-.payment-btn.active{border-color:var(--orange);color:var(--orange);background:rgba(240,90,34,.08)}
-.payment-btn.active svg{opacity:1}
-.btn.loading{opacity:0.7;pointer-events:none;filter:grayscale(1)}
 .value-band{background:linear-gradient(180deg,#111,#0b0b0b);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .value-grid{max-width:1120px;margin:auto;padding:48px 18px;display:grid;gap:22px}
 .value-img{
@@ -891,23 +878,8 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
             <textarea id="custNotes" placeholder="Ej: sin sal, bien cocida, timbrar en apto 3..."></textarea>
           </div>
         </div>
-        <div class="form-field"><label>Método de Pago</label></div>
-        <div class="payment-grid">
-          <button class="payment-btn active" data-pay="efectivo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22m5-18H8.5a4.5 4.5 0 000 9h7a4.5 4.5 0 010 9H7"/></svg>
-            Efectivo
-          </button>
-          <button class="payment-btn" data-pay="transferencia">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M12 15V9m-3 3l3-3 3 3"/></svg>
-            Transfer
-          </button>
-          <button class="payment-btn" data-pay="mercadopago">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12l-3 3 3 3"/></svg>
-            MPago
-          </button>
-        </div>
         <div class="total"><span>Total</span><strong id="cartTotal">$0</strong></div>
-        <button class="btn" id="ocbSend" style="width:100%;background:var(--wa-green);color:#fff;font-size:14px;gap:8px">
+        <button class="btn" id="checkout" style="width:100%;background:var(--wa-green);color:#fff;font-size:14px;gap:8px">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-top:-2px"><path d="M12.031 6.172c-2.32 0-4.519.903-6.16 2.544-1.64 1.641-2.543 3.841-2.543 6.161 0 1.5.385 2.96 1.114 4.247L3.109 23.5l4.512-1.185a8.65 8.65 0 004.41 1.205h.004c2.32 0 4.519-.903 6.16-2.544 1.64-1.641 2.543-3.841 2.543-6.161 0-2.321-.903-4.519-2.544-6.161a8.657 8.657 0 00-6.163-2.54zM12.031 7.422c1.989 0 3.858.775 5.263 2.181 1.406 1.406 2.18 3.275 2.18 5.263 0 1.989-.775 3.858-2.181 5.263-1.406 1.406-3.275 2.18-5.263 2.18h-.003c-1.285 0-2.555-.334-3.673-.966l-.263-.149-2.73.716.728-2.66-.164-.261a7.394 7.394 0 01-1.135-3.963c0-1.989.775-3.858 2.181-5.263 1.406-1.406 3.275-2.18 5.263-2.18zm4.332 5.867l-1.583-.791c-.287-.144-.475-.121-.663.12l-.76 1.012c-.143.19-.332.237-.617.095-.285-.143-1.205-.445-2.296-1.417-.85-.757-1.422-1.691-1.588-1.976-.166-.285-.018-.439.124-.581.129-.127.285-.332.427-.5.143-.166.19-.285.285-.475.095-.19.047-.356-.024-.5-.071-.143-.663-1.594-.91-2.183-.241-.573-.484-.494-.663-.504l-.565-.01c-.19 0-.5.071-.76.356-.261.285-1 1.012-1 2.47s1.059 2.873 1.205 3.063c.143.19 2.083 3.181 5.047 4.462.705.305 1.256.487 1.684.623.708.226 1.353.194 1.862.118.568-.085 1.745-.712 1.994-1.399.25-.688.25-1.278.175-1.401-.075-.124-.261-.19-.547-.333z"/></svg>
           ENVIAR POR WHATSAPP
         </button>
@@ -1156,46 +1128,7 @@ function route(){
   if(valid==='builder') renderBuilder();
 }
 let deliveryMode = 'retiro';
-let selectedPayment = 'efectivo'; // Default
 let pendingItem = null;
-
-// Funciones auxiliares para orders.js
-function getSubtotal() {
-  return cart.reduce((sum, item) => sum + item.qty * item.price, 0);
-}
-function getDeliveryFee() {
-  return deliveryMode === 'envio' ? 150 : 0; // Ajustar si es dinámico
-}
-function getTotal() {
-  return getSubtotal() + getDeliveryFee();
-}
-
-function buildComanda() {
-  const name = $('#custName').value.trim();
-  const phone = $('#custPhone').value.trim();
-  const address = $('#custAddress').value.trim();
-  const notes = $('#custNotes').value.trim();
-  const total = getTotal();
-  
-  let msg='*🍔 NUEVO PEDIDO — LEGENDARY BURGER*\n\n';
-  msg+='📋 *PEDIDO:*\n';
-  cart.forEach(item=>{
-    msg+=`• *${item.name}* x${item.qty} — $${item.price*item.qty}\n`;
-    if (item.removedIngredients && item.removedIngredients.length > 0) {
-      const sorted = [...item.removedIngredients].sort();
-      msg+=`   └ ❌ *Sin:* _${sorted.join(', ')}_\n`;
-    }
-  });
-  msg+='━━━━━━━━━━━━━━━━━━\n';
-  msg+=`💰 *TOTAL: $${total}*\n\n`;
-  msg+=`🛵 *MODALIDAD:* ${deliveryMode === 'retiro' ? '🏪 Retiro en local' : '🛵 Envío a domicilio'}\n`;
-  msg+=`💳 *PAGO:* ${selectedPayment.charAt(0).toUpperCase() + selectedPayment.slice(1)}\n`;
-  msg+=`👤 *Nombre:* ${name}\n`;
-  msg+=`📞 *Teléfono:* ${phone}\n`;
-  if (deliveryMode === 'envio') msg+=`📍 *Dirección:* ${address}\n`;
-  if (notes) msg+=`\n📝 *Notas:* _${notes}_\n`;
-  return msg;
-}
 function save(){localStorage.setItem('legendary-cart',JSON.stringify(cart));renderCart()}
 function getCategory(id) {
   for (const [catId, cat] of Object.entries(cats)) {
@@ -1279,8 +1212,41 @@ function toast(text){
   clearTimeout(window.toastTimer);
   window.toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
 }
-  const waUrl = `https://wa.me/${WA}?text=${encodeURIComponent(buildComanda())}`;
-  window.open(waUrl, '_blank');
+function checkout(){
+  if(!cart.length){toast('Agrega algo al pedido primero');return}
+  const name = $('#custName').value.trim();
+  const phone = $('#custPhone').value.trim();
+  const address = $('#custAddress').value.trim();
+  const notes = $('#custNotes').value.trim();
+  if (!name || !phone) {
+    toast('Ingresá tu nombre y teléfono por favor');
+    return;
+  }
+  if (deliveryMode === 'envio' && !address) {
+    toast('Ingresá tu dirección para el envío');
+    return;
+  }
+  const total=cart.reduce((sum,item)=>sum+item.qty*item.price,0);
+  let msg='*🍔 NUEVO PEDIDO — LEGENDARY BURGER*\n\n';
+  msg+='📋 *PEDIDO:*\n';
+  cart.forEach(item=>{
+    msg+=`• *${item.name}* x${item.qty} — $${item.price*item.qty}\n`;
+    if (item.removedIngredients && item.removedIngredients.length > 0) {
+      const sorted = [...item.removedIngredients].sort();
+      msg+=`   └ ❌ *Sin:* _${sorted.join(', ')}_\n`;
+    }
+  });
+  msg+=`\n━━━━━━━━━━━━━━━━━━\n💰 *TOTAL: $${total}*\n\n`;
+  msg+=`🚗 *MODALIDAD:* ${deliveryMode === 'retiro' ? '🏪 Retiro en local' : '🛵 Envío a domicilio'}\n`;
+  msg+=`👤 *Nombre:* ${name}\n`;
+  msg+=`📞 *Teléfono:* ${phone}\n`;
+  if (deliveryMode === 'envio') {
+    msg+=`📍 *Dirección:* ${address}\n`;
+  }
+  if (notes) {
+    msg+=`\n📝 *Notas:* _${notes}_\n`;
+  }
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 function openLightbox(src){
   $('#lightboxImg').src=src;
@@ -1320,6 +1286,18 @@ document.addEventListener('click',event=>{
     ingRow.classList.toggle('removed', !event.target.checked);
   }
 });
+$('#btnRetiro').addEventListener('click', () => {
+  deliveryMode = 'retiro';
+  $('#btnRetiro').classList.add('active');
+  $('#btnEnvio').classList.remove('active');
+  $('#addressField').style.display = 'none';
+});
+$('#btnEnvio').addEventListener('click', () => {
+  deliveryMode = 'envio';
+  $('#btnEnvio').classList.add('active');
+  $('#btnRetiro').classList.remove('active');
+  $('#addressField').style.display = 'flex';
+});
 $('#modalClose').addEventListener('click', () => {
   $('#ingredientModal').classList.remove('open');
 });
@@ -1330,18 +1308,8 @@ $('#modalConfirm').addEventListener('click', () => {
 });
 $('#hamb').addEventListener('click',()=>{document.body.classList.add('menu-open');$('#mobileMenu').classList.add('open')});
 $('#closeMenu').addEventListener('click',()=>{document.body.classList.remove('menu-open');$('#mobileMenu').classList.remove('open')});
-$('#ocbSend')?.addEventListener('click',sendOrder);
+$('#checkout').addEventListener('click',checkout);
 $('#addCustomBurger').addEventListener('click',addCustomBurger);
-
-$('#btnEnvio').onclick=()=>{deliveryMode='envio';$('#btnEnvio').classList.add('active');$('#btnRetiro').classList.remove('active');$('#addressField').style.display='flex';renderCart()};
-$('#btnRetiro').onclick=()=>{deliveryMode='retiro';$('#btnRetiro').classList.add('active');$('#btnEnvio').classList.remove('active');$('#addressField').style.display='none';renderCart()};
-$$('.payment-btn').forEach(btn=>{
-  btn.onclick=()=>{
-    $$('.payment-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedPayment=btn.dataset.pay;
-  }
-});
 window.addEventListener('hashchange',route);
 renderMenu();
 renderBuilder();
@@ -1350,6 +1318,5 @@ route();
 const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){$$('.tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.cat===entry.target.id))}})},{rootMargin:'-45% 0px -45% 0px'});
 $$('.menu-block').forEach(block=>observer.observe(block));
 </script>
-<script src="orders.js"></script>
 </body>
 </html>
