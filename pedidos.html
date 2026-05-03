@@ -359,71 +359,40 @@ button { border: 0; cursor: pointer; }
 .card-time.urgent { color: #ff4b4b; animation: pulse 2s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
 
-.card-customer {
-  font-size: 16px;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.card-phone {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.card-address {
-  color: #fbbf24;
-  font-weight: 600;
-}
-
-/* Customer */
-.card-customer {
-  font-weight: 800;
-  font-size: 14px;
-  color: #fff;
-  margin-bottom: 2px;
-}
-.card-phone {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-
 /* Items */
 .card-items {
-  background: rgba(0,0,0,.2);
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 14px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 12px 0;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 .card-item {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 3px 0;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
 }
+.card-item:last-child { border-bottom: none; }
 .card-item-name { color: #fff; }
-.card-item-total { color: var(--muted); font-size: 11px; }
+.card-item-total { color: #9ca3af; font-size: 12px; }
 .card-item-removed {
   font-size: 11px;
-  color: #ff6b6b;
+  color: #fb7185;
   font-weight: 700;
   padding-left: 12px;
-  margin-bottom: 4px;
-  opacity: .9;
+  margin: 2px 0 6px 0;
+  font-style: italic;
 }
-
+/* Card Footer */
 .card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px dashed rgba(255,255,255,.1);
+  border-top: 1px dashed rgba(255,255,255,0.15);
   padding-top: 12px;
 }
 .card-payment {
@@ -755,11 +724,15 @@ function buildCard(order) {
   const urgent = order.status !== 'entregado' && isUrgent(order.created_at);
 
   const itemsHTML = items.map(it => {
+    const qty = it.qty || it.quantity || 1;
+    const name = it.name || 'Producto desconocido';
+    const total = it.line_total ?? (qty * (it.unit_price || 0));
     const removed = (it.removed_ingredients || it.removedIngredients || []);
+    
     return `
       <div class="card-item">
-        <span class="card-item-name">${it.qty}x ${it.name}</span>
-        <span class="card-item-total">$${it.line_total ?? (it.qty * it.unit_price)}</span>
+        <span class="card-item-name">${qty}x ${name}</span>
+        <span class="card-item-total">$${total}</span>
       </div>
       ${removed.length ? `<div class="card-item-removed">❌ Sin: ${removed.join(', ')}</div>` : ''}
     `;
