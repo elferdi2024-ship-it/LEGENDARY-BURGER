@@ -45,75 +45,62 @@ async function sendOrder() {
   }
 
   try {
-    const subtotal    = getSubtotal();
-    const deliveryFee = getDeliveryFee();
-    const total       = getTotal();
-    const comanda     = buildComanda();
+    const subtotal    = getSubtotal() || 0;
+    const deliveryFee = getDeliveryFee() || 0;
+    const total       = getTotal() || 0;
+    const comandaText = buildComanda();
 
     // ── 2. Armar el objeto de pedido ──────────────────
     const orderPayload = {
       customer_name:    name,
       customer_phone:   phone,
       customer_address: address || null,
-      delivery_mode:    deliveryMode,              // 'retiro' | 'envio'
-      payment_method:   selectedPayment,           // 'efectivo' | 'transferencia' | 'mercadopago'
+      delivery_mode:    deliveryMode,
+      payment_method:   selectedPayment,
       payment_change:   (typeof change !== 'undefined' ? change : null),
-      notes:            notes    || null,
+      notes:            notes || null,
       items: cart.map(item => ({
-        id:                  item.id,
-        name:                item.name,
-        qty:                 item.qty,
-        unit_price:          item.price,
-        line_total:          item.price * item.qty,
-        removed_ingredients: item.removedIngredients ?? [],
+        id:         item.id,
+        name:       item.name,
+        qty:        item.qty,
+        unit_price: item.price,
+        line_total: item.price * item.qty
       })),
       subtotal,
       delivery_fee: deliveryFee,
       total,
-      comanda,                   // texto plano para WhatsApp / referencia
-      status: 'nuevo',
+      comanda: comandaText,
+      status: 'nuevo'
     };
 
-    // ── 3. Guardar en Supabase ────────────────────────
-    const { data: savedOrder, error: sbError } = await sbClient
+    // ── 3. Guardar en Supabase (Simple Insert) ────────
+    const { error: sbError } = await sbClient
       .from('orders')
-      .insert(orderPayload)
-      .select('id, created_at')
-      .single();
+      .insert([orderPayload]);
 
     if (sbError) {
-      // No bloqueamos el flujo — el pedido igual llega por WhatsApp
-      console.error('[orders.js] Error guardando en Supabase:', sbError.message);
+      console.error('[orders.js] Error Supabase:', sbError);
+      alert('Error al guardar en base de datos: ' + sbError.message + '\n\nEl pedido se enviará por WhatsApp igualmente.');
     } else {
-      console.log('[orders.js] ✅ Pedido guardado:', savedOrder?.id);
+      console.log('[orders.js] ✅ Pedido guardado correctamente.');
     }
 
   } catch (err) {
-    // Error inesperado — tampoco bloqueamos
     console.error('[orders.js] Error inesperado:', err);
-
+    alert('Error inesperado: ' + err.message);
   } finally {
-    // ── 4. Siempre abrir WhatsApp (la comanda es el respaldo) ──
+    // ── 4. Siempre abrir WhatsApp ──
     const waUrl = `https://wa.me/${WA}?text=${encodeURIComponent(buildComanda())}`;
     window.open(waUrl, '_blank');
 
-    // ── 5. Cerrar vista de carrito (opcional, dependiendo de UI)
-    // location.hash = '#menu';
-
-    // ── 6. Restaurar botón ────────────────────────────
+    // ── 5. Restaurar botón y limpiar ──
     if (btn) {
       btn.disabled      = false;
       btn.classList.remove('loading');
       btn.innerHTML     = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-top:-2px"><path d="M12.031 6.172c-2.32 0-4.519.903-6.16 2.544-1.64 1.641-2.543 3.841-2.543 6.161 0 1.5.385 2.96 1.114 4.247L3.109 23.5l4.512-1.185a8.65 8.65 0 004.41 1.205h.004c2.32 0 4.519-.903 6.16-2.544 1.64-1.641 2.543-3.841 2.543-6.161 0-2.321-.903-4.519-2.544-6.161a8.657 8.657 0 00-6.163-2.54zM12.031 7.422c1.989 0 3.858.775 5.263 2.181 1.406 1.406 2.18 3.275 2.18 5.263 0 1.989-.775 3.858-2.181 5.263-1.406 1.406-3.275 2.18-5.263 2.18h-.003c-1.285 0-2.555-.334-3.673-.966l-.263-.149-2.73.716.728-2.66-.164-.261a7.394 7.394 0 01-1.135-3.963c0-1.989.775-3.858 2.181-5.263 1.406-1.406 3.275-2.18 5.263-2.18zm4.332 5.867l-1.583-.791c-.287-.144-.475-.121-.663.12l-.76 1.012c-.143.19-.332.237-.617.095-.285-.143-1.205-.445-2.296-1.417-.85-.757-1.422-1.691-1.588-1.976-.166-.285-.018-.439.124-.581.129-.127.285-.332.427-.5.143-.166.19-.285.285-.475.095-.19.047-.356-.024-.5-.071-.143-.663-1.594-.91-2.183-.241-.573-.484-.494-.663-.504l-.565-.01c-.19 0-.5.071-.76.356-.261.285-1 1.012-1 2.47s1.059 2.873 1.205 3.063c.143.19 2.083 3.181 5.047 4.462.705.305 1.256.487 1.684.623.708.226 1.353.194 1.862.118.568-.085 1.745-.712 1.994-1.399.25-.688.25-1.278.175-1.401-.075-.124-.261-.19-.547-.333z"/></svg> ENVIAR POR WHATSAPP`;
     }
 
-    // ── 7. Vaciar carrito ─────────────────────────────
-    //    Usamos un pequeño delay para que la animación
-    //    de cierre del modal se vea suave.
-    setTimeout(() => {
-      cart = [];
-      save();
-    }, 400);
+    setTimeout(() => { cart = []; save(); }, 400);
   }
 }
 
