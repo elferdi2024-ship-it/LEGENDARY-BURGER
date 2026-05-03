@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="orders.js"></script>
 <style>
 :root{
   --ink:#080808;
@@ -1347,6 +1348,5 @@ route();
 const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){$$('.tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.cat===entry.target.id))}})},{rootMargin:'-45% 0px -45% 0px'});
 $$('.menu-block').forEach(block=>observer.observe(block));
 </script>
-<script src="orders.js"></script>
 </body>
 </html>
