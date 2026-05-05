@@ -1474,6 +1474,9 @@ function buildComanda() {
   msg+=`👤 *Nombre:* ${name}\n`;
   msg+=`📞 *Teléfono:* ${phone}\n`;
   if (deliveryMode === 'envio') msg+=`📍 *Dirección:* ${address}\n`;
+  if (notes) msg+=`📝 *Notas:* ${notes}\n`;
+  return msg;
+}
 function quickAdd(id, btn){
   const item=allItems().find(entry=>entry.id===id);
   if(!item) {
