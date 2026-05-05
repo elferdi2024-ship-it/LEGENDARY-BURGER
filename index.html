@@ -839,6 +839,71 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
   display: grid;
   place-items: center;
 }
+/* SPONSOR BRANDING UPDATES */
+.hero-sponsor{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:12px;
+  opacity:.85;
+  font-size:12px;
+  font-weight:600;
+  color:var(--cream);
+  cursor:pointer;
+  transition: .2s;
+}
+.hero-sponsor:hover{ opacity:1; transform:translateY(-1px); }
+.hero-sponsor img{ height:16px; object-fit:contain; }
+
+.promo-slider{
+  display:flex;
+  overflow-x:auto;
+  gap:12px;
+  padding:20px 15px;
+  scrollbar-width:none;
+}
+.promo-slider::-webkit-scrollbar{display:none}
+.promo-card{
+  min-width:280px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  transition:.3s cubic-bezier(.4,0,.2,1);
+}
+.promo-card:hover{ background:rgba(255,255,255,0.06); transform:scale(1.02); }
+.promo-card h3{ font-family:var(--display); font-size:16px; margin-bottom:4px; color:var(--cream); }
+.promo-card p{ font-size:12px; color:var(--muted); font-weight:500; }
+.promo-card img{ height:38px; object-fit:contain; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+.promo-card.pepsi{ border-color:#005CB4; box-shadow:0 8px 24px rgba(0,92,180,0.15); }
+.promo-card.beer{ border-color:#d4af37; box-shadow:0 8px 24px rgba(212,175,55,0.15); }
+
+.featured-sponsor-section{
+  padding:40px 18px;
+  background:linear-gradient(180deg, transparent, rgba(212,175,55,0.05), transparent);
+}
+.featured-sponsor-section h2{ font-size:22px; margin-bottom:20px; text-align:center; color:var(--cream); }
+.featured-card{
+  background:var(--card);
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(212,175,55,0.3);
+  display:grid;
+  grid-template-columns: 120px 1fr;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.featured-card img{ width:100%; height:140px; object-fit:cover; }
+.featured-card-body{ padding:18px; display:flex; flex-direction:column; justify-content:center; }
+.featured-card-body h3{ font-family:var(--display); font-size:18px; margin-bottom:6px; color:#d4af37; }
+.featured-card-body p{ font-size:13px; color:var(--muted); margin-bottom:14px; line-height:1.4; }
+.featured-card-body .btn-add{ 
+  background:#d4af37; color:#111; padding:8px 16px; border-radius:8px; 
+  font-weight:800; font-size:12px; align-self:flex-start; text-transform:uppercase;
+}
 </style>
 </head>
 <body>
@@ -877,10 +942,30 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
         <div class="actions">
           <a class="btn btn-primary" href="#menu" data-route="menu">Ver menu</a>
           <a class="btn btn-purple" href="#builder" data-route="builder">Arma la tuya</a>
-          <a class="btn btn-ghost" href="#cart" data-route="cart">Mi pedido</a>
+        </div>
+        <div class="hero-sponsor" onclick="app.setCategory('bebidas')">
+          <span>Powered by</span>
+          <img src="SPONSORS/pepsi-logo.png" alt="Pepsi">
         </div>
       </div>
     </div>
+
+    <section class="promo-slider">
+      <div class="promo-card pepsi" onclick="app.setCategory('bebidas')">
+        <div>
+          <h3>Combo Pepsi</h3>
+          <p>Burger + papas + Pepsi</p>
+        </div>
+        <img src="SPONSORS/pepsi-logo.png" alt="Pepsi">
+      </div>
+      <div class="promo-card beer" onclick="app.setCategory('bebidas')">
+        <div>
+          <h3>Cabezas Moment</h3>
+          <p>Tu burger + Birra artesanal</p>
+        </div>
+        <img src="SPONSORS/cabezas-bier-logo.png" alt="Cabezas Bier">
+      </div>
+    </section>
     <div class="ticker"><div class="ticker-track"><span>SMASH BURGERS /</span><span>GRILL GOOD VIBES /</span><span>CHIVITO LEGENDARIO /</span><span>PAPAS CHEDDAR BACON /</span><span>MONTEVIDEO 2024 /</span><span>SMASH BURGERS /</span><span>GRILL GOOD VIBES /</span><span>CHIVITO LEGENDARIO /</span><span>PAPAS CHEDDAR BACON /</span><span>MONTEVIDEO 2024 /</span></div></div>
     <section class="sponsor-strip">
       <div class="scroll">
@@ -891,6 +976,18 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
       </div>
     </section>
     <div class="stats"><div class="stats-inner"><div><div class="stat-num">21+</div><div class="stat-label">Opciones en menu</div></div><div><div class="stat-num">100%</div><div class="stat-label">Plancha caliente</div></div><div><div class="stat-num">2024</div><div class="stat-label">Montevideo</div></div></div></div>
+
+    <section class="featured-sponsor-section">
+      <h2>Recomendado por Cabezas Bier</h2>
+      <div class="featured-card">
+        <img src="IMAGENES/CABEZAS BIER BOTELLA/imgi_115_BlondeAle_3-compressor.jpg" alt="IPA Artesanal" onerror="this.src='IMAGENES/BEBIDAS/cabezas.jpg'">
+        <div class="featured-card-body">
+          <h3>Rubia Artesanal</h3>
+          <p>La compañera perfecta para nuestras smash burgers clásicas.</p>
+          <button class="btn-add" onclick="quickAdd('blonde-ale')">Agregar al pedido</button>
+        </div>
+      </div>
+    </section>
     <section class="section">
       <div class="section-head"><div><div class="mark"></div><h2 class="section-title">Las que <em>mandan</em></h2><p class="section-sub">Una muestra rapida. El menu completo vive en su propia pagina.</p></div><a class="btn btn-ghost" href="#menu" data-route="menu">Ver todo</a></div>
       <div class="grid" id="featuredGrid"></div>
