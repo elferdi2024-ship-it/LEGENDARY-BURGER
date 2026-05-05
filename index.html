@@ -857,21 +857,25 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
   display: grid;
   place-items: center;
 }
-/* SPONSOR BRANDING UPDATES */
-.hero-sponsor{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:12px;
-  opacity:.85;
-  font-size:12px;
-  font-weight:600;
-  color:var(--cream);
-  cursor:pointer;
-  transition: .2s;
+/* HERO BRANDING UPDATES */
+.hero-branding {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.1);
+  opacity: 0.8;
 }
-.hero-sponsor:hover{ opacity:1; transform:translateY(-1px); }
-.hero-sponsor img{ height:16px; object-fit:contain; }
+.hero-branding span { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.hero-branding img { height: 16px; width: auto; }
+
+.hero-sponsor { display: none; } /* Remove old one */
 
 .promo-slider{
   display:flex;
@@ -961,7 +965,7 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
           <a class="btn btn-primary" href="#menu" data-route="menu">Ver menu</a>
           <a class="btn btn-purple" href="#builder" data-route="builder">Arma la tuya</a>
         </div>
-        <div class="hero-sponsor" onclick="app.setCategory('bebidas')">
+        <div class="hero-branding">
           <span>Powered by</span>
           <img src="SPONSORS/pepsi-logo.png" alt="Pepsi">
         </div>
@@ -969,14 +973,14 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
     </div>
 
     <section class="promo-slider">
-      <div class="promo-card pepsi" onclick="app.setCategory('bebidas')">
+      <div class="promo-card pepsi" onclick="app.goToSection('bebidas')">
         <div>
           <h3>Combo Pepsi</h3>
           <p>Burger + papas + Pepsi</p>
         </div>
         <img src="SPONSORS/pepsi-logo.png" alt="Pepsi">
       </div>
-      <div class="promo-card beer" onclick="app.setCategory('bebidas')">
+      <div class="promo-card beer" onclick="app.goToSection('bebidas')">
         <div>
           <h3>Cabezas Moment</h3>
           <p>Tu burger + Birra artesanal</p>
@@ -1429,6 +1433,15 @@ function buildComanda() {
   if (notes) msg+=`\n📝 *Notas:* _${notes}_\n`;
   return msg;
 }
+window.app = {
+  goToSection: function(catId) {
+    location.hash = '#menu';
+    setTimeout(() => {
+      const el = document.getElementById(catId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+};
 function save(){localStorage.setItem('legendary-cart',JSON.stringify(cart));renderCart()}
 function getCategory(id) {
   for (const [catId, cat] of Object.entries(cats)) {
