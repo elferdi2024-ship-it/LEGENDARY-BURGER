@@ -905,27 +905,53 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
 .promo-card.beer{ border-color:#d4af37; box-shadow:0 8px 24px rgba(212,175,55,0.15); }
 
 .featured-sponsor-section{
-  padding:40px 18px;
+  padding:40px 0;
   background:linear-gradient(180deg, transparent, rgba(212,175,55,0.05), transparent);
+  overflow: hidden;
 }
-.featured-sponsor-section h2{ font-size:22px; margin-bottom:20px; text-align:center; color:var(--cream); }
-.featured-card{
-  background:var(--card);
-  border-radius:20px;
-  overflow:hidden;
-  border:1px solid rgba(212,175,55,0.3);
-  display:grid;
-  grid-template-columns: 120px 1fr;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+.featured-sponsor-section h2 { padding: 0 18px; margin-bottom: 20px; font-size: 20px; color: var(--cream); text-align: left; }
+
+.featured-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding: 0 18px 20px;
+  scrollbar-width: none;
 }
-.featured-card img{ width:100%; height:140px; object-fit:cover; }
-.featured-card-body{ padding:18px; display:flex; flex-direction:column; justify-content:center; }
-.featured-card-body h3{ font-family:var(--display); font-size:18px; margin-bottom:6px; color:#d4af37; }
-.featured-card-body p{ font-size:13px; color:var(--muted); margin-bottom:14px; line-height:1.4; }
-.featured-card-body .btn-add{ 
-  background:#d4af37; color:#111; padding:8px 16px; border-radius:8px; 
-  font-weight:800; font-size:12px; align-self:flex-start; text-transform:uppercase;
+.featured-slider::-webkit-scrollbar { display: none; }
+
+.featured-card {
+  min-width: 280px;
+  max-width: 280px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: 0.3s;
 }
+.featured-card img { width: 100%; height: 160px; object-fit: cover; }
+.featured-card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+.featured-card h3 { font-family: var(--display); color: #d4af37; margin-bottom: 8px; font-size: 18px; }
+.featured-card p { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.4; height: 36px; overflow: hidden; }
+
+.btn-add-quick {
+  width: 100%;
+  background: #d4af37;
+  color: #000;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: auto;
+}
+.btn-add-quick:active { transform: scale(0.95); }
+.btn-add-quick.added { background: var(--wa-green); color: white; }
 </style>
 </head>
 <body>
@@ -1001,12 +1027,30 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
 
     <section class="featured-sponsor-section">
       <h2>Recomendado por Cabezas Bier</h2>
-      <div class="featured-card">
-        <img src="IMAGENES/CABEZAS BIER BOTELLA/imgi_115_BlondeAle_3-compressor.jpg" alt="IPA Artesanal" onerror="this.src='IMAGENES/BEBIDAS/cabezas.jpg'">
-        <div class="featured-card-body">
-          <h3>Rubia Artesanal</h3>
-          <p>La compañera perfecta para nuestras smash burgers clásicas.</p>
-          <button class="btn-add" onclick="quickAdd('blonde-ale')">Agregar al pedido</button>
+      <div class="featured-slider">
+        <div class="featured-card">
+          <img src="IMAGENES/CABEZAS BIER BOTELLA/imgi_115_BlondeAle_3-compressor.jpg" alt="Rubia" onerror="this.src='IMAGENES/BEBIDAS/cabezas.jpg'">
+          <div class="featured-card-body">
+            <h3>Rubia Artesanal</h3>
+            <p>La compañera perfecta para nuestras smash clásicas.</p>
+            <button class="btn-add-quick" onclick="quickAdd('blonde-ale', this)">Agregar al pedido</button>
+          </div>
+        </div>
+        <div class="featured-card">
+          <img src="IMAGENES/CABEZAS BIER BOTELLA/imgi_100_DobleIpa_1-compressor.jpg" alt="IPA" onerror="this.src='IMAGENES/BEBIDAS/cabezas.jpg'">
+          <div class="featured-card-body">
+            <h3>IPA Intensa</h3>
+            <p>Amargor equilibrado para los amantes del lúpulo.</p>
+            <button class="btn-add-quick" onclick="quickAdd('ipa', this)">Agregar al pedido</button>
+          </div>
+        </div>
+        <div class="featured-card">
+          <img src="IMAGENES/CABEZAS BIER BOTELLA/imgi_101_DobleIpa_2-compressor.jpg" alt="Stout" onerror="this.src='IMAGENES/BEBIDAS/cabezas.jpg'">
+          <div class="featured-card-body">
+            <h3>Stout Nocturna</h3>
+            <p>Notas de café y chocolate para un cierre épico.</p>
+            <button class="btn-add-quick" onclick="quickAdd('stout', this)">Agregar al pedido</button>
+          </div>
         </div>
       </div>
     </section>
@@ -1430,8 +1474,22 @@ function buildComanda() {
   msg+=`👤 *Nombre:* ${name}\n`;
   msg+=`📞 *Teléfono:* ${phone}\n`;
   if (deliveryMode === 'envio') msg+=`📍 *Dirección:* ${address}\n`;
-  if (notes) msg+=`\n📝 *Notas:* _${notes}_\n`;
-  return msg;
+function quickAdd(id, btn){
+  const item=allItems().find(entry=>entry.id===id);
+  if(!item) {
+    toast("Producto no encontrado en el menú");
+    return;
+  }
+  addToCart(item, []);
+  if(btn) {
+    const oldText = btn.textContent;
+    btn.textContent = '¡Agregado! ✓';
+    btn.classList.add('added');
+    setTimeout(() => {
+      btn.textContent = oldText;
+      btn.classList.remove('added');
+    }, 2000);
+  }
 }
 window.app = {
   goToSection: function(catId) {
