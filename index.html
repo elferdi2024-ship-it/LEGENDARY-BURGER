@@ -771,6 +771,78 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
   .builder-summary{position:static}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.sponsor-logo {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+  z-index: 15;
+}
+.sponsor-badge {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 4px 6px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  z-index: 15;
+  backdrop-filter: blur(4px);
+}
+.sponsor-strip {
+  overflow-x: auto;
+  padding: 20px 10px;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid var(--line);
+  scrollbar-width: none;
+}
+.sponsor-strip::-webkit-scrollbar { display: none; }
+.sponsor-strip .scroll {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  width: max-content;
+  padding: 0 10px;
+}
+.sponsor-strip img {
+  height: 24px;
+  width: auto;
+  opacity: .5;
+  filter: grayscale(1) brightness(1.5);
+  transition: .3s;
+}
+.sponsor-strip img:hover { opacity: 1; filter: none; }
+.upsell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #111;
+  margin: 15px 0;
+  border: 1px solid var(--line);
+}
+.upsell strong { color: var(--orange); font-size: 14px; }
+.upsell p { color: var(--muted); font-size: 12px; margin: 2px 0 0; }
+.upsell .add-upsell {
+  width: 32px;
+  height: 32px;
+  background: var(--orange);
+  color: #111;
+  border-radius: 8px;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+}
 </style>
 </head>
 <body>
@@ -814,6 +886,14 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
       </div>
     </div>
     <div class="ticker"><div class="ticker-track"><span>SMASH BURGERS /</span><span>GRILL GOOD VIBES /</span><span>CHIVITO LEGENDARIO /</span><span>PAPAS CHEDDAR BACON /</span><span>MONTEVIDEO 2024 /</span><span>SMASH BURGERS /</span><span>GRILL GOOD VIBES /</span><span>CHIVITO LEGENDARIO /</span><span>PAPAS CHEDDAR BACON /</span><span>MONTEVIDEO 2024 /</span></div></div>
+    <section class="sponsor-strip">
+      <div class="scroll">
+        <img src="SPONSORS/pepsi-logo.png" alt="Pepsi">
+        <img src="SPONSORS/cabezas-bier-logo.png" alt="Cabezas Bier">
+        <img src="SPONSORS/pepsi-logo.png" alt="Pepsi">
+        <img src="SPONSORS/cabezas-bier-logo.png" alt="Cabezas Bier">
+      </div>
+    </section>
     <div class="stats"><div class="stats-inner"><div><div class="stat-num">21+</div><div class="stat-label">Opciones en menu</div></div><div><div class="stat-num">100%</div><div class="stat-label">Plancha caliente</div></div><div><div class="stat-num">2024</div><div class="stat-label">Montevideo</div></div></div></div>
     <section class="section">
       <div class="section-head"><div><div class="mark"></div><h2 class="section-title">Las que <em>mandan</em></h2><p class="section-sub">Una muestra rapida. El menu completo vive en su propia pagina.</p></div><a class="btn btn-ghost" href="#menu" data-route="menu">Ver todo</a></div>
@@ -989,7 +1069,12 @@ async function initData() {
           price: parseFloat(p.price),
           img: p.img,
           imgs: p.imgs || [],
-          badge: p.badge
+          badge: p.badge,
+          sponsor_name: p.sponsor_name,
+          sponsor_logo: p.sponsor_logo,
+          sponsor_color: p.sponsor_color,
+          sponsor_badge: p.sponsor_badge,
+          sponsor_url: p.sponsor_url
         });
       }
     });
@@ -1057,7 +1142,20 @@ function productCard(item){
     media += originalImgs.map((src,index)=>`<img class="slide" src="${src}" alt="${esc(item.name)} ${index+1}" style="animation: productSlide ${totalTime}s infinite; animation-delay: ${index * 3}s; z-index: ${originalImgs.length - index}" onerror="this.style.display='none'">`).join('') + `<span class="product-dots">${originalImgs.map(()=>'<i></i>').join('')}</span>`;
   }
 
-  return `<article class="product-card"><div class="product-media ${isSingle?'single':''}">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}</div><div class="product-body"><h3>${esc(item.name)}</h3><p>${esc(item.desc)}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" aria-label="Agregar ${esc(item.name)}">+</button></div></div></article>`;
+  const sponsorStyle = item.sponsor_color 
+    ? `style="box-shadow:0 0 0 1px ${item.sponsor_color}, 0 0 16px ${item.sponsor_color}33"` 
+    : '';
+  const btnStyle = item.sponsor_color 
+    ? `style="background:${item.sponsor_color}"` 
+    : '';
+  const sponsorLogo = item.sponsor_logo 
+    ? `<img class="sponsor-logo" src="${item.sponsor_logo}" alt="${esc(item.sponsor_name)}">` 
+    : '';
+  const sponsorBadge = item.sponsor_name 
+    ? `<span class="sponsor-badge">${item.sponsor_badge || 'SPONSORED'}</span>` 
+    : '';
+
+  return `<article class="product-card" ${sponsorStyle}><div class="product-media ${isSingle?'single':''}">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}${sponsorLogo}${sponsorBadge}</div><div class="product-body"><h3>${esc(item.name)}</h3><p>${esc(item.desc)}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" ${btnStyle} aria-label="Agregar ${esc(item.name)}">+</button></div></div></article>`;
 }
 function renderMenu(){
   // IDs ORIGINALES DE LA LANDING
@@ -1262,6 +1360,33 @@ function addToCart(item, removedIngredients) {
   save();
   if(!item.custom) toast(`${item.name} agregado`);
 }
+function renderUpsell(){
+  const pepsiId = 'pepsi-500';
+  const hasPepsi = cart.some(i => i.id === pepsiId);
+  if(hasPepsi) return '';
+
+  return `
+    <div class="upsell">
+      <div>
+        <strong>🔥 Sumá Pepsi 500ml</strong>
+        <p>$130 — Ideal para tu burger</p>
+      </div>
+      <button class="add-upsell" onclick="addSponsorUpsell()">+</button>
+    </div>
+  `;
+}
+window.addSponsorUpsell = function() {
+  const pepsi = {
+    id: 'pepsi-500',
+    name: 'Pepsi 500ml',
+    price: 130,
+    desc: 'Refresco 500ml',
+    img: 'https://images.ofix.com.mx/media/catalog/product/p/e/pepsi_500ml_1.png'
+  };
+  addToCart(pepsi, []);
+  renderCart();
+  if(typeof fbq !== 'undefined') fbq('trackCustom','SponsorUpsellAdd',{sponsor:'Pepsi'});
+};
 function renderCart(){
   const count=cart.reduce((sum,item)=>sum+item.qty,0);
   const total=cart.reduce((sum,item)=>sum+item.qty*item.price,0);
@@ -1274,6 +1399,13 @@ function renderCart(){
       : '';
     return `<div class="cart-item"><div class="cart-thumb">${item.img?`<img src="${item.img}" alt="${item.name}">`:'LB'}</div><div><div class="cart-name">${item.name}</div>${item.desc?`<div class="cart-note">${item.desc}${removedText}</div>`:''}<div class="cart-price">$${item.price*item.qty}</div></div><div class="qty"><button data-dec="${item.cartId||item.id}" aria-label="Quitar">-</button><span>${item.qty}</span><button data-inc="${item.cartId||item.id}" aria-label="Sumar">+</button></div></div>`;
   }).join(''):'<div class="empty">Tu pedido esta vacio.</div>';
+
+  if (cart.length > 0) {
+    const hasDrink = cart.some(i => i.category_id === 'bebidas' || i.id === 'pepsi-500');
+    if (!hasDrink) {
+      $('#cartList').innerHTML += renderUpsell();
+    }
+  }
 }
 function toast(text){
   const el=$('#toast');

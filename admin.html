@@ -196,6 +196,30 @@ h1, h2, h3 { font-family: var(--display); text-transform: uppercase; letter-spac
           <label>URL Imagen Principal</label>
           <input type="text" id="editImgUrl">
         </div>
+
+        <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:12px; margin-top:15px; border:1px solid var(--line)">
+          <h4 style="margin-bottom:10px; font-size:11px; color:var(--orange); text-transform:uppercase; letter-spacing:1px">Configuración Sponsor</h4>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+            <div>
+              <label>Nombre Sponsor</label>
+              <input type="text" id="editSponsorName" placeholder="Ej: Pepsi">
+            </div>
+            <div>
+              <label>Logo Sponsor (URL)</label>
+              <input type="text" id="editSponsorLogo" placeholder="URL PNG/SVG">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px">
+            <div>
+              <label>Color Aura (Hex)</label>
+              <input type="text" id="editSponsorColor" placeholder="#0066ff">
+            </div>
+            <div>
+              <label>Texto Badge</label>
+              <input type="text" id="editSponsorBadge" placeholder="SPONSORED">
+            </div>
+          </div>
+        </div>
         <button onclick="saveProductEdit()" class="btn-primary">Guardar Cambios</button>
       </div>
     </div>
@@ -444,6 +468,11 @@ function openEditModal(id) {
   $('#editCat').value = p.category_id;
   $('#editBadge').value = p.badge || '';
   $('#editImgUrl').value = p.img || '';
+  // Sponsor fields
+  $('#editSponsorName').value = p.sponsor_name || '';
+  $('#editSponsorLogo').value = p.sponsor_logo || '';
+  $('#editSponsorColor').value = p.sponsor_color || '';
+  $('#editSponsorBadge').value = p.sponsor_badge || '';
   $('#editModal').style.display = 'grid';
 }
 
@@ -455,7 +484,11 @@ async function saveProductEdit() {
     price: parseFloat($('#editPrice').value),
     category_id: $('#editCat').value,
     badge: $('#editBadge').value,
-    img: $('#editImgUrl').value
+    img: $('#editImgUrl').value,
+    sponsor_name: $('#editSponsorName').value,
+    sponsor_logo: $('#editSponsorLogo').value,
+    sponsor_color: $('#editSponsorColor').value,
+    sponsor_badge: $('#editSponsorBadge').value
   };
 
   toast("Guardando...");
