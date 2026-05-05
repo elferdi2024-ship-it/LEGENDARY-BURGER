@@ -1357,31 +1357,50 @@ function addToCart(item, removedIngredients) {
   if(!item.custom) toast(`${item.name} agregado`);
 }
 function renderUpsell(){
-  const pepsiId = 'pepsi-500';
-  const hasPepsi = cart.some(i => i.id === pepsiId);
-  if(hasPepsi) return '';
+  const bebidasSponsor = allProducts.filter(p => p.category_id === 'bebidas' && p.sponsor_name);
+  
+  // Si no hay bebidas con sponsor, usamos una lista de respaldo
+  const pool = bebidasSponsor.length > 0 ? bebidasSponsor : [
+    { id: 'pepsi-500', name: 'Pepsi 500ml', price: 130, desc: 'Refresco 500ml', sponsor_name: 'Pepsi' },
+    { id: 'stella-artois', name: 'Stella Artois', price: 190, desc: 'Cerveza Premium 330ml', sponsor_name: 'Stella' }
+  ];
+
+  // Filtrar las que ya están en el carrito
+  const available = pool.filter(p => !cart.some(c => c.id === p.id));
+  if (available.length === 0) return '';
+
+  // Selección aleatoria
+  const randomItem = available[Math.floor(Math.random() * available.length)];
 
   return `
     <div class="upsell">
-      <div>
-        <strong>🔥 Sumá Pepsi 500ml</strong>
-        <p>$130 — Ideal para tu burger</p>
+      <div style="flex:1">
+        <span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">¿Con qué vas a acompañar tu comida?</span>
+        <strong style="color:var(--orange)">🔥 Sumá ${esc(randomItem.name)}</strong>
+        <p>$${randomItem.price} — Ideal para tu burger</p>
       </div>
-      <button class="add-upsell" onclick="addSponsorUpsell()">+</button>
+      <button class="add-upsell" onclick="addSponsorUpsell('${randomItem.id}')">+</button>
     </div>
   `;
 }
-window.addSponsorUpsell = function() {
-  const pepsi = {
-    id: 'pepsi-500',
-    name: 'Pepsi 500ml',
-    price: 130,
-    desc: 'Refresco 500ml',
-    img: 'https://images.ofix.com.mx/media/catalog/product/p/e/pepsi_500ml_1.png'
-  };
-  addToCart(pepsi, []);
-  renderCart();
-  if(typeof fbq !== 'undefined') fbq('trackCustom','SponsorUpsellAdd',{sponsor:'Pepsi'});
+
+window.addSponsorUpsell = function(productId) {
+  let item = allProducts.find(p => p.id === productId);
+  
+  // Si es un producto de respaldo (no está en la DB)
+  if (!item) {
+    const backup = {
+      'pepsi-500': { id: 'pepsi-500', name: 'Pepsi 500ml', price: 130, desc: 'Refresco 500ml', img: 'SPONSORS/pepsi-logo.png' },
+      'stella-artois': { id: 'stella-artois', name: 'Stella Artois', price: 190, desc: 'Cerveza Premium 330ml', img: 'IMAGENES/BEBIDAS/stella.jpg' }
+    };
+    item = backup[productId];
+  }
+
+  if (item) {
+    addToCart(item, []);
+    renderCart();
+    if(typeof fbq !== 'undefined') fbq('trackCustom','SponsorUpsellAdd',{product: item.name});
+  }
 };
 function renderCart(){
   const count=cart.reduce((sum,item)=>sum+item.qty,0);
