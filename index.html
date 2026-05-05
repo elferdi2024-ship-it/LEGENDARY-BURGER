@@ -772,15 +772,13 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 .sponsor-logo {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
-  z-index: 10;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-  opacity: 0.9;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
 }
 .sponsor-badge {
   position: absolute;
@@ -1153,7 +1151,7 @@ function productCard(item){
     ? `<span class="sponsor-badge">${item.sponsor_badge || 'SPONSORED'}</span>` 
     : '';
 
-  return `<article class="product-card" ${sponsorStyle}><div class="product-media ${isSingle?'single':''}">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}${sponsorLogo}${sponsorBadge}</div><div class="product-body"><h3>${esc(item.name)}</h3><p>${esc(item.desc)}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" ${btnStyle} aria-label="Agregar ${esc(item.name)}">+</button></div></div></article>`;
+  return `<article class="product-card" ${sponsorStyle}><div class="product-media ${isSingle?'single':''}">${media}${item.badge?`<span class="badge">${item.badge}</span>`:''}${sponsorBadge}</div><div class="product-body"><h3>${sponsorLogo}${esc(item.name)}</h3><p>${esc(item.desc)}</p><div class="product-foot"><span class="price">$${item.price}</span><button class="plus" data-add="${item.id}" ${btnStyle} aria-label="Agregar ${esc(item.name)}">+</button></div></div></article>`;
 }
 function renderMenu(){
   // IDs ORIGINALES DE LA LANDING
