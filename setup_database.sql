@@ -130,7 +130,7 @@ INSERT INTO products (id, category_id, name, description, price, img, imgs, badg
 ('only', 'carne', 'Only Cheese', 'Smash de carne, bacon, medallon de provolone, salsa BBQ y cheddar x2.', 390, 'IMAGENES/Only Chesse.jpg', '["IMAGENES/Only Chesse.jpg"]', NULL),
 ('triple', 'carne', 'Triple Cheese', 'Doble smash de carne, cheddar x4, salsa Legendary y cebolla.', 480, 'IMAGENES/Triple Chesse/triple chesse 1.jpg', '["IMAGENES/Triple Chesse/triple chesse 1.jpg", "IMAGENES/Triple Chesse/triple chesse 2.jpg", "IMAGENES/Triple Chesse/triple chesse 3.jpg"]', NULL),
 ('onion-rings', 'carne', 'Onion Rings', 'Smash de carne, aros de cebolla x3, muzza x3, mayonesa burger house y bacon.', 390, 'IMAGENES/Oniong Rings/Oniong Rings.jpg', '["IMAGENES/Oniong Rings/Oniong Rings.jpg", "IMAGENES/Oniong Rings/Oniong Rings 2.jpg", "IMAGENES/Oniong Rings/Oniong Rings 3.jpg"]', NULL),
-('moon', 'carne', 'Moon Burger', 'Smash de carne, cheddar x2, salsa barbacoa y cebolla caramelizada.', 390, NULL, '[]', NULL),
+('moon', 'carne', 'Moon Burger', 'Smash de carne, cheddar x2, salsa barbacoa y cebolla caramelizada.', 390, 'IMAGENES/Moon.jpeg', '["IMAGENES/Moon.jpeg"]', NULL),
 ('big-legend', 'carne', 'Big Legend', 'Doble smash de carne, bacon, salsa Legendary, cheddar x4 y pepinillos.', 480, 'IMAGENES/Big Legend/Big Legend.jpg', '["IMAGENES/Big Legend/Big Legend.jpg", "IMAGENES/Big Legend/Big Legend 2.jpg"]', 'TOP'),
 ('kids', 'carne', 'Kids Burger', 'Smash de carne, cheddar x3 y salsa a eleccion.', 350, 'IMAGENES/kid.jpg', '["IMAGENES/kid.jpg"]', NULL),
 ('crispy-bacon', 'pollo', 'Crispy Bacon', 'Pollo crispy, bacon, tomate, cheddar x2 y alioli.', 380, 'IMAGENES/Crispy Bacon.jpg', '["IMAGENES/Crispy Bacon.jpg"]', NULL),
@@ -142,7 +142,6 @@ INSERT INTO products (id, category_id, name, description, price, img, imgs, badg
 ('papas', 'papas', 'Papas', 'Porcion de papas fritas.', 200, 'IMAGENES/fritas.jpg', '["IMAGENES/fritas.jpg"]', NULL),
 ('papas-cheddar', 'papas', 'Papas Cheddar', 'Papas con salsa cheddar caliente.', 240, 'IMAGENES/fritas cheddar.jpg', '["IMAGENES/fritas cheddar.jpg"]', NULL),
 ('papas-bacon', 'papas', 'Papas Cheddar y Bacon', 'Papas con cheddar y bacon crujiente.', 280, 'IMAGENES/papas  cheddar bacon.jpg', '["IMAGENES/papas  cheddar bacon.jpg"]', NULL),
-('coca', 'bebidas', 'Linea Coca Cola 600ml', 'Refresco linea Coca Cola.', 130, NULL, '[]', NULL),
 ('agua', 'bebidas', 'Aguas', 'Agua con gas o sin gas.', 100, NULL, '[]', NULL)
 ON CONFLICT (id) DO UPDATE SET 
   category_id = EXCLUDED.category_id,
@@ -206,7 +205,7 @@ ON CONFLICT (id) DO UPDATE SET
 -- ── 7. SEED DATA: CONFIG ─────────────────────────────
 
 INSERT INTO site_config (key, value) VALUES
-('wa_number', '59892265952'),
+('wa_number', '59892454046'),
 ('delivery_price', '100'),
 ('panel_user', 'admin'),
 ('panel_pass', 'legendary2024')

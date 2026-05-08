@@ -11,7 +11,7 @@ const catsBase = {
     {id:'only',name:'Only Cheese',desc:'Smash de carne, bacon, medallon de provolone, salsa BBQ y cheddar x2.',price:390,img:'IMAGENES/Only Chesse.jpg'},
     {id:'triple',name:'Triple Cheese',desc:'Doble smash de carne, cheddar x4, salsa Legendary y cebolla.',price:480,img:'IMAGENES/Triple Chesse/triple chesse 1.jpg',imgs:['IMAGENES/Triple Chesse/triple chesse 1.jpg','IMAGENES/Triple Chesse/triple chesse 2.jpg','IMAGENES/Triple Chesse/triple chesse 3.jpg']},
     {id:'onion-rings',name:'Onion Rings',desc:'Smash de carne, aros de cebolla x3, muzza x3, mayonesa burger house y bacon.',price:390,img:'IMAGENES/Oniong Rings/Oniong Rings.jpg',imgs:['IMAGENES/Oniong Rings/Oniong Rings.jpg','IMAGENES/Oniong Rings/Oniong Rings 2.jpg','IMAGENES/Oniong Rings/Oniong Rings 3.jpg']},
-    {id:'moon',name:'Moon Burger',desc:'Smash de carne, cheddar x2, salsa barbacoa y cebolla caramelizada.',price:390,img:null},
+    {id:'moon',name:'Moon Burger',desc:'Smash de carne, cheddar x2, salsa barbacoa y cebolla caramelizada.',price:390,img:'IMAGENES/Moon.jpeg',imgs:['IMAGENES/Moon.jpeg']},
     {id:'big-legend',name:'Big Legend',desc:'Doble smash de carne, bacon, salsa Legendary, cheddar x4 y pepinillos.',price:480,img:'IMAGENES/Big Legend/Big Legend.jpg',imgs:['IMAGENES/Big Legend/Big Legend.jpg','IMAGENES/Big Legend/Big Legend 2.jpg'],badge:'TOP'},
     {id:'kids',name:'Kids Burger',desc:'Smash de carne, cheddar x3 y salsa a eleccion.',price:350,img:'IMAGENES/kid.jpg'}]},
   pollo:{label:'Otras Burgers',items:[
@@ -34,12 +34,12 @@ const catsBase = {
     {id:'extra-tomate',name:'Tomate',desc:'Extra para sumar a tu burger.',price:35,img:null},
     {id:'extra-carne-cheddar',name:'Carne mas cheddar',desc:'Medallon extra con cheddar.',price:90,img:null}]},
   bebidas:{label:'Bebidas',items:[
-    {id:'coca',name:'Linea Coca Cola 600ml',desc:'Refresco linea Coca Cola.',price:130,img:null},
+
     {id:'agua',name:'Aguas',desc:'Agua con gas o sin gas.',price:100,img:null},
-    {id:'cabezas-botella',name:'Cabezas Bier Botella',desc:'Cerveza artesanal en botella.',price:270,img:null},
-    {id:'cabezas-lata',name:'Cabezas Bier Lata',desc:'Cerveza artesanal en lata.',price:170,img:null},
-    {id:'cabezas-tirada',name:'Cabezas Bier Tirada',desc:'Cerveza artesanal tirada.',price:250,img:null},
-    {id:'cabezas-gintonic',name:'Cabezas Bier Gintonic',desc:'Gintonic de Cabezas Bier.',price:250,img:null},
+    {id:'cabezas-botella',name:'Cabesas Bier Botella',desc:'Cerveza artesanal en botella.',price:270,img:null},
+    {id:'cabezas-lata',name:'Cabesas Bier Lata',desc:'Cerveza artesanal en lata.',price:170,img:null},
+    {id:'cabezas-tirada',name:'Cabesas Bier Tirada',desc:'Cerveza artesanal tirada.',price:250,img:null},
+    {id:'cabezas-gintonic',name:'Cabesas Bier Gintonic',desc:'Gintonic de Cabesas Bier.',price:250,img:null},
     {id:'brik-330',name:'Cerveza Brik 330',desc:'Cerveza Brik 330 ml.',price:110,img:null},
     {id:'stella',name:'Cerveza Stella Artois',desc:'Cerveza Stella Artois.',price:300,img:null},
     {id:'moreiz-negra',name:'Moreiz Etiqueta Negra',desc:'Vino Moreiz etiqueta negra.',price:295,img:null},
