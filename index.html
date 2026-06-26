@@ -122,13 +122,16 @@ a{color:inherit;text-decoration:none}
 .hamb:before,.hamb:after,.hamb span{
   content:"";
   position:absolute;
+  left:50%;
+  top:50%;
   width:20px;
   height:2px;
   background:var(--cream);
   border-radius:2px;
 }
-.hamb:before{transform:translateY(-7px)}
-.hamb:after{transform:translateY(7px)}
+.hamb span{transform:translate(-50%,-50%)}
+.hamb:before{transform:translate(-50%,-50%) translateY(-7px)}
+.hamb:after{transform:translate(-50%,-50%) translateY(7px)}
 .mobile-menu{
   position:fixed;
   inset:0;
@@ -1199,7 +1202,7 @@ async function initData() {
   console.log('Iniciando carga de datos desde Supabase...');
   try {
     const { data: catData, error: catError } = await sbClient.from('categories').select('*').order('display_order');
-    const { data: prodData, error: prodError } = await sbClient.from('products').select('*').eq('is_active', true);
+    const { data: prodData, error: prodError } = await sbClient.from('products').select('*');
     const { data: configData } = await sbClient.from('site_config').select('*');
     const { data: bSteps, error: bError } = await sbClient.from('builder_options').select('*').order('display_order');
 
@@ -1209,7 +1212,10 @@ async function initData() {
     }
     console.log('Builder options recibidas:', bSteps?.length);
 
-    console.log('Datos recibidos:', { cats: catData?.length, products: prodData?.length });
+    allProducts = prodData || [];
+    const activeProducts = allProducts.filter(p => p.is_active !== false);
+
+    console.log('Datos recibidos:', { cats: catData?.length, products: activeProducts.length });
 
     const config = {};
     configData?.forEach(c => config[c.key] = c.value);
@@ -1220,7 +1226,7 @@ async function initData() {
       catsMap[c.id] = { label: c.label, items: [] };
     });
 
-    prodData?.forEach(p => {
+    activeProducts.forEach(p => {
       if(catsMap[p.category_id]) {
         // Mapeo de imágenes locales para productos específicos
         let itemImg = p.img;
