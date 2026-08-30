@@ -1,1 +1,5 @@
+// filepath: d:/PROYECTOS/burgaa/.gitignore
 .vercel
+node_modules
+*.pdf
+*RESUMEN*

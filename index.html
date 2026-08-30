@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="data.js"></script>
 <style>
 :root{
   --ink:#080808;
@@ -955,6 +956,60 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
 }
 .btn-add-quick:active { transform: scale(0.95); }
 .btn-add-quick.added { background: var(--wa-green); color: white; }
+
+/* ── Floating Demo Switcher ── */
+.demo-floating-bar{
+  position:fixed;
+  bottom:16px;
+  left:16px;
+  z-index:95;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(12,12,12,0.92);
+  border:1px solid rgba(240,90,34,0.6);
+  padding:6px 12px;
+  border-radius:30px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.6), 0 0 12px rgba(240,90,34,0.25);
+}
+.demo-tag{
+  font-size:9px;
+  font-weight:900;
+  color:var(--orange);
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  display:none;
+}
+@media(min-width:480px){.demo-tag{display:inline-block}}
+.demo-link{
+  font-size:10px;
+  font-weight:800;
+  padding:5px 10px;
+  border-radius:20px;
+  text-transform:uppercase;
+  text-decoration:none;
+  transition:.15s;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+.demo-link.kds{
+  background:rgba(37,211,102,0.15);
+  color:#4ade80;
+  border:1px solid rgba(37,211,102,0.4);
+}
+.demo-link.kds:hover{background:var(--wa-green);color:#111}
+.demo-link.adm{
+  background:rgba(107,85,206,0.18);
+  color:#c4b5fd;
+  border:1px solid rgba(107,85,206,0.4);
+}
+.demo-link.adm:hover{background:var(--violet);color:#fff}
+.nav-link.accent-kds{color:#4ade80!important;border:1px solid rgba(74,222,128,0.3);padding:4px 8px;border-radius:6px;background:rgba(74,222,128,0.08)}
+.nav-link.accent-kds:hover{background:var(--wa-green);color:#111!important}
+.nav-link.accent-adm{color:#c4b5fd!important;border:1px solid rgba(196,181,253,0.3);padding:4px 8px;border-radius:6px;background:rgba(196,181,253,0.08)}
+.nav-link.accent-adm:hover{background:var(--violet);color:#fff!important}
 </style>
 </head>
 <body>
@@ -966,6 +1021,8 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
     <a class="nav-link" href="#builder" data-route="builder">Arma tu burger</a>
     <a class="nav-link" href="#cart" data-route="cart">Carrito</a>
     <a class="nav-link" href="#home" data-scroll="local">Locales</a>
+    <a class="nav-link accent-kds" href="pedidos.html" target="_blank" title="Pantalla de Cocina en Tiempo Real">👨‍🍳 Cocina KDS</a>
+    <a class="nav-link accent-adm" href="admin.html" target="_blank" title="Panel de Administración">⚙️ Admin</a>
   </div>
   <div class="nav-actions">
     <a class="chip" href="#cart" data-route="cart">Pedido <span class="cart-badge" id="cartBadge">0</span></a>
@@ -980,6 +1037,15 @@ footer{padding:34px 18px;border-top:1px solid var(--line);background:#0b0b0b;tex
   <a href="#builder" data-route="builder">Arma tu burger</a>
   <a href="#cart" data-route="cart">Carrito</a>
   <a href="#home" data-scroll="local">Locales</a>
+  <a href="pedidos.html" target="_blank" style="color:#4ade80;font-size:22px">👨‍🍳 Cocina (KDS)</a>
+  <a href="admin.html" target="_blank" style="color:#c4b5fd;font-size:22px">⚙️ Panel Admin</a>
+</div>
+
+<!-- Floating Demo Shortcuts -->
+<div class="demo-floating-bar">
+  <span class="demo-tag">⚡ DEMO COMERCIAL</span>
+  <a href="pedidos.html" target="_blank" class="demo-link kds">👨‍🍳 Pantalla Cocina</a>
+  <a href="admin.html" target="_blank" class="demo-link adm">⚙️ Admin</a>
 </div>
 
 <main>
@@ -1185,120 +1251,95 @@ const SUPABASE_URL = 'https://dwgwbnalrbzvakzbiwmb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3Z3dibmFscmJ6dmFremJpd21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MTQ4OTEsImV4cCI6MjA5MzI5MDg5MX0.im55Wn6fWcQddwaiRgZx1umKYPI2y0fwW0_RuP51ZR0';
 
 // Inicialización explícita
-const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { persistSession: false }
-});
+const sbClient = (typeof supabase !== 'undefined' && supabase.createClient)
+  ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } })
+  : null;
 </script>
-<script src="orders.js?v=1.0.3"></script>
+<script src="orders.js?v=2.0.0"></script>
 <script>
 
-let cats = {};
-let allProducts = [];
-let builderSteps = [];
+let allProducts = typeof DEFAULT_PRODUCTS !== 'undefined' ? [...DEFAULT_PRODUCTS] : [];
+let builderSteps = typeof DEFAULT_BUILDER_STEPS !== 'undefined' ? [...DEFAULT_BUILDER_STEPS] : [];
+let cats = typeof buildCategoriesMap === 'function' ? buildCategoriesMap(DEFAULT_CATEGORIES, allProducts) : {};
 const builderState={};
-let WA = '59892454046';
+let WA = (typeof DEFAULT_CONFIG !== 'undefined' && DEFAULT_CONFIG.wa_number) ? DEFAULT_CONFIG.wa_number : '59892454046';
+
+// Inicializar builderState dinámicamente
+builderSteps.forEach(step => {
+  if (step.multi) {
+    if (!builderState[step.id]) builderState[step.id] = [];
+  } else {
+    if (!builderState[step.id]) builderState[step.id] = (step.id === 'base' ? 'smash' : null);
+  }
+});
 
 async function initData() {
-  console.log('Iniciando carga de datos desde Supabase...');
+  console.log('[Legendary] Inicializando catálogo con datos completos...');
+  
+  // Renderizado instantáneo (0ms latency)
+  renderMenu();
+  renderBuilder();
+  route();
+
+  if (!sbClient) return;
+
   try {
-    const { data: catData, error: catError } = await sbClient.from('categories').select('*').order('display_order');
-    const { data: prodData, error: prodError } = await sbClient.from('products').select('*');
-    const { data: configData } = await sbClient.from('site_config').select('*');
-    const { data: bSteps, error: bError } = await sbClient.from('builder_options').select('*').order('display_order');
+    const timeout = (prom, ms) => Promise.race([prom, new Promise((_, r) => setTimeout(() => r(new Error('Timeout')), ms))]);
+    const [catRes, prodRes, bRes, confRes] = await Promise.allSettled([
+      timeout(sbClient.from('categories').select('*').order('display_order'), 2500),
+      timeout(sbClient.from('products').select('*'), 2500),
+      timeout(sbClient.from('builder_options').select('*').order('display_order'), 2500),
+      timeout(sbClient.from('site_config').select('*'), 2500)
+    ]);
 
-    if (catError || prodError || bError) {
-      console.error('Error cargando tablas:', catError || prodError || bError);
-      return;
+    let shouldRerender = false;
+
+    if (prodRes.status === 'fulfilled' && prodRes.value.data && prodRes.value.data.length > 0) {
+      allProducts = prodRes.value.data;
+      const catList = (catRes.status === 'fulfilled' && catRes.value.data && catRes.value.data.length > 0)
+        ? catRes.value.data
+        : DEFAULT_CATEGORIES;
+      cats = buildCategoriesMap(catList, allProducts);
+      shouldRerender = true;
     }
-    console.log('Builder options recibidas:', bSteps?.length);
 
-    allProducts = prodData || [];
-    const activeProducts = allProducts.filter(p => p.is_active !== false);
+    if (bRes.status === 'fulfilled' && bRes.value.data && bRes.value.data.length > 0) {
+      builderSteps = bRes.value.data.map(s => ({
+        id: s.id,
+        title: s.label,
+        multi: s.is_multi,
+        required: s.id === 'base',
+        options: s.options,
+        cols3: s.id === 'toppings' || s.id === 'sauces'
+      }));
+      shouldRerender = true;
+    }
 
-    console.log('Datos recibidos:', { cats: catData?.length, products: activeProducts.length });
-
-    const config = {};
-    configData?.forEach(c => config[c.key] = c.value);
-    WA = '59892454046';
-
-    const catsMap = {};
-    catData?.forEach(c => {
-      catsMap[c.id] = { label: c.label, items: [] };
-    });
-
-    activeProducts.forEach(p => {
-      if(catsMap[p.category_id]) {
-        // Mapeo de imágenes locales para productos específicos
-        let itemImg = p.img;
-        let itemImgs = p.imgs || [];
-        
-        if (p.name.toLowerCase().includes('pepsi')) {
-          itemImg = 'IMAGENES/PEPSI/PEPSI.jpg';
-          itemImgs = ['IMAGENES/PEPSI/PEPSI.jpg'];
-        } else if (p.name.toLowerCase().includes('tirada')) {
-          itemImg = 'IMAGENES/Cabezas bier tirada/tirada.png';
-          itemImgs = ['IMAGENES/Cabezas bier tirada/tirada.png'];
-        }
-
-        catsMap[p.category_id].items.push({
-          id: p.id,
-          name: p.name,
-          desc: p.description,
-          price: parseFloat(p.price),
-          img: itemImg,
-          imgs: itemImgs,
-          badge: p.badge,
-          sponsor_name: p.sponsor_name,
-          sponsor_logo: p.sponsor_logo,
-          sponsor_color: p.sponsor_color,
-          sponsor_badge: p.sponsor_badge,
-          sponsor_url: p.sponsor_url
-        });
-      }
-    });
-
-    // REORDENAR: Sponsors primero en cada categoría
-    Object.values(catsMap).forEach(cat => {
-      cat.items.sort((a, b) => {
-        if (a.sponsor_name && !b.sponsor_name) return -1;
-        if (!a.sponsor_name && b.sponsor_name) return 1;
-        return 0;
+    if (confRes.status === 'fulfilled' && confRes.value.data) {
+      confRes.value.data.forEach(c => {
+        if (c.key === 'wa_number') WA = c.value;
       });
-    });
+    }
 
-    cats = catsMap;
-    builderSteps = bSteps?.map(s => ({
-      id: s.id,
-      title: s.label,
-      multi: s.is_multi,
-      required: s.id === 'base',
-      options: s.options,
-      cols3: s.id === 'toppings' || s.id === 'sauces'
-    })) || [];
-
-    // Inicializar builderState dinámicamente según bSteps
-    builderSteps.forEach(step => {
-      if (step.multi) {
-        if (!builderState[step.id]) builderState[step.id] = [];
-      } else {
-        if (!builderState[step.id]) builderState[step.id] = null;
-      }
-    });
-
-    renderMenu();
-    renderBuilder();
-    route();
-    console.log('Menu y Builder renderizados con éxito');
+    if (shouldRerender) {
+      renderMenu();
+      renderBuilder();
+      console.log('[Legendary] ✅ Catálogo actualizado en vivo desde Supabase');
+    }
   } catch (err) {
-    console.error('Error crítico en initData:', err);
+    console.log('[Legendary] Operando con catálogo local integrado:', err.message);
   }
 }
 
-// Suscripción Realtime mejorada
-sbClient.channel('any')
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, initData)
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, initData)
-  .subscribe();
+// Suscripción Realtime si Supabase está activo
+if (sbClient) {
+  try {
+    sbClient.channel('any')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => initData())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => initData())
+      .subscribe();
+  } catch(e) {}
+}
 
 initData();
 
